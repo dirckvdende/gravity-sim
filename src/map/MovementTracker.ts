@@ -86,7 +86,6 @@ export default class MovementTracker {
         const direction = this.lastPan.normalize()
         let lastFrame = performance.now()
         const inertiaFunction = this.inertiaFunction = () => {
-            console.log("inertia function")
             if (this.inertiaFunction != inertiaFunction)
                 return
             const timeDiff = (performance.now() - lastFrame) / 1000

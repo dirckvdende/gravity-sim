@@ -8,8 +8,8 @@ export default class Vector2 {
     static readonly Zero = new Vector2(0, 0)
 
     // Coordinates
-    private readonly x: number
-    private readonly y: number
+    readonly x: number
+    readonly y: number
 
     /**
      * Constructor

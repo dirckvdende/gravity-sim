@@ -111,7 +111,14 @@
 
 <template>
     <div :class="$style.interactor" ref="interactor">
-        {{ zoom }}, {{ position }}
+        <div :style="{
+            left: `${-position.x}px`,
+            top: `${-position.y}px`,
+            width: '100px',
+            height: '100px',
+            backgroundColor: 'black',
+            position: 'absolute',
+        }"></div>
     </div>
 </template>
 
@@ -125,5 +132,7 @@
         height: 400px;
         background-color: red;
         user-select: none;
+        position: relative;
+        overflow: hidden;
     }
 </style>
