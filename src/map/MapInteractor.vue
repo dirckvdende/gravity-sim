@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { onMounted, ref, useCssModule, useTemplateRef } from 'vue';
+    import { onMounted, ref, useCssModule, useTemplateRef, watch } from 'vue';
     import MovementTracker from './MovementTracker';
     import Vector2 from '@/util/Vector2';
 
@@ -107,15 +107,39 @@
 
     // Expose relevant values
     defineExpose({ zoom, position })
+
+    const lines = ref<Vector2[]>([])
+    watch(position, (value) => {
+        lines.value = []
+        for (let x = -(value.x % 100) - 200; x < -(value.x % 100) + 2599;
+        x += 100)
+            lines.value.push(new Vector2(x, 0))
+    }, { immediate: true })
+
+    const hlines = ref<Vector2[]>([])
+    watch(position, (value) => {
+        hlines.value = []
+        for (let y = -(value.y % 100) - 200; y < -(value.y % 100) + 2599;
+        y += 100)
+            hlines.value.push(new Vector2(0, y))
+    }, { immediate: true })
 </script>
 
 <template>
     <div :class="$style.interactor" ref="interactor">
-        <div :style="{
-            left: `${-position.x}px`,
-            top: `${-position.y}px`,
-            width: '100px',
-            height: '100px',
+        <div v-for="line in lines" :style="{
+            left: `${line.x}px`,
+            top: `${line.y}px`,
+            width: '2px',
+            height: '1000px',
+            backgroundColor: 'black',
+            position: 'absolute',
+        }"></div>
+        <div v-for="line in hlines" :style="{
+            left: `${line.x}px`,
+            top: `${line.y}px`,
+            width: '2000px',
+            height: '2px',
             backgroundColor: 'black',
             position: 'absolute',
         }"></div>
