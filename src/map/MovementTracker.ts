@@ -2,6 +2,10 @@
 import EventHook from "@/util/EventHook"
 import Vector2 from "@/util/Vector2"
 
+// Maximum interval between pans before difference between pans can no longer
+// be used to determine velocity, in milliseconds
+const MAX_PAN_INTERVAL = 200
+
 /**
  * Object used to track panning and zooming of a map
  */
@@ -21,6 +25,8 @@ export default class MovementTracker {
     private lastPan: Vector2
     // Last time a pan was performed
     private lastPanTime: number
+    // last interval between pans, if there were two or more in short succession
+    private lastPanInterval?: number
     // Current function handling inertia animation
     private inertiaFunction?: () => void
 
@@ -46,6 +52,9 @@ export default class MovementTracker {
      */
     pan(diff: Vector2) {
         this.lastPan = diff
+        this.lastPanInterval = performance.now() - this.lastPanTime
+        if (this.lastPanInterval > MAX_PAN_INTERVAL)
+            this.lastPanInterval = undefined
         this.lastPanTime = performance.now()
         this.position = this.position.add(diff.scale(this.pixelSize()))
         if (!diff.isZero())
@@ -68,9 +77,9 @@ export default class MovementTracker {
      * this is overwritten with the new animation
      */
     startInertia(): void {
-        if (!this.inertia)
+        if (!this.inertia || this.lastPanInterval == undefined)
             return
-        const timeDiff = (performance.now() - this.lastPanTime) / 1000
+        const timeDiff = this.lastPanInterval / 1000
         if (timeDiff == 0)
             return
         let velocity = this.lastPan.length() / timeDiff
