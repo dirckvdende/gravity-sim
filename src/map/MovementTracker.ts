@@ -123,10 +123,37 @@ export default class MovementTracker {
     getZoomLevel(): number { return this.zoomLevel }
 
     /**
+     * Convert coordinates to pixel coordinates to draw onto a canvas of a given
+     * size. Note that the position of this movement tracker is set to the
+     * center of the canvas
+     * @param canvasSize The size of the canvas as a Vector2 with width, height
+     * @param coords Coordinates to convert
+     * @retruns The converted position in pixel coordinates
+     */
+    toPixelCoords(canvasSize: Vector2, coords: Vector2): Vector2 {
+        const diff = coords.subtract(this.position)
+        const pixelDiff = diff.scale(1 / this.pixelSize())
+        return canvasSize.scale(.5).subtract(pixelDiff)
+    }
+
+    /**
+     * Get the viewport of coordinates displayed for a given canvas size
+     * @param canvasSize The size of the canvas as a Vector with width, height
+     * @returns The viewport with min and max-coords as a tuple
+     */
+    viewport(canvasSize: Vector2): [Vector2, Vector2] {
+        const halfCanvas = canvasSize.scale(.5 * this.pixelSize())
+        return [
+            this.position.subtract(halfCanvas),
+            this.position.add(halfCanvas),
+        ]
+    }
+
+    /**
      * Get the size of a pixel given the current zoom level
      * @returns The size of a single pixel in units measured by this tracker
      */
-    private pixelSize(): number {
+    pixelSize(): number {
         return Math.exp(-this.zoomLevel)
     }
 

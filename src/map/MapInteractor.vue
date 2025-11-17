@@ -20,6 +20,10 @@
     // Current zoom level of the interactor, can also be changed
     // programmatically or through user interaction
     const zoom = ref(0)
+    // Emitted update when position and/or zoom level changes
+    const emit = defineEmits<{
+        (e: "update", viewport: [Vector2, Vector2]): void,
+    }>()
 
     // Main interactor element
     const interactor = useTemplateRef("interactor")
@@ -35,6 +39,7 @@
     tracker.update.hook(() => {
         zoom.value = tracker.getZoomLevel()
         position.value = tracker.getPosition()
+        emit("update", viewport())
     })
 
     /**
@@ -102,11 +107,29 @@
         tracker.pan(new Vector2(event.movementX, event.movementY).negate())
     }
 
+    function toPixelCoords(coords: Vector2): Vector2 {
+        if (interactor.value == null)
+            throw new Error("Cannot find coords because HTML element is not "
+            + "found")
+        const canvasSize = new Vector2(interactor.value.clientWidth,
+        interactor.value.clientHeight)
+        return tracker.toPixelCoords(canvasSize, coords)
+    }
+
+    function viewport(): [Vector2, Vector2] {
+        if (interactor.value == null)
+            throw new Error("Cannot find coords because HTML element is not "
+            + "found")
+        const canvasSize = new Vector2(interactor.value.clientWidth,
+        interactor.value.clientHeight)
+        return tracker.viewport(canvasSize)
+    }
+
     // Add user events on mount
     onMounted(addUserEvents)
 
     // Expose relevant values
-    defineExpose({ zoom, position })
+    defineExpose({ zoom, position, toPixelCoords, viewport })
 
     const lines = ref<Vector2[]>([])
     watch(position, (value) => {
