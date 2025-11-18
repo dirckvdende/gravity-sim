@@ -2,6 +2,7 @@
     import { onMounted, ref, useCssModule, useTemplateRef, watch } from 'vue';
     import MovementTracker from './MovementTracker';
     import Vector2 from '@/util/Vector2';
+import DragTarget from './DragTarget.vue';
 
     // Multiply wheel event distance with this factor to get zoom factor, per
     // delta mode: [DOM_DELTA_PIXEL, DOM_DELTA_LINE, DOM_DELTA_PAGE]

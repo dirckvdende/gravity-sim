@@ -1,13 +1,40 @@
 <script setup lang="ts">
-    import MapInteractor from './map/MapInteractor.vue';
+    import { ref } from 'vue';
+    import DragTarget from './map/DragTarget.vue';
+    import Vector2 from './util/Vector2';
+
+    const position = ref(Vector2.Zero)
+
+    function updatePosition(diff: Vector2): void {
+        position.value = position.value.add(diff)
+    }
 </script>
 
 <template>
-    <MapInteractor ref="test" />
-    <h1>You did it!</h1>
-    <p>
-        Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the documentation
-    </p>
+    <DragTarget
+        @pan="updatePosition"
+        @zoom="(amt) => console.log('zoom', amt)"
+        :class="$style.target">
+        <div :class="$style.test" :style="{
+            top: `${-position.y}px`,
+            left: `${-position.x}px`,
+        }" />
+    </DragTarget>
 </template>
 
-<style scoped></style>
+<style lang="scss" module>
+    .target {
+        position: relative;
+        background-color: red;
+        width: 400px;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .test {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: black;
+    }
+</style>
