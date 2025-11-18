@@ -1,32 +1,32 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import DragTarget from './map/DragTarget.vue';
     import Vector2 from './util/Vector2';
+    import DragView, { DragViewState } from './map/DragView.vue';
 
-    const position = ref(Vector2.Zero)
+    const objPos = ref(Vector2.Zero)
 
-    function updatePosition(diff: Vector2): void {
-        position.value = position.value.add(diff)
+    function updatePosition(state: DragViewState): void {
+        objPos.value = state.toPixelCoords(Vector2.Zero)
     }
 </script>
 
 <template>
-    <DragTarget
-        @pan="updatePosition"
-        @zoom="(amt) => console.log('zoom', amt)"
+    <DragView
+        @update="updatePosition"
         :class="$style.target">
         <div :class="$style.test" :style="{
-            top: `${-position.y}px`,
-            left: `${-position.x}px`,
+            top: `${objPos.y}px`,
+            left: `${objPos.x}px`,
+            translate: `-50% -50%`
         }" />
-    </DragTarget>
+    </DragView>
 </template>
 
 <style lang="scss" module>
     .target {
         position: relative;
         background-color: red;
-        width: 400px;
+        width: 50%;
         height: 300px;
         overflow: hidden;
     }

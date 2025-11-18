@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
     import Vector2 from '@/util/Vector2';
-    import { watch } from 'vue';
+    import { useTemplateRef, watch } from 'vue';
 
     // Multiply wheel event distance with this factor to get zoom factor, per
     // delta mode: [DOM_DELTA_PIXEL, DOM_DELTA_LINE, DOM_DELTA_PAGE]
@@ -111,10 +111,14 @@
             return
         dragEnd()
     })
+
+    // Expose container element for use by parent components
+    const container = useTemplateRef("container")
+    defineExpose({ container })
 </script>
 
 <template>
-    <div @pointerdown="dragStart" @wheel="zoom">
+    <div @pointerdown="dragStart" @wheel="zoom" ref="container">
         <slot />
     </div>
 </template>
