@@ -1,6 +1,6 @@
 <script lang="ts">
     /**
-     * Element that registers user dragging and scrolling interactions as pans
+     * Component that registers user dragging and scrolling interactions as pans
      * and zooms. Note that this object only emits the detected pans and zooms.
      * It does not keep track of a current position of zoom level
      */
