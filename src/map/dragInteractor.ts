@@ -52,7 +52,7 @@ type DragInteractorCallbacks = {
  */
 type DragInteractorOptions = {
     /**
-     * Minimum distance before detecting a drag instead of a click
+     * Minimum distance before detecting a drag instead of a click (default 0)
      */
     dragThreshold?: number,
 }
@@ -117,8 +117,8 @@ export function useDragInteractor(
             return
         dragging = false
         toggleDragEvents(false)
-        if (targetRef.value && !reachedThreshold && callbacksRef.value?.click)
-            callbacksRef.value.click(mousePosition(targetRef.value, event))
+        if (targetRef.value && !reachedThreshold)
+            callbacksRef.value?.click?.(mousePosition(targetRef.value, event))
         toggleCursor(null)
     }
 
@@ -134,8 +134,7 @@ export function useDragInteractor(
         const diff = updateMovement(mouseMove.scale(-1))
         if (diff.isZero())
             return
-        if (callbacksRef.value?.drag)
-            callbacksRef.value.drag(diff, mousePosition(targetRef.value, event))
+        callbacksRef.value?.drag?.(diff, mousePosition(targetRef.value, event))
         toggleCursor("grab")
     }
 

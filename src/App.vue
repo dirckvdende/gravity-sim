@@ -3,13 +3,15 @@
     import { useDragInteractor } from './map/dragInteractor';
     import { usePositionRectTracker } from './map/positionRectTracker';
     import GridRenderer from './map/GridRenderer.vue';
+    import { useZoomInteractor } from './map/zoomInteractor';
 
     const target = useTemplateRef("target")
     const tracker = usePositionRectTracker(target)
-    const { pan } = tracker
-    useDragInteractor(target, {
-        drag: pan,
-    })
+    const { pan, zoom } = tracker
+    useDragInteractor(target, { drag: pan })
+    useZoomInteractor(target, { zoom: (diff) => {
+        zoom(diff / 1000)
+    }})
 </script>
 
 <template>
