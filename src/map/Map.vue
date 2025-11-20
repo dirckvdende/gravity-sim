@@ -23,7 +23,7 @@
         position: Vector2.Zero,
         size: 100,
         mass: 1,
-        velocity: Vector2.Zero,
+        velocity: new Vector2(0, -200),
     })
 
     objects.value.push({
@@ -31,7 +31,7 @@
         position: new Vector2(400, 0),
         size: 100,
         mass: 1,
-        velocity: Vector2.Zero,
+        velocity: new Vector2(0, 200),
     })
 
     const icons = computed(() => objects.value.map((object) => ({
