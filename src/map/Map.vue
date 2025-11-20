@@ -19,7 +19,7 @@
     const { objects } = useGravitySim()
 
     objects.value.push({
-        icon: 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2@1.5x.png',
+        icon: './public/icons/earth.svg',
         position: Vector2.Zero,
         size: 100,
         mass: 1,
@@ -27,7 +27,7 @@
     })
 
     objects.value.push({
-        icon: 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2@1.5x.png',
+        icon: './public/icons/earth.svg',
         position: new Vector2(400, 0),
         size: 100,
         mass: 1,
