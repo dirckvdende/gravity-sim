@@ -1,17 +1,30 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import Vector2 from './util/Vector2';
-    import DragView, { DragViewState } from './map/DragView.vue';
+    import { useTemplateRef, watch } from 'vue';
+    import { useDragInteractor } from './map/dragInteractor';
+    import { usePositionTracker } from './map/positionTracker';
 
-    const objPos = ref(Vector2.Zero)
+    // import { ref } from 'vue';
+    // import Vector2 from './util/Vector2';
+    // import DragView, { DragViewState } from './map/DragView.vue';
 
-    function updatePosition(state: DragViewState): void {
-        objPos.value = state.toPixelCoords(Vector2.Zero)
-    }
+    // const objPos = ref(Vector2.Zero)
+
+    // function updatePosition(state: DragViewState): void {
+    //     objPos.value = state.toPixelCoords(Vector2.Zero)
+    // }
+
+    const target = useTemplateRef("target")
+    const { position, zoomLevel, pan } = usePositionTracker()
+    useDragInteractor(target, {
+        drag: pan,
+    })
+    watch([position, zoomLevel], ([position, zoomLevel]) => {
+        console.log(position, zoomLevel)
+    })
 </script>
 
 <template>
-    <DragView
+    <!-- <DragView
         @update="updatePosition"
         :class="$style.target">
         <div :class="$style.test" :style="{
@@ -19,7 +32,9 @@
             left: `${objPos.x}px`,
             translate: `-50% -50%`
         }" />
-    </DragView>
+    </DragView> -->
+
+    <div :class="$style.target" ref="target"></div>
 </template>
 
 <style lang="scss" module>
