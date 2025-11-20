@@ -1,40 +1,21 @@
 <script setup lang="ts">
-    import { useTemplateRef, watch } from 'vue';
+    import { useTemplateRef } from 'vue';
     import { useDragInteractor } from './map/dragInteractor';
-    import { usePositionTracker } from './map/positionTracker';
-
-    // import { ref } from 'vue';
-    // import Vector2 from './util/Vector2';
-    // import DragView, { DragViewState } from './map/DragView.vue';
-
-    // const objPos = ref(Vector2.Zero)
-
-    // function updatePosition(state: DragViewState): void {
-    //     objPos.value = state.toPixelCoords(Vector2.Zero)
-    // }
+    import { usePositionRectTracker } from './map/positionRectTracker';
+    import GridRenderer from './map/GridRenderer.vue';
 
     const target = useTemplateRef("target")
-    const { position, zoomLevel, pan } = usePositionTracker()
+    const tracker = usePositionRectTracker(target)
+    const { pan } = tracker
     useDragInteractor(target, {
         drag: pan,
-    })
-    watch([position, zoomLevel], ([position, zoomLevel]) => {
-        console.log(position, zoomLevel)
     })
 </script>
 
 <template>
-    <!-- <DragView
-        @update="updatePosition"
-        :class="$style.target">
-        <div :class="$style.test" :style="{
-            top: `${objPos.y}px`,
-            left: `${objPos.x}px`,
-            translate: `-50% -50%`
-        }" />
-    </DragView> -->
-
-    <div :class="$style.target" ref="target"></div>
+    <div :class="$style.target" ref="target">
+        <GridRenderer :tracker="tracker" />
+    </div>
 </template>
 
 <style lang="scss" module>
