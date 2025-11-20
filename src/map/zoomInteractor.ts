@@ -1,6 +1,8 @@
 
+import Vector2 from "@/util/Vector2";
 import { type MaybeRefOrGetter, toRef, watch, onMounted, onUnmounted } from
 "vue";
+import { mousePosition } from "@/util/mousePosition";
 
 // Multiply wheel event distance with this factor to get zoom factor, per
 // delta mode: [DOM_DELTA_PIXEL, DOM_DELTA_LINE, DOM_DELTA_PAGE]
@@ -14,8 +16,10 @@ type ZoomInteractorCallbacks = {
      * Function to call when the user zooms in or out, with the difference in
      * zoom level it added
      * @param diff Difference in zoom level
+     * @param position The pixel coordinates of the mouse, relative to the
+     * target element
      */
-    zoom?: (diff: number) => void,
+    zoom?: (diff: number, position: Vector2) => void,
 }
 
 /**
@@ -46,11 +50,13 @@ export function useZoomInteractor(
      * @param event Triggered event
      */
     function wheel(event: WheelEvent): void {
+        if (targetRef.value == null)
+            return
         if (optionsRef.value?.preventDefault !== false)
             event.preventDefault()
         const scale = ZOOM_WHEEL_SCALE[event.deltaMode] ?? ZOOM_WHEEL_SCALE[0]
         const diff = -event.deltaY * scale
-        callbacksRef.value?.zoom?.(diff)
+        callbacksRef.value?.zoom?.(diff, mousePosition(targetRef.value, event))
     }
 
     /**

@@ -2,18 +2,7 @@
 import { watch, type MaybeRefOrGetter, onMounted, onUnmounted, toRef } from
 "vue";
 import Vector2 from "@/util/Vector2";
-
-/**
- * Get the mouse position within a target element
- * @param target The target HTML element
- * @returns The mouse position in pixels
- */
-function mousePosition(target: HTMLElement, event: MouseEvent): Vector2 {
-    const targetRect = target.getBoundingClientRect()
-    const mousePos = new Vector2(event.clientX, event.clientY)
-    const targetPos = new Vector2(targetRect.left, targetRect.top)
-    return mousePos.subtract(targetPos)
-}
+import { mousePosition } from "@/util/mousePosition";
 
 /**
  * Toggle the mouse cursor for the entire document

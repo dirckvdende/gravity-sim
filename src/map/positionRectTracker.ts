@@ -41,14 +41,21 @@ export type PositionRectTracker = {
     /**
      * Update the zoom level of the tracker
      * @param diff Difference in zoom level to apply
+     * @param center The coordinates to zoom in to, in unit coordinates
      */
-    zoom: (diff: number) => void,
+    zoom: (diff: number, center?: Vector2) => void,
     /**
      * Convert unit coordinates to pixel coordinates
      * @param coords Unit coordinates
      * @returns Pixel coordinates
      */
     toPixelCoords: (coords: Vector2) => Vector2,
+    /**
+     * Convert pixel coordinates to unit coordinates
+     * @param coords Pixel coordinates
+     * @returns Unit coordinates
+     */
+    toUnitCoords: (coords: Vector2) => Vector2,
 }
 
 export function usePositionRectTracker(
@@ -56,7 +63,8 @@ export function usePositionRectTracker(
 ): PositionRectTracker {
 
     // Keeps track of position, without taking target element into account
-    const { position, zoomLevel, pan, zoom, pixelSize } = usePositionTracker()
+    const { position, zoomLevel, pan, zoom: centerZoom, pixelSize } =
+    usePositionTracker()
     // Size of the target element in pixels
     const dimensions = useElementSize(target)
     // Viewport with top left and bottom right coordinates, where units take
@@ -75,12 +83,40 @@ export function usePositionRectTracker(
      * @returns Pixel coordinates
      */
     function toPixelCoords(coords: Vector2): Vector2 {
+        // (coords - topLeft) / pixelSize
         return coords.subtract(viewport.value.topLeft).scale(1 /
         pixelSize.value)
     }
 
+    /**
+     * Convert pixel coordinates to unit coordinates
+     * @param coords Pixel coordinates
+     * @returns Unit coordinates
+     */
+    function toUnitCoords(coords: Vector2): Vector2 {
+        // coords * pixelSize + topLeft
+        return coords.scale(pixelSize.value).add(viewport.value.topLeft)
+    }
+
+    /**
+     * Update the zoom level of the tracker
+     * @param diff Difference in zoom level to apply
+     * @param center The coordinates to zoom in to, in unit coordinates
+     */
+    function zoom(diff: number, center?: Vector2): void {
+        if (center == undefined) {
+            centerZoom(diff)
+            return
+        }
+        const centerDiff = center.subtract(position.value).scale(1 /
+        pixelSize.value)
+        pan(centerDiff)
+        centerZoom(diff)
+        pan(centerDiff.scale(-1))
+    }
+
     return { position, zoomLevel, pan, zoom, pixelSize, dimensions, viewport,
-    toPixelCoords }
+    toPixelCoords, toUnitCoords }
 }
 
 /**

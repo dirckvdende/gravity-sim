@@ -7,10 +7,10 @@
 
     const target = useTemplateRef("target")
     const tracker = usePositionRectTracker(target)
-    const { pan, zoom } = tracker
+    const { pan, zoom, toUnitCoords } = tracker
     useDragInteractor(target, { drag: pan })
-    useZoomInteractor(target, { zoom: (diff) => {
-        zoom(diff / 1000)
+    useZoomInteractor(target, { zoom: (diff, position) => {
+        zoom(diff / 1000, toUnitCoords(position))
     }})
 </script>
 
