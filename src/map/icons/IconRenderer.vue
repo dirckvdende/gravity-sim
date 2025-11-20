@@ -52,7 +52,6 @@
         position: tracker.toPixelCoords(icon.position),
         size: icon.size / tracker.pixelSize.value,
     })))
-    watch(unitSizeIcons, () => console.log(unitSizeIcons.value))
 </script>
 
 <template>
