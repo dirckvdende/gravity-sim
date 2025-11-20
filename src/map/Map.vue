@@ -4,6 +4,8 @@
     import { usePositionRectTracker } from './positionRectTracker';
     import GridRenderer from './GridRenderer.vue';
     import { useZoomInteractor } from './zoomInteractor';
+    import IconRenderer from './icons/IconRenderer.vue';
+    import Vector2 from '@/util/Vector2';
 
     const target = useTemplateRef("target")
     const tracker = usePositionRectTracker(target)
@@ -17,6 +19,11 @@
 <template>
     <div :class="$style.target" ref="target">
         <GridRenderer :tracker="tracker" />
+        <IconRenderer :tracker="tracker" :icons="[{
+            src: 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2@1.5x.png',
+            position: Vector2.Zero,
+            size: 100,
+        }]" />
     </div>
 </template>
 
