@@ -60,7 +60,7 @@
             position: absolute;
             object-fit: contain;
             aspect-ratio: 1 / 1;
-            top: 17%;
+            top: 16%;
             left: 18%;
             width: 64%;
         }
