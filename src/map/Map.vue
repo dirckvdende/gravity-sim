@@ -11,27 +11,32 @@
     const target = useTemplateRef("target")
     const tracker = usePositionRectTracker(target)
     const { pan, zoom, toUnitCoords } = tracker
+    // Zoom out a lot
+    zoom(-13)
     useDragInteractor(target, { drag: pan })
     useZoomInteractor(target, { zoom: (diff, position) => {
         zoom(diff / 1000, toUnitCoords(position))
     }})
 
-    const { objects } = useGravitySim()
-
-    objects.value.push({
-        icon: './public/icons/earth.svg',
-        position: Vector2.Zero,
-        size: 100,
-        mass: 1,
-        velocity: new Vector2(0, -200),
+    const { objects } = useGravitySim({
+        // 1/120 of a day
+        stepSize: 720,
     })
 
     objects.value.push({
         icon: './public/icons/earth.svg',
-        position: new Vector2(400, 0),
-        size: 100,
-        mass: 1,
-        velocity: new Vector2(0, 200),
+        position: Vector2.Zero,
+        size: 12_742_000,
+        mass: 5.972e24,
+        velocity: new Vector2(0, 0),
+    })
+
+    objects.value.push({
+        icon: './public/icons/moon.svg',
+        position: new Vector2(384_784_000, 0),
+        size: 3_474_800,
+        mass: 7.34767309e22,
+        velocity: new Vector2(0, 1_022),
     })
 
     const icons = computed(() => objects.value.map((object) => ({
