@@ -55,6 +55,10 @@ type DragInteractorOptions = {
      * Minimum distance before detecting a drag instead of a click (default 0)
      */
     dragThreshold?: number,
+    /**
+     * Cursor to display while dragging (default "move")
+     */
+    cursor?: string,
 }
 
 /**
@@ -135,7 +139,7 @@ export function useDragInteractor(
         if (diff.isZero())
             return
         callbacksRef.value?.drag?.(diff, mousePosition(targetRef.value, event))
-        toggleCursor("grab")
+        toggleCursor(optionsRef.value?.cursor ?? "move")
     }
 
     /**
