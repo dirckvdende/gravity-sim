@@ -51,7 +51,7 @@
         ...icon,
         position: tracker.toPixelCoords(icon.position),
         size: icon.size / tracker.pixelSize.value,
-    })))
+    })).sort((iconA, iconB) => iconA.position.y - iconB.position.y))
 </script>
 
 <template>
