@@ -23,6 +23,7 @@
     import type { PositionRectTracker } from '../positionRectTracker';
     import Icon from './Icon.vue';
     import { computed, watch } from 'vue';
+    import IconPin from './IconPin.vue';
 
     const {
         tracker,
@@ -41,7 +42,7 @@
         /**
          * Show a pin with the icon when it becomes too small. This indicates
          * the size in pixels below which a pin will be displayed. Set to zero
-         * to disable pins
+         * to disable pins (default 10)
          */
         showPinAt?: number,
     }>()
@@ -56,7 +57,12 @@
 
 <template>
     <template v-for="icon in unitSizeIcons">
+        <IconPin
+            v-if="icon.size < showPinAt"
+            :src="icon.src"
+            :position="icon.position" />
         <Icon
+            v-else
             :src="icon.src"
             :position="icon.position"
             :size="icon.size" />

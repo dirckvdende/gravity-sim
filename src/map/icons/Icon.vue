@@ -24,8 +24,9 @@
         :style="{
             width: `${size}px`,
             height: `${size}px`,
-            left: `calc(${position.x}px - ${size / 2}px)`,
-            top: `calc(${position.y}px - ${size / 2}px)`,
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+            translate: '-50% -50%',
         }" />
 </template>
 
@@ -33,5 +34,6 @@
     .icon {
         position: absolute;
         object-fit: contain;
+        pointer-events: none;
     }
 </style>
