@@ -63,6 +63,14 @@
         transparency: number,
     }
 
+    /**
+     * Get all grid lines in a given interval, using given steps between grid
+     * lines
+     * @param start Minimum coordinate
+     * @param end Maximum coordinate
+     * @param scale Steps between grid lines
+     * @returns The grid line coordinates as an array of numbers
+     */
     function gridLinesBetween(start: number, end: number, scale: number):
     number[] {
         const out: number[] = []
@@ -71,6 +79,11 @@
         return out
     }
 
+    /**
+     * Get all grid lines that should be displayed at a given scale
+     * @param scale The scale at which to get the lines in the grid
+     * @returns List of lines that make up the grid
+     */
     function gridAtScale(scale: number): Line[] {
         const { viewport } = tracker
         const lineWidth = scale * width
@@ -95,6 +108,11 @@
         return out
     }
 
+    /**
+     * Get the transparancy lines should have at the given scale
+     * @param scale The scale
+     * @returns The transparency between 0 (opaque) and 1 (transparent)
+     */
     function scaleTransparency(scale: number): number {
         const pixels = scale / tracker.pixelSize.value
         const { startFade, start, end, endFade } = scaleTimes
@@ -109,6 +127,10 @@
         return 1
     }
 
+    /**
+     * Get all grid scales that should be displayed
+     * @returns A array of numbers with the scales
+     */
     function scales(): number[] {
         const pixelSize = tracker.pixelSize.value
         const out: number[] = []
@@ -119,14 +141,27 @@
         return out
     }
 
+    /**
+     * Floor a number to a multiple of the given number
+     * @param value The number to floor
+     * @param multiple The multiple to which to floor
+     * @returns The floored number
+     */
     function floorToMultiple(value: number, multiple: number): number {
         return Math.floor(value / multiple) * multiple
     }
 
+    /**
+     * Floor a number to a power of a given base
+     * @param value The number to floor
+     * @param base The base to which to floor
+     * @returns The floored number
+     */
     function floorToPower(value: number, base: number): number {
         return Math.pow(base, Math.floor(Math.log(value) / Math.log(base)))
     }
 
+    // Lines to render
     const lines: ComputedRef<Line[]> = computed(() => {
         const out: Line[] = []
         for (const scale of scales())
