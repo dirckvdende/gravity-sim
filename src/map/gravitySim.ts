@@ -68,8 +68,6 @@ GravitySim {
         for (const object of objects.value) {
             const force = forceOnObject(object)
             const forcePerKG = force.scale(1 / object.mass)
-            console.log(object.icon, force)
-            console.log(object.icon, forcePerKG)
             newObjects.push({
                 ...object,
                 velocity: object.velocity.add(forcePerKG.scale(stepSize)),
