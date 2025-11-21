@@ -1,12 +1,12 @@
 
 import Vector2 from "@/util/Vector2";
-import { toRef, type MaybeRefOrGetter } from "vue";
+import { ref, toRef, type MaybeRefOrGetter, type Ref } from "vue";
 import { useEventListener } from "./eventListener";
 
 /**
  * An single touch interaction. For example a finger held on the screen
  */
-type TouchInteraction = {
+export type TouchInteraction = {
     identifier: number,
     position: Vector2,
 }
@@ -15,21 +15,19 @@ type TouchInteraction = {
  * Detect touch interactions on an HTML element, passing the current touch
  * points to a callback function
  * @param target The target element to track interactions on
- * @param updateCallback Function to call when the current state changes, with
- * the old and new state
+ * @returns Ref to array of current touch interactions
  */
 export function useTouchInteractor(
     target: MaybeRefOrGetter<HTMLElement | null>,
-    updateCallback: (newTouches: TouchInteraction[], oldTouches:
-    TouchInteraction[]) => void,
-): void {
+): { touches: Ref<TouchInteraction[]> } {
 
     // Ref to the target element
     const targetRef = toRef(target)
+    // Ref to array of current touch interactions
+    const touches = ref<TouchInteraction[]>([])
 
     // IDs of touches that were started on the target element
     const tracked: Set<number> = new Set()
-    let lastTouches: TouchInteraction[] = []
 
     /**
      * Called when the user starts touching the target element
@@ -46,11 +44,10 @@ export function useTouchInteractor(
      */
     function update(event: TouchEvent): void {
         removeUnusedTouches(event)
-        const oldTouches = lastTouches
-        lastTouches = getTouches(event)
-        if (lastTouches.length == 0 && oldTouches.length == 0)
+        const newTouches = getTouches(event)
+        if (newTouches.length == 0 && touches.value.length == 0)
             return
-        updateCallback(lastTouches, oldTouches)
+        touches.value = newTouches
     }
     
     /**
@@ -107,5 +104,7 @@ export function useTouchInteractor(
     useEventListener(document.documentElement, "touchmove", update)
     useEventListener(document.documentElement, "touchend", update)
     useEventListener(document.documentElement, "touchcancel", update)
+
+    return { touches }
 
 }

@@ -3,6 +3,7 @@ import { watch, type MaybeRefOrGetter, onMounted, onUnmounted, toRef } from
 "vue";
 import Vector2 from "@/util/Vector2";
 import { mousePosition } from "@/util/mousePosition";
+import { useTouchDragInteractor } from "./interactors/touchDragInteractor";
 
 /**
  * Toggle the mouse cursor for the entire document
@@ -164,5 +165,9 @@ export function useDragInteractor(
     watch(targetRef, updateTargetEvents)
     onMounted(() => updateTargetEvents(targetRef.value, null))
     onUnmounted(() => updateTargetEvents(null, targetRef.value))
+
+    useTouchDragInteractor(targetRef, {
+        drag: (diff, position) => callbacksRef.value?.drag?.(diff.negate(), position),
+    }, { dragThreshold: optionsRef.value?.dragThreshold })
 
 }
