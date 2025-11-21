@@ -88,12 +88,8 @@ export function useTouchDragInteractor(
         thresholdReached = false
     }
 
-    let prevTime = performance.now()
-
     function move(newTouches: TouchInteraction[], oldTouches:
     TouchInteraction[]): void {
-        console.log(performance.now() - prevTime)
-        prevTime = performance.now()
         const { newOverlap, oldOverlap } = overlappingIDs(newTouches,
             oldTouches)
         if (newOverlap.length == 0 || oldOverlap.length == 0)

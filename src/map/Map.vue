@@ -48,7 +48,7 @@
 
 <template>
     <div :class="$style.target" ref="target">
-        <GridRenderer :tracker="tracker" />
+        <!-- <GridRenderer :tracker="tracker" /> -->
         <IconRenderer :tracker="tracker" :icons="icons" />
     </div>
 </template>
