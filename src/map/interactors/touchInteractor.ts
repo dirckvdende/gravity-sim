@@ -3,11 +3,21 @@ import Vector2 from "@/util/Vector2";
 import { toRef, type MaybeRefOrGetter } from "vue";
 import { useEventListener } from "./eventListener";
 
+/**
+ * An single touch interaction. For example a finger held on the screen
+ */
 type TouchInteraction = {
     identifier: number,
     position: Vector2,
 }
 
+/**
+ * Detect touch interactions on an HTML element, passing the current touch
+ * points to a callback function
+ * @param target The target element to track interactions on
+ * @param updateCallback Function to call when the current state changes, with
+ * the old and new state
+ */
 export function useTouchInteractor(
     target: MaybeRefOrGetter<HTMLElement | null>,
     updateCallback: (newTouches: TouchInteraction[], oldTouches:
@@ -21,11 +31,20 @@ export function useTouchInteractor(
     const tracked: Set<number> = new Set()
     let lastTouches: TouchInteraction[] = []
 
+    /**
+     * Called when the user starts touching the target element
+     * @param event The triggered touch event
+     */
     function touchstart(event: TouchEvent): void {
         addTargetTouches(event)
     }
     
-    function update(event: TouchEvent, target: HTMLElement): void {
+    /**
+     * Called when the user performs any touch action (start/move/end/cancel) on
+     * the document (not just the target element)
+     * @param event The triggered touch event
+     */
+    function update(event: TouchEvent): void {
         removeUnusedTouches(event)
         const oldTouches = lastTouches
         lastTouches = getTouches(event)
@@ -34,11 +53,21 @@ export function useTouchInteractor(
         updateCallback(lastTouches, oldTouches)
     }
     
+    /**
+     * Add touch IDs of the touches that are targeting the same element as the
+     * event target to the tracked touches
+     * @param event The triggered event
+     */
     function addTargetTouches(event: TouchEvent): void {
         for (const touch of event.targetTouches)
             tracked.add(touch.identifier)
     }
 
+    /**
+     * Remove touch IDs from tracked touches that are not present in the given
+     * event
+     * @param event The triggered event
+     */
     function removeUnusedTouches(event: TouchEvent): void {
         const currentIDs = new Set(Array.from(event.touches).map((touch) =>
             touch.identifier))
@@ -47,8 +76,12 @@ export function useTouchInteractor(
                 tracked.delete(id)
     }
 
-    function getTouches(event: TouchEvent):
-    TouchInteraction[] {
+    /**
+     * Get the IDs and positions of all tracked touches
+     * @param event The event to read touches from
+     * @returns List of objects with ID and position
+     */
+    function getTouches(event: TouchEvent): TouchInteraction[] {
         const touches = Array.from(event.touches).filter((touch) =>
             tracked.has(touch.identifier))
         return touches.map((touch) => ({
@@ -57,6 +90,11 @@ export function useTouchInteractor(
         }))
     }
 
+    /**
+     * Get the position of a touch event touch, relative to the target element
+     * @param touch The touch event touch
+     * @returns THe position as a vector
+     */
     function touchPosition(touch: Touch): Vector2 {
         const rect = targetRef.value?.getBoundingClientRect() ?? new DOMRect()
         const topLeft = new Vector2(rect.left, rect.top)
