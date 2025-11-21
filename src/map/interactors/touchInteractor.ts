@@ -28,7 +28,7 @@ export function useTouchInteractor(
     function update(event: TouchEvent, target: HTMLElement): void {
         removeUnusedTouches(event)
         const oldTouches = lastTouches
-        lastTouches = getTouches(event, target)
+        lastTouches = getTouches(event)
         if (lastTouches.length == 0 && oldTouches.length == 0)
             return
         updateCallback(lastTouches, oldTouches)
@@ -47,7 +47,7 @@ export function useTouchInteractor(
                 tracked.delete(id)
     }
 
-    function getTouches(event: TouchEvent, target: HTMLElement):
+    function getTouches(event: TouchEvent):
     TouchInteraction[] {
         const touches = Array.from(event.touches).filter((touch) =>
             tracked.has(touch.identifier))
