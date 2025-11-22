@@ -36,6 +36,12 @@ export type GravitySimOptions = {
      */
     maxStepSize?: number,
     /**
+     * Maximum time between frames used for scaling. This is used mainly when
+     * the used tabs out and back in, and the time between frames is very large
+     * (default .1, i.e. 10 fps)
+     */
+    maxTimeBetweenFrames?: number,
+    /**
      * Simulation speed factor. A value of 3 means 3 simulation time units pass
      * every second (default 1)
      */
@@ -85,7 +91,8 @@ GravitySim {
      * Execute a single step in the simulation
      */
     function step(): void {
-        const elapsed = (performance.now() - lastStep) / 1000
+        const elapsed = Math.min((performance.now() - lastStep) / 1000,
+        optionsRef.value?.maxTimeBetweenFrames ?? .1)
         lastStep = performance.now()
         const maxStepSize = optionsRef.value?.maxStepSize ?? Infinity
         const scaledElapsed = (optionsRef.value?.speed ?? 1) * elapsed
