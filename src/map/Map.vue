@@ -5,10 +5,17 @@
     import GridRenderer from './GridRenderer.vue';
     import { useZoomInteractor } from './interactors/zoomInteractor';
     import IconRenderer, { type RenderedIcon } from './icons/IconRenderer.vue';
+    import Vector2 from '@/util/Vector2';
+    import PathRenderer from './PathRenderer.vue';
 
-    const { icons } = defineProps<{
+    const {
+        icons,
+        paths = [],
+    } = defineProps<{
         /** Icons to display on the map */
         icons: RenderedIcon[],
+        /** Paths to display on the map, each as an array of points */
+        paths?: Vector2[][],
     }>()
 
     const target = useTemplateRef("target")
@@ -26,6 +33,7 @@
     <div :class="$style.target" ref="target">
         <GridRenderer :tracker="tracker" />
         <IconRenderer :tracker="tracker" :icons="icons" />
+        <PathRenderer v-for="path in paths" :tracker="tracker" :points="path" />
     </div>
 </template>
 

@@ -2,11 +2,25 @@
     import Map from './map/Map.vue';
     import { useGravitySim } from './gravitySim';
     import Vector2 from './util/Vector2';
-    import { computed } from 'vue';
+    import { computed, ref, watch } from 'vue';
 
     const { objects } = useGravitySim({
         // 1 day / second
         speed: 60 * 60 * 24,
+    })
+
+    const history = ref<Vector2[][]>([])
+
+    watch(objects, (newObjects) => {
+        while (history.value.length < newObjects.length)
+            history.value.push([])
+        for (const [index, object] of newObjects.entries()) {
+            if (history.value[index] == undefined)
+                continue
+            history.value[index].push(object.position)
+            if (history.value[index].length > 10000)
+                history.value[index].splice(0, 1)
+        }
     })
 
     objects.value.push({
@@ -33,7 +47,7 @@
 </script>
 
 <template>
-    <Map :icons="icons" />
+    <Map :icons="icons" :paths="history" />
 </template>
 
 <style lang="scss" module></style>
