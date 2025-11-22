@@ -3,7 +3,7 @@ import Vector2 from "@/util/Vector2";
 import { type MaybeRefOrGetter, toRef, watch, onMounted, onUnmounted } from
 "vue";
 import { mousePosition } from "@/util/mousePosition";
-import { useTouchDragInteractor } from "./interactors/touchDragInteractor";
+import { useTouchDragInteractor } from "./touchDragInteractor";
 
 // Multiply wheel event distance with this factor to get zoom factor, per
 // delta mode: [DOM_DELTA_PIXEL, DOM_DELTA_LINE, DOM_DELTA_PAGE]
