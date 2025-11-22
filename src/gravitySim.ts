@@ -1,6 +1,7 @@
 
 import Vector2 from "@/util/Vector2"
 import { ref, toRef, type MaybeRefOrGetter, type Ref } from "vue"
+import { useAnimationFrame } from "./util/animationFrame"
 
 // Gravitational constant in N * m^2 / kg^2. In the simulation we assume units
 // of distance are meters and units of mass are kg
@@ -29,8 +30,16 @@ export type GravityObject = {
  * Options passed to the gravity sim composable
  */
 export type GravitySimOptions = {
-    /** Time units (seconds) of every simulation step (default .01) */
-    stepSize?: number
+    /**
+     * Maximum time units (seconds) of every simulation step (default
+     * Infinity)
+     */
+    maxStepSize?: number,
+    /**
+     * Simulation speed factor. A value of 3 means 3 simulation time units pass
+     * every second (default 1)
+     */
+    speed?: number,
 }
 
 /**
@@ -49,9 +58,16 @@ export type GravitySim = {
 export function useGravitySim(options?: MaybeRefOrGetter<GravitySimOptions>):
 GravitySim {
 
+    // Tracked objects with gravitational effect
     const objects = ref<GravityObject[]>([])
+    // Reference to input argument
     const optionsRef = toRef(options)
 
+    /**
+     * Calculate the gravitational force on an object by all other objects
+     * @param object The object to calculate the force on
+     * @returns The force vector in Newtons
+     */
     function forceOnObject(object: GravityObject): Vector2 {
         let total = Vector2.Zero
         for (const other of objects.value) {
@@ -62,9 +78,19 @@ GravitySim {
         return total
     }
 
+    // Time of last step, so sim speed will be constant
+    let lastStep = performance.now()
+
+    /**
+     * Execute a single step in the simulation
+     */
     function step(): void {
+        const elapsed = (performance.now() - lastStep) / 1000
+        lastStep = performance.now()
+        const maxStepSize = optionsRef.value?.maxStepSize ?? Infinity
+        const scaledElapsed = (optionsRef.value?.speed ?? 1) * elapsed
+        const stepSize = Math.min(maxStepSize, scaledElapsed)
         const newObjects: GravityObject[] = []
-        const stepSize = optionsRef.value?.stepSize ?? .01
         for (const object of objects.value) {
             const force = forceOnObject(object)
             const forcePerKG = force.scale(1 / object.mass)
@@ -77,11 +103,7 @@ GravitySim {
         objects.value = newObjects
     }
 
-    const animationCallback = () => {
-        step()
-        requestAnimationFrame(animationCallback)
-    }
-    requestAnimationFrame(animationCallback)
+    useAnimationFrame(step)
 
     return { objects }
 

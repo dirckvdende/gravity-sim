@@ -5,8 +5,8 @@
     import { computed } from 'vue';
 
     const { objects } = useGravitySim({
-        // 1/120 of a day
-        stepSize: 720,
+        // 1 day / second
+        speed: 60 * 60 * 24,
     })
 
     objects.value.push({
