@@ -62,6 +62,7 @@
         bottom: 0;
         background-color: white;
         overflow: hidden;
+        touch-action: none;
     }
 
     .test {
