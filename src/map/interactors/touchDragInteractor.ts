@@ -3,7 +3,7 @@ import Vector2 from "@/util/Vector2"
 import { toRef, watch, type MaybeRefOrGetter } from "vue"
 import { useTouchInteractor, type TouchInteraction } from "./touchInteractor"
 
-const PINCH_SMOOTHING = 1
+const PINCH_SMOOTHING = 30
 
 /**
  * Callbacks passed to the touch interactor composable
@@ -120,8 +120,8 @@ export function useTouchDragInteractor(
             return
         const newDistance = maxTouchDistance(newOverlap) + PINCH_SMOOTHING
         const oldDistance = maxTouchDistance(oldOverlap) + PINCH_SMOOTHING
-        callbacksRef.value?.pinch?.(newDistance / oldDistance,
-        averagePosition(newTouches))
+        const diff = newDistance / oldDistance
+        callbacksRef.value?.pinch?.(diff, averagePosition(newTouches))
     }
 
     function averagePosition(touches: TouchInteraction[]): Vector2 {

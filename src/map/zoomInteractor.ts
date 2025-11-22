@@ -3,6 +3,7 @@ import Vector2 from "@/util/Vector2";
 import { type MaybeRefOrGetter, toRef, watch, onMounted, onUnmounted } from
 "vue";
 import { mousePosition } from "@/util/mousePosition";
+import { useTouchDragInteractor } from "./interactors/touchDragInteractor";
 
 // Multiply wheel event distance with this factor to get zoom factor, per
 // delta mode: [DOM_DELTA_PIXEL, DOM_DELTA_LINE, DOM_DELTA_PAGE]
@@ -73,5 +74,12 @@ export function useZoomInteractor(
     watch(targetRef, updateTargetEvents)
     onMounted(() => updateTargetEvents(targetRef.value, null))
     onUnmounted(() => updateTargetEvents(null, targetRef.value))
+
+    useTouchDragInteractor(targetRef, {
+        pinch: (ratio, position) => {
+            const zoomDiff = Math.log(ratio)
+            callbacksRef.value?.zoom?.(zoomDiff * 1000, position)
+        },
+    })
 
 }
