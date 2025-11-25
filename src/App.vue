@@ -1,13 +1,16 @@
 <script setup lang="ts">
     import Map from './map/Map.vue';
+    import SpeedMenu from './menus/speedmenu/SpeedMenu.vue';
     import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
-    import { computed, ref, watch } from 'vue';
+    import { computed, ref, useTemplateRef, watch } from 'vue';
 
-    const { objects, centerOfMass } = useGravitySim({
-        // 1 day / second
-        speed: 60 * 60 * 24,
-    })
+    const speedMenu = useTemplateRef("speed-menu")
+    const options = computed(() => ({
+        speed: speedMenu.value?.speed ?? 0,
+    }))
+
+    const { objects, centerOfMass } = useGravitySim(options)
 
     const history = ref<Vector2[][]>([])
 
@@ -48,6 +51,12 @@
 
 <template>
     <Map :icons="icons" :paths="history" :dots="[centerOfMass]" />
+    <SpeedMenu ref="speed-menu" />
 </template>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+    body {
+        font-family: "Nunito", sans-serif;
+        font-size: 18px;
+    }
+</style>
