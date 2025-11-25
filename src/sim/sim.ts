@@ -27,7 +27,10 @@ export type GravitySimOptions = {
     speed?: number,
     /** Maximum number of steps to execute per frame (default 100) */
     maxStepsPerFrame?: number,
-    /** Error tolerance for the RKF solver (default 1000) */
+    /**
+     * Error tolerance for the RKF solver, relative to the maximum distance
+     * between any two objects (default 1e-6)
+     */
     tolerance?: number,
 }
 
@@ -63,7 +66,7 @@ GravitySim {
         const state = objectsToState(objects.value)
         const slope = slopeFunction(objects.value)
         const solver = new RKFSolver(state, slope, {
-            tolerance: optionsRef.value?.tolerance ?? 1000,
+            tolerance: (optionsRef.value?.tolerance ?? 1e-6) * maxDistance(),
         })
         const speed = optionsRef.value?.speed ?? 1
         const time = Math.min(
@@ -79,6 +82,18 @@ GravitySim {
         const newObjects = objects.value.slice()
         stateToObjects(newState, newObjects)
         objects.value = newObjects
+    }
+
+    /**
+     * Maximum distance between any two objects
+     * @returns Maximum distance
+     */
+    function maxDistance(): number {
+        let mx = 0
+        for (const first of objects.value)
+            for (const second of objects.value)
+                mx = Math.max(mx, first.position.distanceTo(second.position))
+        return mx
     }
 
     useAnimationFrame(frame)
