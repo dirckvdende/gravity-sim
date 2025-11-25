@@ -32,8 +32,8 @@
 <template>
     <div :class="$style.target" ref="target">
         <GridRenderer :tracker="tracker" />
-        <IconRenderer :tracker="tracker" :icons="icons" />
         <PathRenderer v-for="path in paths" :tracker="tracker" :points="path" />
+        <IconRenderer :tracker="tracker" :icons="icons" />
     </div>
 </template>
 
