@@ -25,10 +25,10 @@ export type GravitySimOptions = {
      * every second (default 1)
      */
     speed?: number,
-    /**
-     * Maximum number of steps to execute per frame (default 100)
-     */
+    /** Maximum number of steps to execute per frame (default 100) */
     maxStepsPerFrame?: number,
+    /** Error tolerance for the RKF solver (default 1000) */
+    tolerance?: number,
 }
 
 /**
@@ -63,7 +63,7 @@ GravitySim {
         const state = objectsToState(objects.value)
         const slope = slopeFunction(objects.value)
         const solver = new RKFSolver(state, slope, {
-            tolerance: 10,
+            tolerance: optionsRef.value?.tolerance ?? 1000,
         })
         const speed = optionsRef.value?.speed ?? 1
         const time = Math.min(
@@ -75,7 +75,7 @@ GravitySim {
         )
         lastStep = performance.now()
         const { state: newState } = solver.evolve(time,
-        optionsRef.value?.maxStepsPerFrame ?? 100)
+        optionsRef.value?.maxStepsPerFrame ?? 10)
         const newObjects = objects.value.slice()
         stateToObjects(newState, newObjects)
         objects.value = newObjects
