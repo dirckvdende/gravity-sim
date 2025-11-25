@@ -12,16 +12,16 @@ export type RKFOptions = {
 
 // Factors while calculating k's
 const B = [
-    [1 / 4],
-    [3 / 32, 9 / 32],
-    [1932 / 2197, -7200 / 2197, 7296 / 2197],
-    [439 / 216, -8, 3680 / 513, -845 / 4104],
-    [-8 / 27, 2, -3544 / 2565, 1859 / 4104, -11 / 40],
+    [2 / 9],
+    [1 / 12, 1 / 4],
+    [69 / 128, -243 / 128, 135 / 64],
+    [-17 / 12, 27 / 4, -27 / 5, 16 / 15],
+    [65 / 432, -5 / 16, 13 / 16, 4 / 27, 5 / 144]
 ]
 // Factors in front of k's while calculating order 4 approximation
-const C4 = [25 / 216, 1408 / 2565, 2197 / 4101, -1 / 5]
+const C4 = [1 / 9, 0, 9 / 20, 16 / 45, 1 / 12]
 // Factors in front of k's while calculating order 5 approximation
-const C5 = [16 / 135, 6656 / 12825, 28561 / 56430, -9 / 50, 2 / 55]
+const C5 = [47 / 450, 0, 12 / 25, 32 / 225, 1 / 30, 6 / 25]
 
 /**
  * Class for simulating ODEs using RKF45. Implementation is derived from
