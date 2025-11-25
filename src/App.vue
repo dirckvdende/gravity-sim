@@ -4,7 +4,7 @@
     import Vector2 from './util/Vector2';
     import { computed, ref, watch } from 'vue';
 
-    const { objects } = useGravitySim({
+    const { objects, centerOfMass } = useGravitySim({
         // 1 day / second
         speed: 60 * 60 * 24,
     })
@@ -47,7 +47,7 @@
 </script>
 
 <template>
-    <Map :icons="icons" :paths="history" />
+    <Map :icons="icons" :paths="history" :dots="[centerOfMass]" />
 </template>
 
 <style lang="scss" module></style>

@@ -7,15 +7,19 @@
     import IconRenderer, { type RenderedIcon } from './icons/IconRenderer.vue';
     import Vector2 from '@/util/Vector2';
     import PathRenderer from './PathRenderer.vue';
+    import DotRenderer from './DotRenderer.vue';
 
     const {
         icons,
         paths = [],
+        dots = [],
     } = defineProps<{
         /** Icons to display on the map */
         icons: RenderedIcon[],
         /** Paths to display on the map, each as an array of points */
         paths?: Vector2[][],
+        /** Separate points to display on the map */
+        dots?: Vector2[],
     }>()
 
     const target = useTemplateRef("target")
@@ -34,6 +38,7 @@
         <GridRenderer :tracker="tracker" />
         <PathRenderer v-for="path in paths" :tracker="tracker" :points="path" />
         <IconRenderer :tracker="tracker" :icons="icons" />
+        <DotRenderer v-for="dot in dots" :tracker="tracker" :coords="dot" />
     </div>
 </template>
 

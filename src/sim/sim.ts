@@ -1,9 +1,11 @@
 
-import { ref, toRef, type MaybeRefOrGetter, type Ref } from "vue"
+import { computed, ref, toRef, type ComputedRef, type MaybeRefOrGetter, type Ref } from
+"vue"
 import { useAnimationFrame } from "../util/animationFrame"
 import { type GravityObject } from "./object"
 import { objectsToState, slopeFunction, stateToObjects } from "./odeConvert"
 import { RKFSolver } from "./rkf45"
+import Vector2 from "@/util/Vector2"
 
 /**
  * Options passed to the gravity sim composable
@@ -40,6 +42,8 @@ export type GravitySimOptions = {
 export type GravitySim = {
     /** Ref to simulated objects, which can be modified */
     objects: Ref<GravityObject[]>,
+    /** Computed ref of the center of mass */
+    centerOfMass: ComputedRef<Vector2>,
 }
 
 /**
@@ -84,6 +88,9 @@ GravitySim {
         objects.value = newObjects
     }
 
+    // Call frame() function every animation frame
+    useAnimationFrame(frame)
+
     /**
      * Maximum distance between any two objects
      * @returns Maximum distance
@@ -96,8 +103,16 @@ GravitySim {
         return mx
     }
 
-    useAnimationFrame(frame)
+    const centerOfMass = computed(() => {
+        let total = Vector2.Zero
+        let mass = 0
+        for (const object of objects.value) {
+            total = total.add(object.position.scale(object.mass))
+            mass += object.mass
+        }
+        return total.scale(1 / mass)
+    })
 
-    return { objects }
+    return { objects, centerOfMass }
 
 }
