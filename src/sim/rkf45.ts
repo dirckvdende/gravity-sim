@@ -5,7 +5,7 @@
 export type RKFOptions = {
     /**
      * Tolerance for the solver to determine required step sizes. Lower
-     * tolerance means step size will be smaller. (default 1e-4)
+     * tolerance means step size will be smaller. (default 1)
      */
     tolerance: number,
 }
@@ -102,9 +102,9 @@ export class RKFSolver<T extends {
      * @returns The new vector k
      */
     private nextK(prevK: T[][], factors: number[], h: number): T[] {
-        return this.scale(prevK.reduce((prev, cur, index) =>
+        return this.scale(this.slope(prevK.reduce((prev, cur, index) =>
             this.add(prev, this.scale(cur, factors[index] ?? 0)), this.state
-        ), h)
+        )), h)
     }
 
     /**
@@ -163,7 +163,7 @@ export class RKFSolver<T extends {
      */
     private static defaultOptions(options: Partial<RKFOptions>): RKFOptions {
         return {
-            tolerance: 1e-4,
+            tolerance: 1,
             ...options,
         }
     }

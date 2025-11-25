@@ -1,9 +1,9 @@
 
-import Vector2 from "@/util/Vector2"
 import { ref, toRef, type MaybeRefOrGetter, type Ref } from "vue"
 import { useAnimationFrame } from "../util/animationFrame"
 import { type GravityObject } from "./object"
-import { GRAV_CONSTANT, DISTANCE_SMOOTHING } from "./constants"
+import { objectsToState, slopeFunction, stateToObjects } from "./odeConvert"
+import { RKFSolver } from "./rkf45"
 
 /**
  * Options passed to the gravity sim composable
@@ -25,6 +25,10 @@ export type GravitySimOptions = {
      * every second (default 1)
      */
     speed?: number,
+    /**
+     * Maximum number of steps to execute per frame (default 100)
+     */
+    maxStepsPerFrame?: number,
 }
 
 /**
@@ -48,65 +52,37 @@ GravitySim {
     // Reference to input argument
     const optionsRef = toRef(options)
 
-    /**
-     * Calculate the gravitational force on an object by all other objects
-     * @param object The object to calculate the force on
-     * @returns The force vector in Newtons
-     */
-    function forceOnObject(object: GravityObject): Vector2 {
-        let total = Vector2.Zero
-        for (const other of objects.value) {
-            if (other == object)
-                continue
-            total = total.add(objectForce(object, other))
-        }
-        return total
-    }
-
     // Time of last step, so sim speed will be constant
     let lastStep = performance.now()
 
     /**
-     * Execute a single step in the simulation
+     * Function that is called every frame to update the object positions and
+     * velocities
      */
-    function step(): void {
-        const elapsed = Math.min((performance.now() - lastStep) / 1000,
-        optionsRef.value?.maxTimeBetweenFrames ?? .1)
+    function frame(): void {
+        const state = objectsToState(objects.value)
+        const slope = slopeFunction(objects.value)
+        const solver = new RKFSolver(state, slope, {
+            tolerance: 10,
+        })
+        const speed = optionsRef.value?.speed ?? 1
+        const time = Math.min(
+            optionsRef.value?.maxStepSize ?? Infinity,
+            Math.min(
+                (performance.now() - lastStep) / 1000,
+                optionsRef.value?.maxTimeBetweenFrames ?? .1
+            ) * speed
+        )
         lastStep = performance.now()
-        const maxStepSize = optionsRef.value?.maxStepSize ?? Infinity
-        const scaledElapsed = (optionsRef.value?.speed ?? 1) * elapsed
-        const stepSize = Math.min(maxStepSize, scaledElapsed)
-        const newObjects: GravityObject[] = []
-        for (const object of objects.value) {
-            const force = forceOnObject(object)
-            const forcePerKG = force.scale(1 / object.mass)
-            newObjects.push({
-                ...object,
-                velocity: object.velocity.add(forcePerKG.scale(stepSize)),
-                position: object.position.add(object.velocity.scale(stepSize)),
-            })
-        }
+        const { state: newState } = solver.evolve(time,
+        optionsRef.value?.maxStepsPerFrame ?? 100)
+        const newObjects = objects.value.slice()
+        stateToObjects(newState, newObjects)
         objects.value = newObjects
     }
 
-    useAnimationFrame(step)
+    useAnimationFrame(frame)
 
     return { objects }
 
-}
-
-/**
- * Calculate gravitational force on an object given another object, in
- * vectorized form. Masses are assumed to be in kg, distances in meters
- * @param first First object, the object on which to calculate the force
- * @param second Other object that causes the force
- * @return The force vector in Newtons
- */
-function objectForce(first: GravityObject, second: GravityObject): Vector2 {
-    const distance = first.position.distanceTo(second.position) +
-    DISTANCE_SMOOTHING
-    const diff = second.position.subtract(first.position)
-    // F = G * m1 * m2 / r^3 * (v2 - v1)
-    return diff.scale(GRAV_CONSTANT * first.mass * second.mass / distance /
-    distance / distance)
 }

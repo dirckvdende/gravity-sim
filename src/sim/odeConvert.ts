@@ -49,7 +49,7 @@ Vector2[] {
         const slope = state.map(() => Vector2.Zero)
         for (const [index, mass] of masses.entries()) {
             slope[index * 2] = state[index * 2 + 1]!
-            slope[index * 2 + 1] = forceOn(index, state, masses).scale(mass)
+            slope[index * 2 + 1] = forceOn(index, state, masses).scale(1 / mass)
         }
         return slope
     }

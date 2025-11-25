@@ -28,12 +28,12 @@
         position: new Vector2(-4_670_000, 0),
         size: 12_742_000,
         mass: 5.972e24,
-        velocity: new Vector2(0, -12.40),
+        velocity: new Vector2(0, -12.5742),
     })
 
     objects.value.push({
         icon: './icons/moon.svg',
-        position: new Vector2(384_784_000, 0),
+        position: new Vector2(380_784_000, 0),
         size: 3_474_800,
         mass: 7.34767309e22,
         velocity: new Vector2(0, 1_022),
