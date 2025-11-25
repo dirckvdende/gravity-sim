@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import Map from './map/Map.vue';
-    import { useGravitySim } from './gravitySim';
+    import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
     import { computed, ref, watch } from 'vue';
 
