@@ -3,13 +3,7 @@ import Vector2 from "@/util/Vector2"
 import { ref, toRef, type MaybeRefOrGetter, type Ref } from "vue"
 import { useAnimationFrame } from "../util/animationFrame"
 import { type GravityObject } from "./object"
-
-// Gravitational constant in N * m^2 / kg^2. In the simulation we assume units
-// of distance are meters and units of mass are kg
-const GRAV_CONSTANT = 6.6743e-11
-// Factor added to the distance between objects when calculating gravitational
-// forces
-const DISTANCE_SMOOTHING = 1e-5
+import { GRAV_CONSTANT, DISTANCE_SMOOTHING } from "./constants"
 
 /**
  * Options passed to the gravity sim composable
