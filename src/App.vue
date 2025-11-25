@@ -18,7 +18,7 @@
             if (history.value[index] == undefined)
                 continue
             history.value[index].push(object.position)
-            if (history.value[index].length > 10000)
+            if (history.value[index].length > 1000)
                 history.value[index].splice(0, 1)
         }
     })
