@@ -32,9 +32,17 @@
         return modes[index.value]?.speed ?? 0
     })
 
-    function pause() { paused.value = !paused.value }
-    function slowDown() { index.value = Math.max(0, index.value - 1) }
+    function pause() {
+        paused.value = !paused.value
+    }
+
+    function slowDown() {
+        paused.value = false
+        index.value = Math.max(0, index.value - 1)
+    }
+
     function speedUp() {
+        paused.value = false
         index.value = Math.min(modes.length - 1, index.value + 1)
     }
 
@@ -43,7 +51,8 @@
 
 <template>
     <div :class="$style.menu">
-        <button :class="$style['speed-button']" @click="pause">
+        <button :class="[$style['speed-button'], $style['pause-button'], {
+        [$style.paused]: paused }]" @click="pause">
             <SVGIcon :path="paused ? mdiPlay : mdiPause" :class="$style.icon" />
         </button>
         <button :class="$style['speed-button']" @click="slowDown">
@@ -74,20 +83,38 @@
             border: none;
             cursor: pointer;
 
-            &:hover {
-                background-color: #0001;
-            }
-
             .icon {
                 width: 2em;
                 height: 2em;
-                fill: grey;
+                fill: #999;
+            }
+
+            &:hover .icon {
+                fill: #555;
+            }
+        }
+
+        .pause-button .icon {
+            fill: #e16262;
+
+            &:hover {
+                fill: #9d3131;
+            }
+        }
+        
+        .pause-button.paused .icon {
+            fill: #6b8edf;
+
+            &:hover {
+                fill: #4065bb;
             }
         }
 
         .speed-text {
-            width: 6em;
+            width: 7em;
             text-align: center;
+            font-size: .9em;
+            font-weight: 500;
         }
     }
 </style>
