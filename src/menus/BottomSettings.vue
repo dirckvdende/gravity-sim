@@ -73,14 +73,14 @@
                 @click="pause"
                 :style="{
                     '--icon-color': paused ? '#6b8edf' : '#e16262',
-                }" />
+                }">{{ paused ? "Play (_)" : "Pause (_)" }}</MenuButton>
             <MenuButton
                 :icon="mdiRewind"
-                @click="slowDown" />
+                @click="slowDown">Slower ([)</MenuButton>
             <MenuText>{{ name }}</MenuText>
             <MenuButton
                 :icon="mdiFastForward"
-                @click="speedUp" />
+                @click="speedUp">Faster (])</MenuButton>
         </MenuSection>
         <MenuSection>
             <MenuButton
@@ -88,7 +88,7 @@
                 @click="toggleBarycenter"
                 :style="{
                     '--icon-color': showBarycenter ? '#9f30b3' : undefined,
-                }" />
+                }">Barycenter</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>

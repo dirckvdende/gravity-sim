@@ -28,6 +28,7 @@
                 cursor: pointer;
                 font-size: .8em;
                 --icon-color: #999;
+                position: relative;
 
                 :global(.menu-button-icon) {
                     width: 2em;
@@ -35,12 +36,31 @@
                     fill: var(--icon-color);
                 }
 
-                &:hover :global(.menu-button-icon) {
-                    fill: color-mix(in srgb, var(--icon-color), #000 20%);
+                :global(.menu-button-text) {
+                    position: absolute;
+                    left: 50%;
+                    top: -80%;
+                    translate: -50% 0;
+                    user-select: none;
+                    pointer-events: none;
+                    background-color: white;
+                    box-shadow: 0 .15em .6em -.35em black;
+                    font-size: .9em;
+                    border-radius: .5em;
+                    padding: .3em .7em;
+                    display: none;
+                    width: auto;
+                    white-space: preserve nowrap;
                 }
 
-                :global(.menu-button-text) {
-                    display: none;
+                &:hover {
+                    :global(.menu-button-icon) {
+                        fill: color-mix(in srgb, var(--icon-color), #000 20%);
+                    }
+
+                    :global(.menu-button-text) {
+                        display: block;
+                    }
                 }
             }
 
