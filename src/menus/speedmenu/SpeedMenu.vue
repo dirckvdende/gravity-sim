@@ -80,7 +80,7 @@
         padding: 0 .4em;
         background-color: white;
         border-radius: .5em;
-        box-shadow: 0 .2em .4em -.3em black;
+        box-shadow: 0 .15em .6em -.4em black;
         user-select: none;
 
         .speed-button {
