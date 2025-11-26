@@ -2,8 +2,8 @@
     import Map from './map/Map.vue';
     import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
-    import { computed, ref, triggerRef, watch } from 'vue';
-    import BottomSettings from './menus/BottomSettings.vue';
+    import { computed, ref, watch } from 'vue';
+    import BottomSettings from './ui/BottomSettings.vue';
     import { useOptionsStore } from './stores/options';
     import { storeToRefs } from 'pinia';
     import type { RenderedIcon } from './map/icons/IconRenderer.vue';
