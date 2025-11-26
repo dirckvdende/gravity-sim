@@ -29,7 +29,7 @@
 
     // Pluto
     objects.value.push({
-        icon: './icons/moon.svg',
+        icon: './icons/pluto.svg',
         position: new Vector2(2.12703919e+06, -3.08210900e-12),
         size: 2_376_600,
         mass: 869.3 * NORMALIZE_FACTOR,
@@ -37,7 +37,7 @@
     })
     // Charon
     objects.value.push({
-        icon: './icons/moon.svg',
+        icon: './icons/charon.svg',
         position: new Vector2(-1.74691048e+07, -1.48438086e+03),
         size: 1_212_000,
         mass: 106.1 * NORMALIZE_FACTOR,
@@ -45,7 +45,7 @@
     })
     // Nix
     objects.value.push({
-        icon: './icons/moon.svg',
+        icon: './icons/nix.svg',
         position: new Vector2(-4.83354857e+07, -7.42254914e+06),
         size: 50_000,
         mass: 1.50e-3 * NORMALIZE_FACTOR,
@@ -53,7 +53,7 @@
     })
     // Hydra
     objects.value.push({
-        icon: './icons/moon.svg',
+        icon: './icons/hydra.svg',
         position: new Vector2(32554655.74929921, 56051327.32152872),
         size: 50_900,
         mass: 2.01e-3 * NORMALIZE_FACTOR,
@@ -61,7 +61,7 @@
     })
     // Kerberos
     objects.value.push({
-        icon: './icons/moon.svg',
+        icon: './icons/kerberos.svg',
         position: new Vector2(-51255243.15214943, -26846953.65410998),
         size: 19_000,
         mass: 1e-5 * NORMALIZE_FACTOR, // (very low mass)
@@ -69,7 +69,7 @@
     })
     // Styx
     objects.value.push({
-        icon: './icons/moon.svg',
+        icon: './icons/styx.svg',
         position: new Vector2(-4022208.59039472, 42121539.42213004),
         size: 16_000,
         mass: 1e-5 * NORMALIZE_FACTOR, // (very low mass)
