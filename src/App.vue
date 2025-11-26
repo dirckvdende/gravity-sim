@@ -120,5 +120,11 @@
     body {
         font-family: "Nunito", sans-serif;
         font-size: 18px;
+        font-weight: 500;
+    }
+
+    button {
+        font-family: inherit;
+        font-weight: inherit;
     }
 </style>
