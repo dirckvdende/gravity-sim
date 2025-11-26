@@ -2,6 +2,7 @@
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay } from '@mdi/js';
     import SVGIcon from '../SVGIcon.vue';
     import { computed, ref } from 'vue';
+    import { useKeyEvent } from '../keyEvent';
 
     type Mode = {
         name: string,
@@ -45,6 +46,10 @@
         paused.value = false
         index.value = Math.min(modes.length - 1, index.value + 1)
     }
+    
+    useKeyEvent(" ", () => paused.value = !paused.value)
+    useKeyEvent("[", slowDown)
+    useKeyEvent("]", speedUp)
 
     defineExpose({ speed })
 </script>
