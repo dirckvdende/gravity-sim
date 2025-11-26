@@ -52,6 +52,7 @@
         background-color: white;
         overflow: hidden;
         touch-action: none;
+        user-select: none;
     }
 
     .test {
