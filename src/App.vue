@@ -9,7 +9,9 @@
     import type { RenderedIcon } from './map/icons/IconRenderer.vue';
 
     const { speed, showBarycenter } = storeToRefs(useOptionsStore())
-    const { objects, barycenter } = useGravitySim(ref({ speed }))
+    const sim = useGravitySim(ref({ speed }))
+    const { objects, barycenter } = sim
+
 
     const history = ref<Vector2[][]>([])
 
@@ -113,7 +115,7 @@
     <Map
         :icons="icons"
         :paths="history" />
-    <BottomSettings ref="bottom-settings" />
+    <BottomSettings ref="bottom-settings" :sim="sim" />
 </template>
 
 <style lang="scss" module>

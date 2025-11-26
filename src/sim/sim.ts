@@ -44,6 +44,11 @@ export type GravitySim = {
     objects: Ref<GravityObject[]>,
     /** Computed ref of the center of mass */
     barycenter: ComputedRef<Vector2>,
+    /**
+     * Reset the barycenter to (0, 0) and adapt velocities such that barycenter
+     * doesn't move
+     */
+    resetToBarycenter: () => void,
 }
 
 /**
@@ -113,6 +118,32 @@ GravitySim {
         return total.scale(1 / mass)
     })
 
-    return { objects, barycenter }
+    /**
+     * Velocity of the barycenter (i.e. total shift of the system over time)
+     */
+    function barycenterVelocity(): Vector2 {
+        let total = Vector2.Zero
+        let mass = 0
+        for (const object of objects.value) {
+            total = total.add(object.velocity.scale(object.mass))
+            mass += object.mass
+        }
+        return mass == 0 ? Vector2.Zero : total.scale(1 / mass)
+    }
+
+    /**
+     * Normalize positions and velocities such that barycenter is at (0, 0) and
+     * doesn't move
+     */
+    function resetToBarycenter(): void {
+        const position = barycenter.value
+        const velocity = barycenterVelocity()
+        for (const object of objects.value) {
+            object.position = object.position.subtract(position)
+            object.velocity = object.velocity.subtract(velocity)
+        }
+    }
+
+    return { objects, barycenter, resetToBarycenter }
 
 }

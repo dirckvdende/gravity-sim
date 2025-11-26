@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-    import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye } from '@mdi/js';
+    import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
+    mdiTarget } from '@mdi/js';
     import { computed, ref } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -8,6 +9,12 @@
     import BottomMenu from './templates/BottomMenu.vue';
     import { useOptionsStore } from '@/stores/options';
     import { storeToRefs } from 'pinia';
+    import type { GravitySim } from '@/sim/sim';
+
+    const { sim } = defineProps<{
+        /** Simulation object */
+        sim: GravitySim,
+    }>()
 
     const { speed, showBarycenter } = storeToRefs(useOptionsStore())
 
@@ -89,6 +96,10 @@
                 :style="{
                     '--icon-color': showBarycenter ? '#9f30b3' : undefined,
                 }">Barycenter</MenuButton>
+            <MenuButton
+                :icon="mdiTarget"
+                @click="() => sim.resetToBarycenter()"
+            >Reset to barycenter</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>
