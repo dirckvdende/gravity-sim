@@ -8,6 +8,7 @@
     import Vector2 from '@/util/Vector2';
     import PathRenderer from './PathRenderer.vue';
     import DotRenderer from './DotRenderer.vue';
+import Ruler from '@/ui/Ruler.vue';
 
     const {
         icons,
@@ -39,6 +40,7 @@
         <PathRenderer v-for="path in paths" :tracker="tracker" :points="path" />
         <IconRenderer :tracker="tracker" :icons="icons" />
         <DotRenderer v-for="dot in dots" :tracker="tracker" :coords="dot" />
+        <Ruler :tracker="tracker" />
     </div>
 </template>
 
