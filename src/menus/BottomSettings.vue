@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-    import { mdiFastForward, mdiRewind, mdiPause, mdiPlay } from '@mdi/js';
-    import SVGIcon from '../SVGIcon.vue';
+    import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye } from '@mdi/js';
     import { computed, ref } from 'vue';
-    import { useKeyEvent } from '../keyEvent';
+    import { useKeyEvent } from '../util/keyEvent';
+    import MenuSection from './templates/MenuSection.vue';
+    import MenuButton from './templates/MenuButton.vue';
+    import MenuText from './templates/MenuText.vue';
+    import BottomMenu from './templates/BottomMenu.vue';
 
     type Mode = {
         name: string,
@@ -55,19 +58,27 @@
 </script>
 
 <template>
-    <div :class="$style.menu">
-        <button :class="[$style['speed-button'], $style['pause-button'], {
-        [$style.paused]: paused }]" @click="pause">
-            <SVGIcon :path="paused ? mdiPlay : mdiPause" :class="$style.icon" />
-        </button>
-        <button :class="$style['speed-button']" @click="slowDown">
-            <SVGIcon :path="mdiRewind" :class="$style.icon" />
-        </button>
-        <div :class="$style['speed-text']">{{ name }}</div>
-        <button :class="$style['speed-button']" @click="speedUp">
-            <SVGIcon :path="mdiFastForward" :class="$style.icon" />
-        </button>
-    </div>
+    <BottomMenu>
+        <MenuSection>
+            <MenuButton
+                :icon="paused ? mdiPlay : mdiPause"
+                @click="pause"
+                :style="{
+                    '--icon-color': paused ? '#6b8edf' : '#e16262',
+                }" />
+            <MenuButton
+                :icon="mdiRewind"
+                @click="slowDown" />
+            <MenuText>{{ name }}</MenuText>
+            <MenuButton
+                :icon="mdiFastForward"
+                @click="speedUp" />
+        </MenuSection>
+        <MenuSection>
+            <MenuButton
+                :icon="mdiBullseye" />
+        </MenuSection>
+    </BottomMenu>
 </template>
 
 <style lang="scss" module>

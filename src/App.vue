@@ -1,13 +1,13 @@
 <script setup lang="ts">
     import Map from './map/Map.vue';
-    import SpeedMenu from './menus/speedmenu/SpeedMenu.vue';
     import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
     import { computed, ref, useTemplateRef, watch } from 'vue';
+    import BottomSettings from './menus/BottomSettings.vue';
 
-    const speedMenu = useTemplateRef("speed-menu")
+    const bottomSettings = useTemplateRef("bottom-settings")
     const options = computed(() => ({
-        speed: speedMenu.value?.speed ?? 0,
+        speed: bottomSettings.value?.speed ?? 0,
     }))
 
     const { objects, centerOfMass } = useGravitySim(options)
@@ -102,7 +102,7 @@
 
 <template>
     <Map :icons="icons" :paths="history" :dots="[centerOfMass]" />
-    <SpeedMenu ref="speed-menu" />
+    <BottomSettings ref="bottom-settings" />
 </template>
 
 <style lang="scss" module>
