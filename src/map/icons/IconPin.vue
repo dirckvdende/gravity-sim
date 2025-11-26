@@ -47,6 +47,7 @@
         position: absolute;
         aspect-ratio: 10 / 16;
         pointer-events: none;
+        user-select: none;
 
         .svg {
             position: absolute;

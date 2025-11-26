@@ -12,9 +12,16 @@
          */
         position: Vector2,
         /**
-         * Size of the icon in unit coordinates (max. of width and height)
+         * Size of the icon in unit coordinates (max. of width and height), or
+         * pixel coordinates if ignoreScaling is set
          */
         size: number,
+        /**
+         * Makes the size of the icon in pixels instead of unit coordinates.
+         * Position is unchanged. If this is set the icon will never appear as a
+         * pin (default false)
+         */
+        ignoreScaling?: boolean,
     };
 </script>
 
@@ -22,7 +29,7 @@
     import type Vector2 from '@/util/Vector2';
     import type { PositionRectTracker } from '../positionRectTracker';
     import Icon from './Icon.vue';
-    import { computed, watch } from 'vue';
+    import { computed } from 'vue';
     import IconPin from './IconPin.vue';
 
     const {
@@ -50,14 +57,20 @@
     const unitSizeIcons = computed(() => icons.map((icon) => ({
         ...icon,
         position: tracker.toPixelCoords(icon.position),
-        size: icon.size / tracker.pixelSize.value,
-    })).sort((iconA, iconB) => iconA.position.y - iconB.position.y))
+        size:  icon.size / (icon.ignoreScaling ? 1 : tracker.pixelSize.value),
+    })).sort((iconA, iconB) => {
+        const ignoreA = iconA.ignoreScaling ?? false
+        const ignoreB = iconB.ignoreScaling ?? false
+        if (ignoreA != ignoreB)
+            return Number(ignoreA) - Number(ignoreB)
+        return iconA.position.y - iconB.position.y
+    }))
 </script>
 
 <template>
     <template v-for="icon in unitSizeIcons">
         <IconPin
-            v-if="icon.size < showPinAt"
+            v-if="icon.size < showPinAt && !icon.ignoreScaling"
             :src="icon.src"
             :position="icon.position" />
         <Icon

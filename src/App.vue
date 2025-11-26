@@ -2,15 +2,14 @@
     import Map from './map/Map.vue';
     import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
-    import { computed, ref, useTemplateRef, watch } from 'vue';
+    import { computed, ref, triggerRef, watch } from 'vue';
     import BottomSettings from './menus/BottomSettings.vue';
+    import { useOptionsStore } from './stores/options';
+    import { storeToRefs } from 'pinia';
+    import type { RenderedIcon } from './map/icons/IconRenderer.vue';
 
-    const bottomSettings = useTemplateRef("bottom-settings")
-    const options = computed(() => ({
-        speed: bottomSettings.value?.speed ?? 0,
-    }))
-
-    const { objects, centerOfMass } = useGravitySim(options)
+    const { speed, showBarycenter } = storeToRefs(useOptionsStore())
+    const { objects, barycenter } = useGravitySim(ref({ speed }))
 
     const history = ref<Vector2[][]>([])
 
@@ -93,15 +92,27 @@
     //     velocity: new Vector2(0, 1_022),
     // })
 
-    const icons = computed(() => objects.value.map((object) => ({
-        src: object.icon,
-        position: object.position,
-        size: object.size,
-    })))
+    const icons = computed(() => {
+        const out: RenderedIcon[] = objects.value.map((object) => ({
+            src: object.icon,
+            position: object.position,
+            size: object.size,
+        }))
+        if (showBarycenter.value)
+            out.push({
+                src: "./icons/barycenter.svg",
+                position: barycenter.value,
+                size: 20,
+                ignoreScaling: true,
+            })
+        return out
+    })
 </script>
 
 <template>
-    <Map :icons="icons" :paths="history" :dots="[centerOfMass]" />
+    <Map
+        :icons="icons"
+        :paths="history" />
     <BottomSettings ref="bottom-settings" />
 </template>
 

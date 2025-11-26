@@ -43,7 +43,7 @@ export type GravitySim = {
     /** Ref to simulated objects, which can be modified */
     objects: Ref<GravityObject[]>,
     /** Computed ref of the center of mass */
-    centerOfMass: ComputedRef<Vector2>,
+    barycenter: ComputedRef<Vector2>,
 }
 
 /**
@@ -103,7 +103,7 @@ GravitySim {
         return mx
     }
 
-    const centerOfMass = computed(() => {
+    const barycenter = computed(() => {
         let total = Vector2.Zero
         let mass = 0
         for (const object of objects.value) {
@@ -113,6 +113,6 @@ GravitySim {
         return total.scale(1 / mass)
     })
 
-    return { objects, centerOfMass }
+    return { objects, barycenter }
 
 }

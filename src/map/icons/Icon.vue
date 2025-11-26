@@ -35,5 +35,6 @@
         position: absolute;
         object-fit: contain;
         pointer-events: none;
+        user-select: none;
     }
 </style>

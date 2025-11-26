@@ -6,6 +6,10 @@
     import MenuButton from './templates/MenuButton.vue';
     import MenuText from './templates/MenuText.vue';
     import BottomMenu from './templates/BottomMenu.vue';
+    import { useOptionsStore } from '@/stores/options';
+    import { storeToRefs } from 'pinia';
+
+    const { speed, showBarycenter } = storeToRefs(useOptionsStore())
 
     type Mode = {
         name: string,
@@ -30,31 +34,35 @@
             return "Paused"
         return modes[index.value]?.name ?? "Paused"
     })
-    const speed = computed(() => {
-        if (paused.value)
-            return 0
-        return modes[index.value]?.speed ?? 0
-    })
+
+    function updateSpeed() {
+        speed.value = paused.value ? 0 : (modes[index.value]?.speed ?? 0)
+    }
 
     function pause() {
         paused.value = !paused.value
+        updateSpeed()
     }
 
     function slowDown() {
         paused.value = false
         index.value = Math.max(0, index.value - 1)
+        updateSpeed()
     }
 
     function speedUp() {
         paused.value = false
         index.value = Math.min(modes.length - 1, index.value + 1)
+        updateSpeed()
     }
     
-    useKeyEvent(" ", () => paused.value = !paused.value)
+    useKeyEvent(" ", pause)
     useKeyEvent("[", slowDown)
     useKeyEvent("]", speedUp)
 
-    defineExpose({ speed })
+    function toggleBarycenter() {
+        showBarycenter.value = !showBarycenter.value
+    }
 </script>
 
 <template>
@@ -76,7 +84,11 @@
         </MenuSection>
         <MenuSection>
             <MenuButton
-                :icon="mdiBullseye" />
+                :icon="mdiBullseye"
+                @click="toggleBarycenter"
+                :style="{
+                    '--icon-color': showBarycenter ? '#9f30b3' : undefined,
+                }" />
         </MenuSection>
     </BottomMenu>
 </template>

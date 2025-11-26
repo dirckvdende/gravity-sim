@@ -57,7 +57,7 @@
         height: 100%;
 
         .line {
-            stroke: red;
+            stroke: #aaa;
             stroke-width: 2;
             fill: none;
         }
