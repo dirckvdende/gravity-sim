@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-    import { mdiArrowLeft, mdiArrowRight } from '@mdi/js';
+    import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
     import SVGIcon from './SVGIcon.vue';
-    import { ref, useTemplateRef, computed, onMounted, onUnmounted } from 'vue';
+    import { ref, useTemplateRef, computed, onMounted } from 'vue';
     
     const container = useTemplateRef("container")
     const menu = useTemplateRef("menu")
@@ -59,13 +59,13 @@
         v-if="!atStart"
         :class="$style['arrow-left']"
         @click="() => scroll(-100)">
-        <SVGIcon :path="mdiArrowLeft" :class="$style.icon" />
+        <SVGIcon :path="mdiChevronLeft" :class="$style.icon" />
     </button>
     <button
         v-if="!atEnd"
         :class="$style['arrow-right']"
         @click="() => scroll(100)">
-        <SVGIcon :path="mdiArrowRight" :class="$style.icon" />
+        <SVGIcon :path="mdiChevronRight" :class="$style.icon" />
     </button>
 </template>
 
@@ -82,9 +82,15 @@
         border-radius: 1.25em;
         border: none;
         cursor: pointer;
+        border: .2em solid var(--background-color, white);
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .icon {
             fill: var(--bottom-menu-icon-color, #999);
+            translate: 0 1px !important;
         }
 
         &:hover .icon {
