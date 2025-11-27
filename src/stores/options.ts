@@ -17,6 +17,8 @@ export const useOptionsStore = defineStore("sim-options", () => {
         showBarycenter: ref(false),
         /** Whether to show orbits of all bodies */
         showOrbits: ref(true),
+        /** Whether to show grid lines */
+        showGrid: ref(true),
         /** Dark mode vs light mode theme */
         darkMode,
     }

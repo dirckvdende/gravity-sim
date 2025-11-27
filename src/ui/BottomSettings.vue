@@ -2,7 +2,8 @@
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, 
     mdiOrbit,
-    mdiWeatherNight} from '@mdi/js';
+    mdiWeatherNight,
+    mdiGrid} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -17,6 +18,7 @@
         showBarycenter,
         showOrbits,
         darkMode,
+        showGrid,
     } = storeToRefs(useOptionsStore())
     const { speed, paused } = storeToRefs(useSimOptionsStore())
 
@@ -88,6 +90,10 @@
     function toggleDarkMode() {
         darkMode.value = !darkMode.value
     }
+
+    function toggleGrid() {
+        showGrid.value = !showGrid.value
+    }
 </script>
 
 <template>
@@ -129,6 +135,13 @@
                     '--icon-color': showOrbits ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Show orbits (O)</MenuButton>
+            <MenuButton
+                :icon="mdiGrid"
+                @click="toggleGrid"
+                :style="{
+                    '--icon-color': showGrid ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Show grid</MenuButton>
             <MenuButton
                 :icon="mdiWeatherNight"
                 @click="toggleDarkMode"
