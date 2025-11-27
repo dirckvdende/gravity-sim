@@ -4,6 +4,7 @@
     import { ref, useTemplateRef, computed, onMounted, onUnmounted } from 'vue';
     
     const container = useTemplateRef("container")
+    const menu = useTemplateRef("menu")
     const scrollWidth = ref(0)
     const clientWidth = ref(0)
     const scrollLeft = ref(0)
@@ -11,6 +12,9 @@
         clientWidth.value + scrollLeft.value > scrollWidth.value - 2)
     const atStart = computed(() => scrollLeft.value < 2)
 
+    /**
+     * Update the refs related to scrolling the bottom menu
+     */
     function updateScrollData(): void {
         if (container.value == null)
             return
@@ -19,26 +23,48 @@
         scrollLeft.value = container.value.scrollLeft
     }
 
+    /**
+     * Scroll the bottom menu
+     * @param diff Difference by which to scroll (positive = right, negative =
+     * left)
+     */
+    function scroll(diff: number): void {
+        container.value?.scrollBy({
+            left: diff,
+            top: 0,
+            behavior: "smooth",
+        })
+    }
+
     onMounted(() => {
-        container.value?.addEventListener("scroll", updateScrollData)
+        if (!container.value || !menu.value)
+            return
+        container.value.addEventListener("scroll", updateScrollData)
+        const observer = new ResizeObserver(updateScrollData)
+        observer.observe(container.value)
+        observer.observe(menu.value)
         updateScrollData()
     })
-
-    onUnmounted(() =>
-        container.value?.removeEventListener("scroll", updateScrollData))
 </script>
 
 <template>
     <div :class="$style.container" ref="container">
-        <div :class="$style.menu">
+        <div :class="$style.menu" ref="menu">
             <slot />
-            <div style="width: .1em; flex-shrink: 0;"></div>
+            <!-- Extra div for spacing at the end -->
+            <div style="width: 2em; flex-shrink: 0;"></div>
         </div>
     </div>
-    <button v-if="!atStart" :class="$style['arrow-left']">
+    <button
+        v-if="!atStart"
+        :class="$style['arrow-left']"
+        @click="() => scroll(-100)">
         <SVGIcon :path="mdiArrowLeft" :class="$style.icon" />
     </button>
-    <button v-if="!atEnd" :class="$style['arrow-right']">
+    <button
+        v-if="!atEnd"
+        :class="$style['arrow-right']"
+        @click="() => scroll(100)">
         <SVGIcon :path="mdiArrowRight" :class="$style.icon" />
     </button>
 </template>
