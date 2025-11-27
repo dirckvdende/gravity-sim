@@ -6,7 +6,7 @@
     const {
         tracker,
         stepSize = 2,
-        color = "#eee",
+        color = "var(--grid-color, #eee)",
         width = .01,
         minPixelWidth = 2,
         scaleTimes = {

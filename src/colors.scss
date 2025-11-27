@@ -1,0 +1,38 @@
+
+body {
+    --background-color: white;
+    --grid-color: #eee;
+    --accent-color-blue: #6b8edf;
+    --accent-color-red: #e65656;
+    --accent-color-purple: #9f30b3;
+    --ruler-color: #333;
+
+    --bottom-menu-background-color: white;
+    --bottom-menu-shadow-color: black;
+    --bottom-menu-icon-color: #999;
+    --bottom-menu-icon-color-mix: #000;
+
+    --pin-background-color: #ccc;
+
+    --orbit-color: #aaa;
+
+    color: black;
+}
+
+body.dark-mode {
+    --background-color: #061225;
+    --grid-color: #091830;
+    --accent-color-purple: #bf60cf;
+    --ruler-color: #ccc;
+
+    --bottom-menu-background-color: #192e4f;
+    --bottom-menu-shadow-color: black;
+    --bottom-menu-icon-color: #71737e;
+    --bottom-menu-icon-color-mix: #000;
+
+    --pin-background-color: #313f56;
+
+    --orbit-color: #aaa;
+
+    color: #ddd;
+}

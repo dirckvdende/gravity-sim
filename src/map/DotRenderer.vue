@@ -45,7 +45,7 @@
         height: 100%;
 
         .dot {
-            fill: purple;
+            fill: var(--accent-color-purple, purple);
         }
     }
 </style>

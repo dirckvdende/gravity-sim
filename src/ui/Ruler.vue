@@ -187,13 +187,13 @@
 
         .label {
             font-size: .7em;
-            color: #333;
+            color: var(--ruler-color, #333);
             margin-bottom: -.2em;
             font-weight: bold;
         }
 
         .arrow {
-            stroke: #333;
+            stroke: var(--ruler-color, #333);
             stroke-linecap: round;
             fill: none;
         }

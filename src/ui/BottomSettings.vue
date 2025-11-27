@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, 
-    mdiOrbit} from '@mdi/js';
+    mdiOrbit,
+    mdiWeatherNight} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -12,7 +13,11 @@
     import { storeToRefs } from 'pinia';
     import { useSimOptionsStore, useSimStore } from '@/stores/sim';
 
-    const { showBarycenter, showOrbits } = storeToRefs(useOptionsStore())
+    const {
+        showBarycenter,
+        showOrbits,
+        darkMode,
+    } = storeToRefs(useOptionsStore())
     const { speed, paused } = storeToRefs(useSimOptionsStore())
 
     type Mode = {
@@ -79,6 +84,10 @@
     }
 
     useKeyEvent("O", toggleOrbits, { caseInsensitive: true })
+
+    function toggleDarkMode() {
+        darkMode.value = !darkMode.value
+    }
 </script>
 
 <template>
@@ -88,7 +97,8 @@
                 :icon="paused ? mdiPlay : mdiPause"
                 @click="pause"
                 :style="{
-                    '--icon-color': paused ? '#6b8edf' : '#e16262',
+                    '--icon-color': paused ? 'var(--accent-color-blue, #6b8edf)'
+                    : 'var(--accent-color-red, #e16262)',
                 }">{{ paused ? "Play (_)" : "Pause (_)" }}</MenuButton>
             <MenuButton
                 :icon="mdiRewind"
@@ -103,7 +113,8 @@
                 :icon="mdiBullseye"
                 @click="toggleBarycenter"
                 :style="{
-                    '--icon-color': showBarycenter ? '#9f30b3' : undefined,
+                    '--icon-color': showBarycenter ?
+                    'var(--accent-color-purple, #9f30b3)' : undefined,
                 }">Show barycenter (B)</MenuButton>
             <MenuButton
                 :icon="mdiTarget"
@@ -115,8 +126,16 @@
                 :icon="mdiOrbit"
                 @click="toggleOrbits"
                 :style="{
-                    '--icon-color': showOrbits ? '#6b8edf' : undefined,
+                    '--icon-color': showOrbits ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Show orbits (O)</MenuButton>
+            <MenuButton
+                :icon="mdiWeatherNight"
+                @click="toggleDarkMode"
+                :style="{
+                    '--icon-color': darkMode ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Dark mode</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>

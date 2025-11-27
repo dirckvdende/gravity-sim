@@ -70,25 +70,26 @@
 </template>
 
 <style lang="scss" module>
-    $shadow: 0 .15em .6em -.35em black;
+    $shadow: 0 .15em .6em -.35em var(--bottom-menu-shadow-color, black);
 
     %arrow {
         position: fixed;
         bottom: .9em;
         width: 2.5em;
         height: 2.5em;
-        background-color: white;
+        background-color: var(--bottom-menu-background-color, white);
         box-shadow: $shadow;
         border-radius: 1.25em;
         border: none;
         cursor: pointer;
 
         .icon {
-            fill: #666;
+            fill: var(--bottom-menu-icon-color, #999);
         }
 
         &:hover .icon {
-            fill: black;
+            fill: color-mix(in srgb, var(--bottom-menu-icon-color, #999),
+                var(--bottom-menu-icon-color-mix, black) 20%);
         }
     }
 
@@ -121,7 +122,7 @@
             display: flex;
             align-items: center;
             padding: 0 .4em;
-            background-color: white;
+            background-color: var(--bottom-menu-background-color, white);
             border-radius: .5em;
             box-shadow: $shadow;
             user-select: none;
@@ -133,7 +134,7 @@
                 border: none;
                 cursor: pointer;
                 font-size: .8em;
-                --icon-color: #999;
+                --icon-color: var(--bottom-menu-icon-color, #999);
                 position: relative;
 
                 :global(.menu-button-icon) {
@@ -148,7 +149,8 @@
                     top: -80%;
                     translate: -50% 0;
                     user-select: none;
-                    background-color: white;
+                    background-color: var(--bottom-menu-background-color, 
+                        white);
                     box-shadow: $shadow;
                     font-size: .9em;
                     border-radius: .5em;
@@ -160,7 +162,8 @@
 
                 &:hover {
                     :global(.menu-button-icon) {
-                        fill: color-mix(in srgb, var(--icon-color), #000 20%);
+                        fill: color-mix(in srgb, var(--icon-color),
+                            var(--bottom-menu-icon-color-mix, black) 20%);
                     }
 
                     :global(.menu-button-text) {

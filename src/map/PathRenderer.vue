@@ -57,7 +57,7 @@
         height: 100%;
 
         .line {
-            stroke: #aaa;
+            stroke: var(--orbit-color, #aaa);
             stroke-width: 2;
             fill: none;
         }

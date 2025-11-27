@@ -141,5 +141,10 @@
     button {
         font-family: inherit;
         font-weight: inherit;
+        color: inherit;
     }
+</style>
+
+<style lang="scss">
+    @use "./colors.scss";
 </style>
