@@ -1,69 +1,50 @@
 
-import { computed, ref, toRef, type ComputedRef, type MaybeRefOrGetter, type Ref } from
-"vue"
-import { useAnimationFrame } from "../util/animationFrame"
-import { type GravityObject } from "./object"
-import { objectsToState, slopeFunction, stateToObjects } from "./odeConvert"
-import { RKFSolver } from "./rkf45"
-import Vector2 from "@/util/Vector2"
+import type { GravityObject } from "@/sim/object";
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import Vector2 from "@/util/Vector2";
+import { objectsToState, stateToObjects, slopeFunction } from
+"@/sim/odeConvert";
+import { RKFSolver } from "@/sim/rkf45";
+import { useAnimationFrame } from "@/util/animationFrame";
+
+/** Simulation options */
+export const useSimOptionsStore = defineStore("gravity-sim-options", () => {
+    return {
+        /**
+         * Maximum time units (seconds) of every simulation step (default
+         * Infinity)
+         */
+        maxStepSize: ref(Infinity),
+        /**
+         * Maximum time between frames used for scaling. This is used mainly
+         * when the used tabs out and back in, and the time between frames is
+         * very large (default .1, i.e. 10 fps)
+         */
+        maxTimeBetweenFrames: ref(10),
+        /**
+         * Simulation speed factor. A value of 3 means 3 simulation time units
+         * pass every second (default 1)
+         */
+        speed: ref(1),
+        /** Maximum number of steps to execute per frame (default 100) */
+        maxStepsPerFrame: ref(100),
+        /**
+         * Error tolerance for the RKF solver, relative to the maximum distance
+         * between any two objects (default 1e-6)
+         */
+        tolerance: ref(1e-6),
+    }
+})
 
 /**
- * Options passed to the gravity sim composable
+ * Main simulator with data on all objects (current positions, velocities, etc.)
  */
-export type GravitySimOptions = {
-    /**
-     * Maximum time units (seconds) of every simulation step (default
-     * Infinity)
-     */
-    maxStepSize?: number,
-    /**
-     * Maximum time between frames used for scaling. This is used mainly when
-     * the used tabs out and back in, and the time between frames is very large
-     * (default .1, i.e. 10 fps)
-     */
-    maxTimeBetweenFrames?: number,
-    /**
-     * Simulation speed factor. A value of 3 means 3 simulation time units pass
-     * every second (default 1)
-     */
-    speed?: number,
-    /** Maximum number of steps to execute per frame (default 100) */
-    maxStepsPerFrame?: number,
-    /**
-     * Error tolerance for the RKF solver, relative to the maximum distance
-     * between any two objects (default 1e-6)
-     */
-    tolerance?: number,
-}
-
-/**
- * Type returned by the gravity sim composable
- */
-export type GravitySim = {
-    /** Ref to simulated objects, which can be modified */
-    objects: Ref<GravityObject[]>,
-    /** Computed ref of the center of mass */
-    barycenter: ComputedRef<Vector2>,
-    /**
-     * Reset the barycenter to (0, 0) and adapt velocities such that barycenter
-     * doesn't move
-     */
-    resetToBarycenter: () => void,
-}
-
-/**
- * Gravity simulator composable
- * @param options Simulation options
- * @returns Gravity sim with objects that can be modified
- */
-export function useGravitySim(options?: MaybeRefOrGetter<GravitySimOptions>):
-GravitySim {
-
+export const useSimStore = defineStore("gravity-sim", () => {
     // Tracked objects with gravitational effect
     const objects = ref<GravityObject[]>([])
-    // Reference to input argument
-    const optionsRef = toRef(options)
-
+    // Simulator options
+    const options = useSimOptionsStore()
     // Time of last step, so sim speed will be constant
     let lastStep = performance.now()
 
@@ -75,19 +56,19 @@ GravitySim {
         const state = objectsToState(objects.value)
         const slope = slopeFunction(objects.value)
         const solver = new RKFSolver(state, slope, {
-            tolerance: (optionsRef.value?.tolerance ?? 1e-6) * maxDistance(),
+            tolerance: (options.tolerance ?? 1e-6) * maxDistance(),
         })
-        const speed = optionsRef.value?.speed ?? 1
+        const speed = options.speed ?? 1
         const time = Math.min(
-            optionsRef.value?.maxStepSize ?? Infinity,
+            options.maxStepSize ?? Infinity,
             Math.min(
                 (performance.now() - lastStep) / 1000,
-                optionsRef.value?.maxTimeBetweenFrames ?? .1
+                options.maxTimeBetweenFrames ?? .1
             ) * speed
         )
         lastStep = performance.now()
         const { state: newState } = solver.evolve(time,
-        optionsRef.value?.maxStepsPerFrame ?? 10)
+        options.maxStepsPerFrame ?? 10)
         const newObjects = objects.value.slice()
         stateToObjects(newState, newObjects)
         objects.value = newObjects
@@ -145,5 +126,4 @@ GravitySim {
     }
 
     return { objects, barycenter, resetToBarycenter }
-
-}
+})

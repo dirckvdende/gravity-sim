@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import Map from './map/Map.vue';
-    import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
     import { computed, ref, watch } from 'vue';
     import BottomSettings from './ui/BottomSettings.vue';
@@ -11,11 +10,10 @@
     import GridRenderer from './map/GridRenderer.vue';
     import IconRenderer from './map/icons/IconRenderer.vue';
     import Ruler from './ui/Ruler.vue';
+    import { useSimStore } from './stores/sim';
 
-    const { speed, showBarycenter } = storeToRefs(useOptionsStore())
-    const sim = useGravitySim(ref({ speed }))
-    const { objects, barycenter } = sim
-
+    const { showBarycenter } = storeToRefs(useOptionsStore())
+    const { objects, barycenter } = storeToRefs(useSimStore())
 
     const history = ref<Vector2[][]>([])
 
@@ -122,7 +120,7 @@
         <IconRenderer :tracker="tracker" :icons="icons" />
         <Ruler :tracker="tracker" />
     </Map>
-    <BottomSettings ref="bottom-settings" :sim="sim" />
+    <BottomSettings ref="bottom-settings" />
 </template>
 
 <style lang="scss" module>

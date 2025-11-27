@@ -9,14 +9,10 @@
     import BottomMenu from './templates/BottomMenu.vue';
     import { useOptionsStore } from '@/stores/options';
     import { storeToRefs } from 'pinia';
-    import type { GravitySim } from '@/sim/sim';
+    import { useSimOptionsStore, useSimStore } from '@/stores/sim';
 
-    const { sim } = defineProps<{
-        /** Simulation object */
-        sim: GravitySim,
-    }>()
-
-    const { speed, showBarycenter } = storeToRefs(useOptionsStore())
+    const { showBarycenter } = storeToRefs(useOptionsStore())
+    const { speed } = storeToRefs(useSimOptionsStore())
 
     type Mode = {
         name: string,
@@ -98,7 +94,7 @@
                 }">Barycenter</MenuButton>
             <MenuButton
                 :icon="mdiTarget"
-                @click="() => sim.resetToBarycenter()"
+                @click="() => useSimStore().resetToBarycenter()"
             >Reset to barycenter</MenuButton>
         </MenuSection>
     </BottomMenu>
