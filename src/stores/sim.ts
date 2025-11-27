@@ -55,8 +55,10 @@ export const useSimStore = defineStore("gravity-sim", () => {
      * velocities
      */
     function frame(): void {
-        if (options.paused)
+        if (options.paused) {
+            lastStep = performance.now()
             return
+        }
         const state = objectsToState(objects.value)
         const slope = slopeFunction(objects.value)
         const solver = new RKFSolver(state, slope, {
