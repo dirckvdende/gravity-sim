@@ -1,14 +1,94 @@
+<script lang="ts" setup>
+    import { mdiArrowLeft, mdiArrowRight } from '@mdi/js';
+    import SVGIcon from './SVGIcon.vue';
+    import { ref, useTemplateRef, computed, onMounted, onUnmounted } from 'vue';
+    
+    const container = useTemplateRef("container")
+    const scrollWidth = ref(0)
+    const clientWidth = ref(0)
+    const scrollLeft = ref(0)
+    const atEnd = computed(() =>
+        clientWidth.value + scrollLeft.value > scrollWidth.value - 2)
+    const atStart = computed(() => scrollLeft.value < 2)
+
+    function updateScrollData(): void {
+        if (container.value == null)
+            return
+        scrollWidth.value = container.value.scrollWidth
+        clientWidth.value = container.value.clientWidth
+        scrollLeft.value = container.value.scrollLeft
+    }
+
+    onMounted(() => {
+        container.value?.addEventListener("scroll", updateScrollData)
+        updateScrollData()
+    })
+
+    onUnmounted(() =>
+        container.value?.removeEventListener("scroll", updateScrollData))
+</script>
+
 <template>
-    <div :class="$style.menu">
-        <slot />
+    <div :class="$style.container" ref="container">
+        <div :class="$style.menu">
+            <slot />
+            <div style="width: .1em; flex-shrink: 0;"></div>
+        </div>
     </div>
+    <button v-if="!atStart" :class="$style['arrow-left']">
+        <SVGIcon :path="mdiArrowLeft" :class="$style.icon" />
+    </button>
+    <button v-if="!atEnd" :class="$style['arrow-right']">
+        <SVGIcon :path="mdiArrowRight" :class="$style.icon" />
+    </button>
 </template>
 
 <style lang="scss" module>
-    .menu {
+    $shadow: 0 .15em .6em -.35em black;
+
+    %arrow {
         position: fixed;
-        bottom: .6em;
-        left: .6em;
+        bottom: .9em;
+        width: 2.5em;
+        height: 2.5em;
+        background-color: white;
+        box-shadow: $shadow;
+        border-radius: 1.25em;
+        border: none;
+        cursor: pointer;
+
+        .icon {
+            fill: #666;
+        }
+
+        &:hover .icon {
+            fill: black;
+        }
+    }
+
+    .arrow-left {
+        @extend %arrow;
+        left: .5em;
+    }
+
+    .arrow-right {
+        @extend %arrow;
+        right: .5em;
+    }
+
+    .container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        padding: 1.8em .6em .6em .6em;
+        box-sizing: border-box;
+        width: 100%;
+        overflow-x: scroll;
+        scrollbar-width: none;
+
+    }
+
+    .menu {
         display: flex;
         
         & > :global(.menu-section) {
@@ -17,10 +97,10 @@
             padding: 0 .4em;
             background-color: white;
             border-radius: .5em;
-            box-shadow: 0 .15em .6em -.35em black;
+            box-shadow: $shadow;
             user-select: none;
-
-            &:not(:last-child) { margin-right: .5em; }
+            margin-right: .5em;
+            flex-shrink: 0;
 
             & > :global(.menu-button) {
                 background-color: transparent;
@@ -42,9 +122,8 @@
                     top: -80%;
                     translate: -50% 0;
                     user-select: none;
-                    pointer-events: none;
                     background-color: white;
-                    box-shadow: 0 .15em .6em -.35em black;
+                    box-shadow: $shadow;
                     font-size: .9em;
                     border-radius: .5em;
                     padding: .3em .7em;
