@@ -12,12 +12,16 @@
     import Ruler from './ui/Ruler.vue';
     import { useSimStore } from './stores/sim';
 
-    const { showBarycenter } = storeToRefs(useOptionsStore())
+    const { showBarycenter, showOrbits } = storeToRefs(useOptionsStore())
     const { objects, barycenter } = storeToRefs(useSimStore())
 
     const history = ref<Vector2[][]>([])
 
     watch(objects, (newObjects) => {
+        if (!showOrbits.value) {
+            history.value = []
+            return
+        }
         while (history.value.length < newObjects.length)
             history.value.push([])
         for (const [index, object] of newObjects.entries()) {
@@ -116,7 +120,11 @@
 <template>
     <Map v-slot="{ tracker }">
         <GridRenderer :tracker="tracker" />
-        <PathRenderer v-for="path in history" :tracker="tracker" :points="path" />
+        <PathRenderer
+            v-if="showOrbits"
+            v-for="path in history"
+            :tracker="tracker"
+            :points="path" />
         <IconRenderer :tracker="tracker" :icons="icons" />
         <Ruler :tracker="tracker" />
     </Map>

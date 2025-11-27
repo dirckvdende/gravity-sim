@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
-    mdiTarget } from '@mdi/js';
+    mdiTarget, 
+    mdiOrbit} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -11,7 +12,7 @@
     import { storeToRefs } from 'pinia';
     import { useSimOptionsStore, useSimStore } from '@/stores/sim';
 
-    const { showBarycenter } = storeToRefs(useOptionsStore())
+    const { showBarycenter, showOrbits } = storeToRefs(useOptionsStore())
     const { speed, paused } = storeToRefs(useSimOptionsStore())
 
     type Mode = {
@@ -72,6 +73,12 @@
 
     useKeyEvent("B", toggleBarycenter, { caseInsensitive: true })
     useKeyEvent("R", resetToBarycenter, { caseInsensitive: true })
+
+    function toggleOrbits() {
+        showOrbits.value = !showOrbits.value
+    }
+
+    useKeyEvent("O", toggleOrbits, { caseInsensitive: true })
 </script>
 
 <template>
@@ -102,6 +109,14 @@
                 :icon="mdiTarget"
                 @click="resetToBarycenter"
             >Reset to barycenter (R)</MenuButton>
+        </MenuSection>
+        <MenuSection>
+            <MenuButton
+                :icon="mdiOrbit"
+                @click="toggleOrbits"
+                :style="{
+                    '--icon-color': showOrbits ? '#6b8edf' : undefined,
+                }">Show orbits (O)</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>
