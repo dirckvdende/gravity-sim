@@ -7,6 +7,10 @@
     import { useOptionsStore } from './stores/options';
     import { storeToRefs } from 'pinia';
     import type { RenderedIcon } from './map/icons/IconRenderer.vue';
+    import PathRenderer from './map/PathRenderer.vue';
+    import GridRenderer from './map/GridRenderer.vue';
+    import IconRenderer from './map/icons/IconRenderer.vue';
+    import Ruler from './ui/Ruler.vue';
 
     const { speed, showBarycenter } = storeToRefs(useOptionsStore())
     const sim = useGravitySim(ref({ speed }))
@@ -112,9 +116,12 @@
 </script>
 
 <template>
-    <Map
-        :icons="icons"
-        :paths="history" />
+    <Map v-slot="{ tracker }">
+        <GridRenderer :tracker="tracker" />
+        <PathRenderer v-for="path in history" :tracker="tracker" :points="path" />
+        <IconRenderer :tracker="tracker" :icons="icons" />
+        <Ruler :tracker="tracker" />
+    </Map>
     <BottomSettings ref="bottom-settings" :sim="sim" />
 </template>
 

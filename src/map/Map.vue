@@ -2,26 +2,7 @@
     import { useTemplateRef } from 'vue';
     import { useDragInteractor } from './interactors/dragInteractor';
     import { usePositionRectTracker } from './positionRectTracker';
-    import GridRenderer from './GridRenderer.vue';
     import { useZoomInteractor } from './interactors/zoomInteractor';
-    import IconRenderer, { type RenderedIcon } from './icons/IconRenderer.vue';
-    import Vector2 from '@/util/Vector2';
-    import PathRenderer from './PathRenderer.vue';
-    import DotRenderer from './DotRenderer.vue';
-import Ruler from '@/ui/Ruler.vue';
-
-    const {
-        icons,
-        paths = [],
-        dots = [],
-    } = defineProps<{
-        /** Icons to display on the map */
-        icons: RenderedIcon[],
-        /** Paths to display on the map, each as an array of points */
-        paths?: Vector2[][],
-        /** Separate points to display on the map */
-        dots?: Vector2[],
-    }>()
 
     const target = useTemplateRef("target")
     const tracker = usePositionRectTracker(target)
@@ -36,11 +17,7 @@ import Ruler from '@/ui/Ruler.vue';
 
 <template>
     <div :class="$style.target" ref="target">
-        <GridRenderer :tracker="tracker" />
-        <PathRenderer v-for="path in paths" :tracker="tracker" :points="path" />
-        <IconRenderer :tracker="tracker" :icons="icons" />
-        <DotRenderer v-for="dot in dots" :tracker="tracker" :coords="dot" />
-        <Ruler :tracker="tracker" />
+        <slot :tracker="tracker" />
     </div>
 </template>
 
