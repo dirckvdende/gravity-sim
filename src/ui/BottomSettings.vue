@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget } from '@mdi/js';
-    import { computed, ref } from 'vue';
+    import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
     import MenuButton from './templates/MenuButton.vue';
@@ -12,14 +12,14 @@
     import { useSimOptionsStore, useSimStore } from '@/stores/sim';
 
     const { showBarycenter } = storeToRefs(useOptionsStore())
-    const { speed } = storeToRefs(useSimOptionsStore())
+    const { speed, paused } = storeToRefs(useSimOptionsStore())
 
     type Mode = {
         name: string,
         speed: number,
     }
 
-    const modes: Mode[] = [
+    const modes = [
         { name: "1 second / s", speed: 1 },
         { name: "1 minute / s", speed: 60 },
         { name: "1 hour / s", speed: 60 * 60 },
@@ -27,38 +27,37 @@
         { name: "1 week / s", speed: 60 * 60 * 24 * 7 },
         { name: "1 month / s", speed: 60 * 60 * 24 * 365.25 / 12 },
         { name: "1 year / s", speed: 60 * 60 * 24 * 365.25 },
-    ]
-    
-    const paused = ref(false)
-    const index = ref(0)
-    
-    const name = computed(() => {
-        if (paused.value)
-            return "Paused"
-        return modes[index.value]?.name ?? "Paused"
-    })
+    ] as const
 
-    function updateSpeed() {
-        speed.value = paused.value ? 0 : (modes[index.value]?.speed ?? 0)
-    }
+    // Pair of [index, mode]
+    const mode = computed(() => {
+        let closestDiff = Infinity
+        let closest: [number, Mode] = [0, modes[0]]
+        for (const [index, mode] of modes.entries()) {
+            if (Math.abs(speed.value - mode.speed) < closestDiff) {
+                closestDiff = Math.abs(speed.value - mode.speed)
+                closest = [index, mode]
+            }
+        }
+        return closest
+    })
 
     function pause() {
         paused.value = !paused.value
-        updateSpeed()
-    }
-
-    function slowDown() {
-        paused.value = false
-        index.value = Math.max(0, index.value - 1)
-        updateSpeed()
     }
 
     function speedUp() {
-        paused.value = false
-        index.value = Math.min(modes.length - 1, index.value + 1)
-        updateSpeed()
+        const nextMode = modes[mode.value[0] + 1]
+        if (nextMode != undefined)
+            speed.value = nextMode.speed
     }
-    
+
+    function slowDown() {
+        const prevMode = modes[mode.value[0] - 1]
+        if (prevMode != undefined)
+            speed.value = prevMode.speed
+    }
+
     useKeyEvent(" ", pause)
     useKeyEvent("[", slowDown)
     useKeyEvent("]", speedUp)
@@ -66,6 +65,13 @@
     function toggleBarycenter() {
         showBarycenter.value = !showBarycenter.value
     }
+
+    function resetToBarycenter() {
+        useSimStore().resetToBarycenter()
+    }
+
+    useKeyEvent("B", toggleBarycenter, { caseInsensitive: true })
+    useKeyEvent("R", resetToBarycenter, { caseInsensitive: true })
 </script>
 
 <template>
@@ -80,7 +86,7 @@
             <MenuButton
                 :icon="mdiRewind"
                 @click="slowDown">Slower ([)</MenuButton>
-            <MenuText>{{ name }}</MenuText>
+            <MenuText>{{ mode[1].name }}</MenuText>
             <MenuButton
                 :icon="mdiFastForward"
                 @click="speedUp">Faster (])</MenuButton>
@@ -91,11 +97,11 @@
                 @click="toggleBarycenter"
                 :style="{
                     '--icon-color': showBarycenter ? '#9f30b3' : undefined,
-                }">Barycenter</MenuButton>
+                }">Show barycenter (B)</MenuButton>
             <MenuButton
                 :icon="mdiTarget"
-                @click="() => useSimStore().resetToBarycenter()"
-            >Reset to barycenter</MenuButton>
+                @click="resetToBarycenter"
+            >Reset to barycenter (R)</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>

@@ -27,6 +27,8 @@ export const useSimOptionsStore = defineStore("gravity-sim-options", () => {
          * pass every second (default 1)
          */
         speed: ref(1),
+        /** Wether the simulator is currently paused (default false) */
+        paused: ref(false),
         /** Maximum number of steps to execute per frame (default 100) */
         maxStepsPerFrame: ref(100),
         /**
@@ -53,6 +55,8 @@ export const useSimStore = defineStore("gravity-sim", () => {
      * velocities
      */
     function frame(): void {
+        if (options.paused)
+            return
         const state = objectsToState(objects.value)
         const slope = slopeFunction(objects.value)
         const solver = new RKFSolver(state, slope, {
