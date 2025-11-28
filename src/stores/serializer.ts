@@ -9,7 +9,12 @@ import type { Serializer } from "pinia-plugin-persistedstate";
  * @returns The serialized state as a string
  */
 function serialize(value: StateTree): string {
-    return JSON.stringify(value, (_key, value) => {
+    // This is not good code, but JSON.stringify doesn't let you process dates
+    // yourself because they already have a toJSON method... :(
+    const dateToJSON = Date.prototype.toJSON
+    // @ts-ignore
+    Date.prototype.toJSON = undefined
+    const result = JSON.stringify(value, (_key, value) => {
         if (value === Infinity)
             return { $type: "infinity" }
         if (value instanceof Vector2)
@@ -18,6 +23,9 @@ function serialize(value: StateTree): string {
             return { $type: "Date", value: value.getTime() }
         return value
     })
+    // Here we restore what we did before
+    Date.prototype.toJSON = dateToJSON
+    return result
 }
 
 /**
