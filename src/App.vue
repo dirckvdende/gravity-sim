@@ -19,7 +19,7 @@
         showOrbits,
         showGrid,
     } = storeToRefs(useOptionsStore())
-    const { objects, barycenter } = storeToRefs(useSimStore())
+    const { objects, barycenter, timestamp } = storeToRefs(useSimStore())
 
     const history = ref<Vector2[][]>([])
 
@@ -41,6 +41,7 @@
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
+    timestamp.value = new Date("2013-1-1 0:00:00 UTC")
     // Pluto
     objects.value.push({
         icon: './icons/pluto.svg',
