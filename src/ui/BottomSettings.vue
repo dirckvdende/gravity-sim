@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
-    mdiFileOutline } from '@mdi/js';
+    mdiFileOutline, mdiFullscreen} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -12,6 +12,7 @@
     import { storeToRefs } from 'pinia';
     import { useSimOptionsStore, useSimStore } from '@/stores/sim';
     import { downloadFile, uploadFile } from '@/util/piniaStoreToFile';
+    import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
 
     const {
         showBarycenter,
@@ -163,6 +164,13 @@
                     '--icon-color': darkMode ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Dark mode</MenuButton>
+            <MenuButton
+                :icon="mdiFullscreen"
+                @click="() => toggleFullscreen()"
+                :style="{
+                    '--icon-color': isFullscreenRef ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Full screen</MenuButton>
         </MenuSection>
         <MenuSection>
             <MenuButton
