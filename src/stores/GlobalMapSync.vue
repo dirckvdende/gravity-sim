@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { storeToRefs } from 'pinia';
-    import type { PositionRectTracker } from './map/positionRectTracker';
-    import { useSimStateStore } from './stores/state';
+    import type { PositionRectTracker } from '@/map/positionRectTracker';
+    import { useSimStateStore } from './state';
     import { syncRef } from '@vueuse/core';
 
     const { tracker } = defineProps<{
