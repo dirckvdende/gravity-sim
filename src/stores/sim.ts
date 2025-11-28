@@ -7,6 +7,7 @@ import { objectsToState, stateToObjects, slopeFunction } from
 "@/sim/odeConvert";
 import { RKFSolver } from "@/sim/rkf45";
 import { useAnimationFrame } from "@/util/animationFrame";
+import { serializer } from "./serializer";
 
 /** Simulation options */
 export const useSimOptionsStore = defineStore("gravity-sim-options", () => {
@@ -132,4 +133,9 @@ export const useSimStore = defineStore("gravity-sim", () => {
     }
 
     return { objects, barycenter, resetToBarycenter }
+}, {
+    saveToFiles: {
+        files: ["state"],
+        serializer,
+    }
 })

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
-    mdiTarget, 
-    mdiOrbit,
-    mdiWeatherNight,
-    mdiGrid} from '@mdi/js';
+    mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
+    mdiFileOutline } from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -13,6 +11,7 @@
     import { useOptionsStore } from '@/stores/options';
     import { storeToRefs } from 'pinia';
     import { useSimOptionsStore, useSimStore } from '@/stores/sim';
+    import { downloadFile, uploadFile } from '@/util/piniaStoreToFile';
 
     const {
         showBarycenter,
@@ -94,6 +93,14 @@
     function toggleGrid() {
         showGrid.value = !showGrid.value
     }
+
+    function saveFile() {
+        downloadFile("state", "gravity-sim.grav")
+    }
+
+    function loadFile() {
+        uploadFile("state", ".grav")
+    }
 </script>
 
 <template>
@@ -149,6 +156,16 @@
                     '--icon-color': darkMode ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Dark mode</MenuButton>
+        </MenuSection>
+        <MenuSection>
+            <MenuButton
+                :icon="mdiContentSaveOutline"
+                @click="saveFile"
+                >Save file</MenuButton>
+            <MenuButton
+                :icon="mdiFileOutline"
+                @click="loadFile"
+                >Load file</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>

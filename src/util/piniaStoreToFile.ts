@@ -1,5 +1,5 @@
 
-import { deepOmitUnsafe, deepPick, deepPickUnsafe } from "deep-pick-omit";
+import { deepOmitUnsafe, deepPickUnsafe } from "deep-pick-omit";
 import "pinia"
 import type { PiniaPluginContext, StateTree, Store } from "pinia";
 import { type Serializer } from "pinia-plugin-persistedstate";
@@ -38,21 +38,61 @@ export default function piniaPluginStoreToFile(context: PiniaPluginContext) {
     })
 }
 
-function downloadString(content: string): void {
+function downloadString(content: string, filename: string): void {
     const blob = new Blob([content], { type: "text" })
     const url = URL.createObjectURL(blob)
     const elt = document.createElement("a")
     elt.href = url
-    elt.download = ""
+    elt.download = filename
     elt.click()
+}
+
+function loadFromString(name: string, content: string): void {
+    const data = JSON.parse(content)
+    for (const save of saves) {
+        if (save.files.indexOf(name) == -1)
+            continue
+        if (!(save.store.$id in data))
+            continue
+        const deserializer = save.serializer?.deserialize ?? JSON.parse
+        save.store.$state = {
+            ...save.store.$state,
+            ...deserializer(data[save.store.$id]),
+        }
+    }
+}
+
+function uploadString(callback: (content: string | null) => void, extension:
+string = ".txt"): void {
+    const inputElement = document.createElement("input")
+    inputElement.type = "file"
+    inputElement.accept = extension
+    inputElement.addEventListener("change", () => {
+        if (inputElement.files == null || inputElement.files.length == 0)
+            return
+        const file = inputElement.files[0]
+        if (file == undefined)
+            return
+        const reader = new FileReader()
+        reader.addEventListener("load", () => {
+            if (typeof reader.result != "string") {
+                callback(null)
+                return
+            }
+            callback(reader.result)
+        })
+        reader.readAsText(file)
+    })
+    inputElement.click()
 }
 
 /**
  * Download a file with the contents of all stores that have the same filename
  * registered
- * @param name The name of the file
+ * @param name The name of the file in the store settings
+ * @param filename Filename to export (default same as name)
  */
-export function downloadFile(name: string): void {
+export function downloadFile(name: string, filename?: string): void {
     const data: Record<string, string> = {}
     for (const save of saves) {
         if (save.files.indexOf(name) == -1)
@@ -65,14 +105,20 @@ export function downloadFile(name: string): void {
             state = deepOmitUnsafe(state, save.omit)
         data[save.store.$id] = serialize(state)
     }
-    downloadString(JSON.stringify(data))
+    downloadString(JSON.stringify(data), filename ?? name)
 }
 
 /**
  * Load a file (shows a popup) and store its data in corresponding stores with
  * the same filename registered
  * @param name The filename to load the file to
+ * @param extension Filename extension to use (default ".txt")
+ * @note Loading file happens asynchronously
  */
-export function loadFile(name: string): void {
-    // TODO
+export function uploadFile(name: string, extension: string = ".txt"): void {
+    uploadString((content) => {
+        if (content == null)
+            throw new Error("Could read file")
+        loadFromString(name, content)
+    }, extension)
 }

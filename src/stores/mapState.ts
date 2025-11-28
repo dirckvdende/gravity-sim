@@ -12,4 +12,8 @@ export const useMapStateStore = defineStore("map-state", () => {
     }
 }, {
     persist: { serializer },
+    saveToFiles: {
+        files: ["state"],
+        serializer,
+    }
 })
