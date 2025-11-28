@@ -1,4 +1,5 @@
 
+import { usePreferredDark } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 
@@ -7,10 +8,11 @@ import { ref, watch } from "vue";
  */
 export const useOptionsStore = defineStore("sim-options", () => {
     
-    const darkMode = ref(false)
+    const darkMode = ref(usePreferredDark())
 
     watch(darkMode, (value) =>
-        document.body.classList.toggle("dark-mode", value))
+        document.body.classList.toggle("dark-mode", value),
+        { immediate: true })
 
     return {
         /** Whether to show the barycenter as an icon on the map */
