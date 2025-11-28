@@ -27,6 +27,13 @@
     }
 
     const modes = [
+        { name: "-1 year / s", speed: -60 * 60 * 24 * 365.25 },
+        { name: "-1 month / s", speed: -60 * 60 * 24 * 365.25 / 12 },
+        { name: "-1 week / s", speed: -60 * 60 * 24 * 7 },
+        { name: "-1 day / s", speed: -60 * 60 * 24 },
+        { name: "-1 hour / s", speed: -60 * 60 },
+        { name: "-1 minute / s", speed: -60 },
+        { name: "-1 second /s", speed: -1 },
         { name: "1 second / s", speed: 1 },
         { name: "1 minute / s", speed: 60 },
         { name: "1 hour / s", speed: 60 * 60 },

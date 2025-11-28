@@ -71,29 +71,30 @@ export const useSimStore = defineStore("gravity-sim", () => {
      * velocities
      */
     function frame(): void {
-        if (options.paused) {
+        if (options.paused || options.speed == 0) {
             lastStep = performance.now()
             return
         }
+        const backward = options.speed < 0
+        const speed = Math.abs(options.speed)
         const state = objectsToState(objects.value)
-        const slope = slopeFunction(objects.value)
+        const slope = slopeFunction(objects.value, backward)
         const solver = new RKFSolver(state, slope, {
-            tolerance: (options.tolerance ?? 1e-6) * maxDistance(),
+            tolerance: options.tolerance * maxDistance(),
         })
-        const speed = options.speed ?? 1
         const time = Math.min(
-            options.maxStepSize ?? Infinity,
+            options.maxStepSize,
             Math.min(
                 (performance.now() - lastStep) / 1000,
-                options.maxTimeBetweenFrames ?? .1
+                options.maxTimeBetweenFrames
             ) * speed
         )
         lastStep = performance.now()
         const { state: newState, time: elapsedTime } = solver.evolve(time,
-            options.maxStepsPerFrame ?? 10)
+            options.maxStepsPerFrame)
         slowed.value = time - elapsedTime > 1e-3
         timestamp.value = new Date(Math.round(timestamp.value.getTime() +
-            elapsedTime * 1000))
+            elapsedTime * 1000 * (backward ? -1 : 1)))
         const newObjects = objects.value.slice()
         stateToObjects(newState, newObjects)
         objects.value = newObjects
