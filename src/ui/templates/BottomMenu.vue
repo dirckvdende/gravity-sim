@@ -118,11 +118,12 @@
         width: 100%;
         overflow-x: scroll;
         scrollbar-width: none;
-
+        pointer-events: none;
     }
 
     .menu {
         display: flex;
+        pointer-events: all;
         
         & > :global(.menu-section) {
             display: flex;
