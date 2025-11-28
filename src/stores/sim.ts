@@ -38,6 +38,16 @@ export const useSimOptionsStore = defineStore("gravity-sim-options", () => {
          */
         tolerance: ref(1e-6),
     }
+}, {
+    persist: {
+        serializer,
+        pick: ["speed", "paused"],
+    },
+    saveToFiles: {
+        files: ["state"],
+        serializer,
+        pick: ["speed", "paused"],
+    }
 })
 
 /**
