@@ -151,6 +151,7 @@
         font-family: "Nunito", sans-serif;
         font-size: 18px;
         font-weight: 500;
+        background-color: var(--background-color, white);
     }
 
     button {
