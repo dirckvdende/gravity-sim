@@ -58,6 +58,11 @@ export const useSimStore = defineStore("gravity-sim", () => {
     const objects = ref<GravityObject[]>([])
     // Simulator options
     const options = useSimOptionsStore()
+    // Whether the simulation is running more slowly than set in the options
+    const slowed = ref(false)
+    // Current timestamp for display to the user, does not impact simulation.
+    // Timestamp is updated in accordance with simulation steps
+    const timestamp = ref(new Date())
     // Time of last step, so sim speed will be constant
     let lastStep = performance.now()
 
@@ -84,8 +89,11 @@ export const useSimStore = defineStore("gravity-sim", () => {
             ) * speed
         )
         lastStep = performance.now()
-        const { state: newState } = solver.evolve(time,
-        options.maxStepsPerFrame ?? 10)
+        const { state: newState, time: elapsedTime } = solver.evolve(time,
+            options.maxStepsPerFrame ?? 10)
+        slowed.value = time - elapsedTime > 1e-3
+        timestamp.value = new Date(Math.round(timestamp.value.getTime() +
+            elapsedTime * 1000))
         const newObjects = objects.value.slice()
         stateToObjects(newState, newObjects)
         objects.value = newObjects
@@ -142,10 +150,11 @@ export const useSimStore = defineStore("gravity-sim", () => {
         }
     }
 
-    return { objects, barycenter, resetToBarycenter }
+    return { objects, barycenter, resetToBarycenter, slowed, timestamp }
 }, {
     saveToFiles: {
         files: ["state"],
         serializer,
+        pick: ["timestamp", "objects"],
     }
 })

@@ -14,6 +14,8 @@ function serialize(value: StateTree): string {
             return { $type: "infinity" }
         if (value instanceof Vector2)
             return { $type: "Vector2", x: value.x, y: value.y }
+        if (value instanceof Date)
+            return { $type: "Date", value: value.getTime() }
         return value
     })
 }
@@ -29,6 +31,7 @@ function deserialize(value: string): StateTree {
             switch (value.$type) {
                 case "infinity": return Infinity
                 case "Vector2": return new Vector2(value.x, value.y)
+                case "Date": return new Date(value.value)
                 default: throw new Error(`Unrecognized type ${value.$type}`)
             }
         }
