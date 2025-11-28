@@ -12,6 +12,7 @@
     import Ruler from './ui/Ruler.vue';
     import { useSimStore } from './stores/sim';
     import GlobalMapSync from './stores/GlobalMapSync.vue';
+    import TimeDisplay from './ui/TimeDisplay.vue';
 
     const {
         showBarycenter,
@@ -139,6 +140,7 @@
         <GlobalMapSync :tracker="tracker" />
     </Map>
     <BottomSettings ref="bottom-settings" />
+    <TimeDisplay />
 </template>
 
 <style lang="scss" module>
