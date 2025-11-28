@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import { useSimStore } from '@/stores/sim';
     import { storeToRefs } from 'pinia';
-    import { useTemplateRef, watch } from 'vue';
+    import { onMounted, useTemplateRef, watch } from 'vue';
 
     const { timestamp } = storeToRefs(useSimStore())
     const input = useTemplateRef("input")
@@ -45,13 +45,16 @@
         input.value.blur()
     }
 
-    watch(timestamp, (time) => {
+    function updateInputContent(time: Date) {
         if (!input.value)
             return
         if (input.value == document.activeElement)
             return
         input.value.value = formatDate(time)
-    })
+    }
+
+    watch(timestamp, updateInputContent)
+    onMounted(() => updateInputContent(timestamp.value))
 </script>
 
 <template>
@@ -71,11 +74,10 @@
         max-width: 100%;
         top: 0;
         left: 0;
-        color: yellow;
         display: block;
 
         .input {
-            font-size: .9em;
+            font-size: .7em;
             margin: 0;
             padding: .3em .7em;
             border: none;
@@ -84,9 +86,9 @@
                 transparent 50%);
             color: var(--time-text-color);
             border-radius: .3em;
-            width: 10em;
+            width: 11em;
             font-family: inherit;
-            font-weight: inherit;
+            font-weight: 700;
 
             &:hover, &:focus {
                 background-color: var(--time-background-color);

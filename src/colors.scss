@@ -16,8 +16,8 @@ body {
 
     --orbit-color: #aaa;
 
-    --time-background-color: var(--bottom-menu-background-color);
-    --time-text-color: var(--bottom-menu-icon-color);
+    --time-background-color: #e8e8e8;
+    --time-text-color: #444;
 
     color: black;
 }
@@ -38,4 +38,7 @@ body.dark-mode {
     --orbit-color: #33435b;
 
     color: #ddd;
+
+    --time-background-color: #192e4f;
+    --time-text-color: #c1bf9d;
 }
