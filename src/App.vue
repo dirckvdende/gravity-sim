@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Map from './map/Map.vue';
     import Vector2 from './util/Vector2';
-    import { computed, onMounted, ref, watch } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import BottomSettings from './ui/BottomSettings.vue';
     import { useOptionsStore } from './stores/options';
     import { storeToRefs } from 'pinia';
@@ -13,7 +13,7 @@
     import { useSimStore } from './stores/sim';
     import GlobalMapSync from './stores/GlobalMapSync.vue';
     import TimeDisplay from './ui/TimeDisplay.vue';
-import DemoOverlay from './ui/DemoOverlay.vue';
+    import DemoOverlay from './ui/DemoOverlay.vue';
 
     const {
         showBarycenter,
@@ -157,6 +157,10 @@ import DemoOverlay from './ui/DemoOverlay.vue';
         font-family: inherit;
         font-weight: inherit;
         color: inherit;
+    }
+
+    * {
+        -webkit-tap-highlight-color: transparent;
     }
 </style>
 
