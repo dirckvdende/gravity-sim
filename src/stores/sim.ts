@@ -19,10 +19,10 @@ export const useSimOptionsStore = defineStore("gravity-sim-options", () => {
         maxStepSize: ref(Infinity),
         /**
          * Maximum time between frames used for scaling. This is used mainly
-         * when the used tabs out and back in, and the time between frames is
+         * when the user tabs out and back in, and the time between frames is
          * very large (default .1, i.e. 10 fps)
          */
-        maxTimeBetweenFrames: ref(10),
+        maxTimeBetweenFrames: ref(.1),
         /**
          * Simulation speed factor. A value of 3 means 3 simulation time units
          * pass every second (default 1)
