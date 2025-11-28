@@ -13,6 +13,7 @@
     import { useSimStore } from './stores/sim';
     import GlobalMapSync from './stores/GlobalMapSync.vue';
     import TimeDisplay from './ui/TimeDisplay.vue';
+import DemoOverlay from './ui/DemoOverlay.vue';
 
     const {
         showBarycenter,
@@ -142,6 +143,7 @@
     </Map>
     <BottomSettings ref="bottom-settings" />
     <TimeDisplay />
+    <DemoOverlay />
 </template>
 
 <style lang="scss" module>
