@@ -8,8 +8,10 @@ import { ref, watch } from "vue";
  */
 export const useOptionsStore = defineStore("sim-options", () => {
     
-    const darkMode = ref(usePreferredDark())
+    // Initialize dark mode to value set by browser
+    const darkMode = ref(usePreferredDark().value)
 
+    // Watch dark mode for changes and add/remove dark-move class to body
     watch(darkMode, (value) =>
         document.body.classList.toggle("dark-mode", value),
         { immediate: true })
@@ -24,4 +26,4 @@ export const useOptionsStore = defineStore("sim-options", () => {
         /** Dark mode vs light mode theme */
         darkMode,
     }
-})
+}, { persist: true })

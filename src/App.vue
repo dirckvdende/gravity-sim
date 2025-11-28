@@ -11,6 +11,7 @@
     import IconRenderer from './map/icons/IconRenderer.vue';
     import Ruler from './ui/Ruler.vue';
     import { useSimStore } from './stores/sim';
+    import GlobalMapSync from './stores/GlobalMapSync.vue';
 
     const {
         showBarycenter,
@@ -135,6 +136,7 @@
             :tracker="tracker"
             :icons="icons" />
         <Ruler :tracker="tracker" />
+        <GlobalMapSync :tracker="tracker" />
     </Map>
     <BottomSettings ref="bottom-settings" />
 </template>

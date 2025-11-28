@@ -11,11 +11,11 @@ export type PositionRectTracker = {
     /**
      * Ref to the current position of the tracker
      */
-    position: Readonly<Ref<Vector2>>,
+    position: Ref<Vector2>,
     /**
      * Ref to the current zoom level of the tracker
      */
-    zoomLevel: Readonly<Ref<number>>,
+    zoomLevel: Ref<number>,
     /**
      * Number of units that every screen pixel is large
      */
