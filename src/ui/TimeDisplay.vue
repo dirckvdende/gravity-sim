@@ -72,9 +72,10 @@
         padding: 1em;
         box-sizing: border-box;
         max-width: 100%;
-        top: 0;
+        top: env(safe-area-inset-top, 0px);
         left: 0;
         display: block;
+        padding-top: max(1em - env(safe-area-inset-top, 0px), 0px);
 
         .input {
             font-size: .7em;

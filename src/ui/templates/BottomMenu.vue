@@ -74,7 +74,7 @@
 
     %arrow {
         position: fixed;
-        bottom: .9em;
+        bottom: calc(.9em + env(safe-area-inset-bottom, 0px));
         width: 2.5em;
         height: 2.5em;
         background-color: var(--bottom-menu-background-color, white);
@@ -113,7 +113,7 @@
         position: fixed;
         bottom: 0;
         left: 0;
-        padding: 1.8em .6em .6em .6em;
+        padding: 1.8em .6em calc(.6em + env(safe-area-max-inset-bottom, 0px)) .6em;
         box-sizing: border-box;
         width: 100%;
         overflow-x: scroll;
