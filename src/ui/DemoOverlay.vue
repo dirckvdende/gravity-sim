@@ -17,7 +17,7 @@
         width: 100%;
         text-align: center;
         font-size: min(30vh, 30vw);
-        opacity: .2;
+        opacity: .1;
         font-weight: 800;
         font-family: sans-serif;
         rotate: -45deg;
