@@ -143,11 +143,32 @@
                 font-size: .8em;
                 --icon-color: var(--bottom-menu-icon-color, #999);
                 position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 2.6em;
+
+                :global(.menu-button-path-icon) {
+                    width: 2em;
+                    height: 2em;
+                    fill: var(--icon-color);
+                }
 
                 :global(.menu-button-icon) {
                     width: 2em;
                     height: 2em;
-                    fill: var(--icon-color);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    box-sizing: border-box;
+                    padding: .1em;
+
+                    & > img {
+                        flex-grow: 1;
+                        flex-shrink: 1;
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
                 }
 
                 :global(.menu-button-text) {
@@ -168,7 +189,7 @@
                 }
 
                 &:hover {
-                    :global(.menu-button-icon) {
+                    :global(.menu-button-path-icon) {
                         fill: color-mix(in srgb, var(--icon-color),
                             var(--bottom-menu-icon-color-mix, black) 20%);
                     }

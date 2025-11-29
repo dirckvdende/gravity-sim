@@ -115,57 +115,57 @@
     <BottomMenu>
         <MenuSection>
             <MenuButton
-                :icon="paused ? mdiPlay : mdiPause"
+                :path-icon="paused ? mdiPlay : mdiPause"
                 @click="pause"
                 :style="{
                     '--icon-color': paused ? 'var(--accent-color-blue, #6b8edf)'
                     : 'var(--accent-color-red, #e16262)',
                 }">{{ paused ? "Play (_)" : "Pause (_)" }}</MenuButton>
             <MenuButton
-                :icon="mdiRewind"
+                :path-icon="mdiRewind"
                 @click="slowDown">Slower ([)</MenuButton>
             <MenuText>{{ mode[1].name }}</MenuText>
             <MenuButton
-                :icon="mdiFastForward"
+                :path-icon="mdiFastForward"
                 @click="speedUp">Faster (])</MenuButton>
         </MenuSection>
         <MenuSection>
             <MenuButton
-                :icon="mdiBullseye"
+                :path-icon="mdiBullseye"
                 @click="toggleBarycenter"
                 :style="{
                     '--icon-color': showBarycenter ?
                     'var(--accent-color-purple, #9f30b3)' : undefined,
                 }">Show barycenter (B)</MenuButton>
             <MenuButton
-                :icon="mdiTarget"
+                :path-icon="mdiTarget"
                 @click="resetToBarycenter"
             >Reset to barycenter (R)</MenuButton>
         </MenuSection>
         <MenuSection>
             <MenuButton
-                :icon="mdiOrbit"
+                :path-icon="mdiOrbit"
                 @click="toggleOrbits"
                 :style="{
                     '--icon-color': showOrbits ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Show orbits (O)</MenuButton>
             <MenuButton
-                :icon="mdiGrid"
+                :path-icon="mdiGrid"
                 @click="toggleGrid"
                 :style="{
                     '--icon-color': showGrid ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Show grid</MenuButton>
             <MenuButton
-                :icon="mdiWeatherNight"
+                :path-icon="mdiWeatherNight"
                 @click="toggleDarkMode"
                 :style="{
                     '--icon-color': darkMode ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Dark mode</MenuButton>
             <MenuButton
-                :icon="mdiFullscreen"
+                :path-icon="mdiFullscreen"
                 @click="() => toggleFullscreen()"
                 :style="{
                     '--icon-color': isFullscreenRef ?
@@ -174,11 +174,11 @@
         </MenuSection>
         <MenuSection>
             <MenuButton
-                :icon="mdiContentSaveOutline"
+                :path-icon="mdiContentSaveOutline"
                 @click="saveFile"
                 >Save file</MenuButton>
             <MenuButton
-                :icon="mdiFileOutline"
+                :path-icon="mdiFileOutline"
                 @click="loadFile"
                 >Load file</MenuButton>
         </MenuSection>
