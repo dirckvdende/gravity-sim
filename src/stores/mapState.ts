@@ -8,7 +8,7 @@ import { serializer } from "./serializer";
 export const useMapStateStore = defineStore("map-state", () => {
     return {
         position: ref(Vector2.Zero),
-        zoomLevel: ref(0),
+        zoomLevel: ref(-12),
     }
 }, {
     persist: { serializer },
