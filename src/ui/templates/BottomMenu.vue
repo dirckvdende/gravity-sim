@@ -147,6 +147,7 @@
                 align-items: center;
                 justify-content: center;
                 height: 2.6em;
+                outline: none;
 
                 :global(.menu-button-path-icon) {
                     width: 2em;

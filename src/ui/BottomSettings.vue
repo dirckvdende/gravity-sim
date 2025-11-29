@@ -73,7 +73,7 @@
             speed.value = prevMode.speed
     }
 
-    useKeyEvent(" ", pause)
+    useKeyEvent(" ", pause, { preventDefault: true })
     useKeyEvent("[", slowDown)
     useKeyEvent("]", speedUp)
 

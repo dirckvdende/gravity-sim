@@ -17,6 +17,11 @@ export type KeyEventOptions = {
      * key or not doesn't have an effect (default false)
      */
     caseInsensitive?: boolean,
+    /**
+     * Prevent default event handler when this specific key is pressed (default
+     * false). Only has an effect for mode "press"
+     */
+    preventDefault?: boolean,
 }
 
 /**
@@ -80,8 +85,11 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
         if (!isKey(event.key))
             return
         holdActive = false
-        if ((optionsRef.value?.mode ?? "press") == "press")
+        if ((optionsRef.value?.mode ?? "press") == "press") {
             callback(event)
+            if (optionsRef.value?.preventDefault)
+                event.preventDefault()
+        }
     }
 
     /**
