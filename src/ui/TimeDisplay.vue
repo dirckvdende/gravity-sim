@@ -68,14 +68,14 @@
 
 <style lang="scss" module>
     .container {
-        position: fixed;
-        padding: 1em;
+        position: absolute;
+        padding: 0;
         box-sizing: border-box;
         max-width: 100%;
-        top: env(safe-area-inset-top, 0px);
+        top: 0;
         left: 0;
         display: block;
-        padding-top: max(1em - env(safe-area-inset-top, 0px), 0px);
+        padding-top: max(calc(0 - env(safe-area-inset-top, 0px)), -1em);
 
         .input {
             font-size: .7em;

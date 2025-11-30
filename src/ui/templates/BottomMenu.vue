@@ -70,15 +70,15 @@
 </template>
 
 <style lang="scss" module>
-    $shadow: 0 .15em .6em -.35em var(--bottom-menu-shadow-color, black);
+    @use "@/colors.scss";
 
     %arrow {
-        position: fixed;
-        bottom: calc(.9em + env(safe-area-inset-bottom, 0px));
+        position: absolute;
+        bottom: .2em;
         width: 2.5em;
         height: 2.5em;
         background-color: var(--bottom-menu-background-color, white);
-        box-shadow: $shadow;
+        box-shadow: colors.$menu-shadow;
         border-radius: 1.25em;
         border: none;
         cursor: pointer;
@@ -101,21 +101,21 @@
 
     .arrow-left {
         @extend %arrow;
-        left: .5em;
+        left: 0;
     }
 
     .arrow-right {
         @extend %arrow;
-        right: .5em;
+        right: 0;
     }
 
     .container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        padding: 1.8em .6em calc(.6em + env(safe-area-max-inset-bottom, 0px)) .6em;
+        position: absolute;
+        bottom: -.6em;
+        left: -.6em;
+        right: -.6em;
+        padding: 1.8em .6em .6em .6em;
         box-sizing: border-box;
-        width: 100%;
         overflow-x: scroll;
         scrollbar-width: none;
         pointer-events: none;
@@ -131,7 +131,7 @@
             padding: 0 .4em;
             background-color: var(--bottom-menu-background-color, white);
             border-radius: .5em;
-            box-shadow: $shadow;
+            box-shadow: colors.$menu-shadow;
             user-select: none;
             margin-right: .5em;
             flex-shrink: 0;
@@ -180,7 +180,7 @@
                     user-select: none;
                     background-color: var(--bottom-menu-background-color, 
                         white);
-                    box-shadow: $shadow;
+                    box-shadow: colors.$menu-shadow;
                     font-size: .9em;
                     border-radius: .5em;
                     padding: .3em .7em;

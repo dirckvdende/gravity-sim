@@ -11,8 +11,9 @@
     import { useOptionsStore } from '@/stores/options';
     import { storeToRefs } from 'pinia';
     import { useSimOptionsStore, useSimStore } from '@/stores/sim';
-    import { downloadFile, uploadFile } from '@/util/piniaStoreToFile';
+    import { downloadFile } from '@/util/piniaStoreToFile';
     import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
+    import { useMenuStore } from '@/stores/menu';
 
     const {
         showBarycenter,
@@ -106,8 +107,10 @@
         downloadFile("state", "gravity-sim.grav")
     }
 
+    const { activeMenu } = storeToRefs(useMenuStore())
+
     function loadFile() {
-        uploadFile("state", ".grav")
+        activeMenu.value = "load"
     }
 </script>
 

@@ -14,6 +14,8 @@
     import GlobalMapSync from './stores/GlobalMapSync.vue';
     import TimeDisplay from './ui/TimeDisplay.vue';
     import DemoOverlay from './ui/DemoOverlay.vue';
+    import LoadMenu from './ui/LoadMenu.vue';
+import UIContainer from './ui/UIContainer.vue';
 
     const {
         showBarycenter,
@@ -141,8 +143,11 @@
         <Ruler :tracker="tracker" />
         <GlobalMapSync :tracker="tracker" />
     </Map>
-    <BottomSettings ref="bottom-settings" />
-    <TimeDisplay />
+    <UIContainer>
+        <BottomSettings ref="bottom-settings" />
+        <TimeDisplay />
+        <LoadMenu />
+    </UIContainer>
     <DemoOverlay />
 </template>
 

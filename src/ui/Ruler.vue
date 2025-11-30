@@ -176,8 +176,8 @@
 
 <style lang="scss" module>
     .container {
-        position: fixed;
-        bottom: calc(3.2em + env(safe-area-inset-bottom, 0px));
+        position: absolute;
+        bottom: 3.2em;
         left: .5em;
         display: flex;
         flex-direction: column;

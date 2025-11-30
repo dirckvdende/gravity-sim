@@ -1,4 +1,6 @@
 
+$menu-shadow: 0 .15em .6em -.35em var(--bottom-menu-shadow-color, black);
+
 body {
     --background-color: white;
     --grid-color: #eee;
@@ -11,6 +13,12 @@ body {
     --bottom-menu-shadow-color: black;
     --bottom-menu-icon-color: #999;
     --bottom-menu-icon-color-mix: #000;
+
+    --side-menu-background-color: white;
+    --side-menu-icon-color: #666;
+    --side-menu-icon-color-mix: #000;
+    --side-menu-line-color: #ddd;
+    --side-menu-button-color: #eee;
 
     --pin-background-color: #ccc;
 
@@ -32,6 +40,12 @@ body.dark-mode {
     --bottom-menu-shadow-color: black;
     --bottom-menu-icon-color: #aaa;
     --bottom-menu-icon-color-mix: #000;
+
+    --side-menu-background-color: #192e4f;
+    --side-menu-icon-color: #aaa;
+    --side-menu-icon-color-mix: #000;
+    --side-menu-line-color: #152541;
+    --side-menu-button-color: #12213a;
 
     --pin-background-color: #313f56;
 
