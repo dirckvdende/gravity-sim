@@ -59,9 +59,11 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        pointer-events: none;
 
         &.visible {
             opacity: 1;
+            pointer-events: all;
             translate: 0 0;
         }
 
