@@ -34,9 +34,9 @@ export const useSimOptionsStore = defineStore("gravity-sim-options", () => {
         maxStepsPerFrame: ref(100),
         /**
          * Error tolerance for the RKF solver, relative to the maximum distance
-         * between any two objects (default 1e-6)
+         * between any two objects (default 1e-8)
          */
-        tolerance: ref(1e-6),
+        tolerance: ref(1e-8),
     }
 }, {
     persist: {
