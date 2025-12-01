@@ -22,6 +22,7 @@
         showGrid,
     } = storeToRefs(useOptionsStore())
     const { speed, paused } = storeToRefs(useSimOptionsStore())
+    const { slowed } = storeToRefs(useSimStore())
 
     type Mode = {
         name: string,
@@ -127,7 +128,9 @@
             <MenuButton
                 :path-icon="mdiRewind"
                 @click="slowDown">Slower ([)</MenuButton>
-            <MenuText>{{ mode[1].name }}</MenuText>
+            <MenuText :style="{
+                color: slowed ? 'var(--accent-color-orange)' : undefined,
+            }">{{ mode[1].name }}{{ slowed ? " *" : "" }}</MenuText>
             <MenuButton
                 :path-icon="mdiFastForward"
                 @click="speedUp">Faster (])</MenuButton>
