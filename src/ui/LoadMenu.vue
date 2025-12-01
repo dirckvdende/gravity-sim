@@ -2,7 +2,7 @@
     import MenuSection from './templates/MenuSection.vue';
     import SideMenu from './templates/SideMenu.vue';
     import MenuButton from './templates/MenuButton.vue';
-    import { mdiFileOutline } from '@mdi/js';
+    import { mdiFolderOpenOutline } from '@mdi/js';
     import MenuText from './templates/MenuText.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/menu';
@@ -41,7 +41,7 @@
     <SideMenu :visible="visible" menu-title="Load scenario" @close="closeMenu">
         <MenuSection>
             <MenuButton
-                :path-icon="mdiFileOutline"
+                :path-icon="mdiFolderOpenOutline"
                 @click="() => {
                     uploadFile('state', '.grav')
                     closeMenu()

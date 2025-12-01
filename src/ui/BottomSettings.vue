@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
-    mdiFileOutline, mdiFullscreen} from '@mdi/js';
+    mdiFullscreen, mdiFolderOpenOutline} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
@@ -184,7 +184,7 @@
                 @click="saveFile"
                 >Save file</MenuButton>
             <MenuButton
-                :path-icon="mdiFileOutline"
+                :path-icon="mdiFolderOpenOutline"
                 @click="loadFile"
                 >Load file</MenuButton>
         </MenuSection>
