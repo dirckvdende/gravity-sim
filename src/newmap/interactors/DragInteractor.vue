@@ -12,3 +12,5 @@
             panPixels(new Vector2(-pointer.moveX / t, -pointer.moveY / t))
     }, { target })
 </script>
+
+<template></template>
