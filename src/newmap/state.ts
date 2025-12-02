@@ -43,19 +43,28 @@ export type MapState = MapStateBase & {
      */
     toPixelCoords(mapCoords: Vector2): Vector2
     /**
-     * Modify a map state such that it is shifted by a given amount of pixels
+     * Modify map state such that it is shifted by a given amount of pixels
      * @param state The map state to modify
      * @param diff Pixel coord difference
      */
     panPixels(diff: Vector2): void
     /**
-     * Modify a map state to zoom in/out
+     * Modify map state to zoom in/out
      * @param state The map state to modify
-     * @param diff Difference in zoom level to apply (positive = zoom in, negative =
-     * zoom out)
-     * @param at Position to zoom into, in map coords (default center of viewport)
+     * @param diff Difference in zoom level to apply (positive = zoom in,
+     * negative = zoom out)
+     * @param at Position to zoom into, in map coords (default center of
+     * viewport)
      */
     zoom(diff: number, at?: Vector2): void
+    /**
+     * Modify map state to zoom in/out given some ratio pixelSizeAfter /
+     * pixelSizeBefore
+     * @param ratio The ratio between the pixel size before and after
+     * @param at Position to zoom into, in map coords (default center of
+     * viewport)
+     */
+    zoomRatio(ratio: number, at?: Vector2): void
 }
 
 /** Key used for inject-provide in map component */
@@ -116,6 +125,10 @@ export function extendMapState(base: MapStateBase): MapState {
         position.value = position.value.add(shift.scale(1 - scaleFactor))
     }
 
+    function zoomRatio(ratio: number, at?: Vector2): void {
+        zoom(Math.log(ratio), at)
+    }
+
     return {
         ...base,
         pixelSize,
@@ -124,5 +137,6 @@ export function extendMapState(base: MapStateBase): MapState {
         toPixelCoords,
         panPixels,
         zoom,
+        zoomRatio,
     }
 }
