@@ -37,5 +37,6 @@
         height: 400px;
         background-color: red;
         position: relative;
+        touch-action: none;
     }
 </style>
