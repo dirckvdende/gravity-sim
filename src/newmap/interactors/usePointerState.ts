@@ -17,6 +17,7 @@ type PointerStateOptions = Parameters<typeof usePointer>[0]
  */
 export function usePointerState(options?: PointerStateOptions):
 Ref<PointerState[]> {
+    const trackedIds: Set<number> = new Set()
     const tracked = ref<PointerState[]>([])
     const targetElement = computed(() => {
         const value = toValue(options?.target)
@@ -26,28 +27,10 @@ Ref<PointerState[]> {
     })
     const { x: offsetX, y: offsetY } = useElementBounding(targetElement)
 
-    function hasId(id: number): boolean {
-        return tracked.value.find(({ pointerId }) => pointerId == id) !=
-            undefined
-    }
-
-    function add(state: PointerState): void {
-        if (hasId(state.pointerId))
-            return
-        tracked.value = [...tracked.value, { ...state }]
-    }
-
     function removeId(id: number): void {
-        if (!hasId(id))
+        if (!trackedIds.delete(id))
             return
         tracked.value = tracked.value.filter(({ pointerId }) => pointerId != id)
-    }
-
-    function update(state: PointerState): void {
-        if (!hasId(state.pointerId))
-            return
-        removeId(state.pointerId)
-        add(state)
     }
 
     // Watch target element for drag start. This is only used to detect drag
@@ -56,18 +39,22 @@ Ref<PointerState[]> {
         if (value.pressure == 0)
             removeId(value.pointerId)
         else
-            add(value)
+            trackedIds.add(value.pointerId)
     })
 
     // Watch document element for tracked pointer movement and removal
     watch(reactive(usePointer({...options, target: undefined})), (value) => {
         if (value.pressure == 0)
             removeId(value.pointerId)
-        update({
+        if (!trackedIds.has(value.pointerId))
+            return
+        removeId(value.pointerId)
+        trackedIds.add(value.pointerId)
+        tracked.value = [...tracked.value, {
             ...value,
             x: value.x - offsetX.value,
             y: value.y - offsetY.value,
-        })
+        }]
     })
 
     return tracked
