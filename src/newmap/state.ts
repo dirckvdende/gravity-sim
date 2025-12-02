@@ -1,88 +1,128 @@
 
 import Vector2 from "@/util/Vector2";
-import { type InjectionKey, type Ref } from "vue";
+import { computed, type ComputedRef, type InjectionKey, type Ref, ref } from
+"vue";
 
 /** State of a map with center position, zoom level, etc. */
-export type MapState = {
+export type MapStateBase = {
     /** HTML element that the map uses to render */
-    target: HTMLElement | null
+    target: Ref<HTMLElement | null>
     /** Position of the center of the displayed map */
-    position: Vector2
+    position: Ref<Vector2>
     /** Zoom level on an logarithmic scale */
-    zoomLevel: number
+    zoomLevel: Ref<number>
     /** Size of the target element in pixels */
-    targetSize: Vector2
+    targetSize: ComputedRef<Vector2>
+}
+
+/**
+ * State of a map with center position, zoom level, etc., and computed
+ * properties
+ */
+export type MapState = MapStateBase & {
+    /** The size of a single pixel in map coords */
+    pixelSize: ComputedRef<number>
+    /**
+     * Viewport (in map coords) of the map with top left and bottom right coords
+     */
+    viewport: ComputedRef<{
+        topLeft: Vector2
+        bottomRight: Vector2
+    }>
+    /**
+     * Convert pixel coords to map coords
+     * @param pixelCoords Pixel coords to convert
+     * @returns The map coords
+     */
+    toMapCoords(pixelCoords: Vector2): Vector2
+    /**
+     * Convert map coords to pixel coords
+     * @param state The map state to use for the conversion
+     * @param mapCoords Map coords to convert
+     * @returns The pixel coords
+     */
+    toPixelCoords(mapCoords: Vector2): Vector2
+    /**
+     * Modify a map state such that it is shifted by a given amount of pixels
+     * @param state The map state to modify
+     * @param diff Pixel coord difference
+     */
+    panPixels(diff: Vector2): void
+    /**
+     * Modify a map state to zoom in/out
+     * @param state The map state to modify
+     * @param diff Difference in zoom level to apply (positive = zoom in, negative =
+     * zoom out)
+     * @param at Position to zoom into, in map coords (default center of viewport)
+     */
+    zoom(diff: number, at?: Vector2): void
 }
 
 /** Key used for inject-provide in map component */
-export const mapStateKey = Symbol() as InjectionKey<Ref<MapState>>
+export const mapStateKey = Symbol() as InjectionKey<MapState>
 
 /**
- * Get the viewport (in map coords) of a map
- * @param state The map state to get the viewport of
- * @returns The viewport with topLeft and bottomRight coords
+ * Default value to use for map state inject(). Returns a new object such that
+ * no modifications bleed over
+ * @returns A new map state with default values
  */
-export function viewport(state: MapState): {
-    topLeft: Vector2
-    bottomRight: Vector2
-} {
-    const scale = pixelSize(state)
-    return {
-        topLeft: state.position.subtract(state.targetSize.scale(scale / 2)),
-        bottomRight: state.position.add(state.targetSize.scale(scale / 2)),
+export function defaultState(): MapState {
+    return extendMapState({
+        target: ref<HTMLElement | null>(null),
+        position: ref(Vector2.Zero),
+        zoomLevel: ref(0),
+        targetSize: computed(() => Vector2.Zero),
+    })
+}
+
+/**
+ * Extends a base map state with computed refs and helper functions
+ * @param base Base map state to extend with computed refs and functions
+ * @returns The extended map state
+ */
+export function extendMapState(base: MapStateBase): MapState {
+
+    const { position, targetSize, zoomLevel } = base
+
+    const pixelSize = computed(() => {
+        return Math.exp(-zoomLevel.value)
+    })
+
+    const viewport = computed(() => ({
+        topLeft: position.value.subtract(targetSize.value.scale(
+            pixelSize.value / 2)),
+        bottomRight: position.value.add(targetSize.value.scale(
+            pixelSize.value / 2)),
+    }))
+
+    function toMapCoords(pixelCoords: Vector2): Vector2 {
+        const { topLeft } = viewport.value
+        return new Vector2(topLeft).add(pixelCoords.scale(pixelSize.value))
     }
-}
 
-/**
- * Get the pixel size of a map
- * @param state The state to get the pixel size of
- * @return The size of a single pixel in map coords
- */
-export function pixelSize(state: MapState): number {
-    return Math.exp(-state.zoomLevel)
-}
+    function toPixelCoords(mapCoords: Vector2): Vector2 {
+        return mapCoords.subtract(viewport.value.topLeft).scale(1 /
+            pixelSize.value)
+    }
 
-/**
- * Convert pixel coords to map coords
- * @param state The map state to use for the conversion
- * @param pixelCoords Pixel coords to convert
- * @returns The map coords
- */
-export function toMapCoords(state: MapState, pixelCoords: Vector2): Vector2 {
-    const { topLeft } = viewport(state)
-    return new Vector2(topLeft).add(pixelCoords.scale(pixelSize(state)))
-}
+    function panPixels(diff: Vector2): void {
+        position.value = position.value.add(diff.scale(pixelSize.value))
+    }
 
-/**
- * Convert map coords to pixel coords
- * @param state The map state to use for the conversion
- * @param mapCoords Map coords to convert
- * @returns The pixel coords
- */
-export function toPixelCoords(state: MapState, mapCoords: Vector2): Vector2 {
-    return mapCoords.subtract(viewport(state).topLeft).scale(1 /
-        pixelSize(state))
-}
+    function zoom(diff: number, at?: Vector2): void {
+        const shift = (at ?? position.value).subtract(position.value)
+        const scaleFactor = Math.exp(-diff)
+        zoomLevel.value += diff
+        position.value = position.value.add(shift.scale(1 - scaleFactor))
+    }
 
-/**
- * Modify a map state such that it is shifted by a given amount of pixels
- * @param state The map state to modify
- * @param diff Pixel coord difference
- */
-export function panPixels(state: MapState, diff: Vector2): void {
-    state.position = state.position.add(diff.scale(pixelSize(state)))
-}
-
-/**
- * Modify a map state to zoom in/out
- * @param state The map state to modify
- * @param diff Difference in zoom level to apply (positive = zoom in, negative =
- * zoom out)
- * @param at Position to zoom into, in map coords (default center of viewport)
- */
-export function zoom(state: MapState, diff: number, at?: Vector2): void {
-    const shift = (at ?? state.position).subtract(state.position)
-    const scaleFactor = Math.exp(-diff)
-    state.zoomLevel += diff
-    state.position = state.position.add(shift.scale(1 - scaleFactor))
+    return {
+        ...base,
+        pixelSize,
+        viewport,
+        toMapCoords,
+        toPixelCoords,
+        panPixels,
+        zoom,
+    }
 }
