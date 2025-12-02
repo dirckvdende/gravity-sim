@@ -1,0 +1,59 @@
+
+$menu-shadow: 0 .15em .6em -.35em var(--bottom-menu-shadow-color, black);
+
+body {
+    --background-color: white;
+    --grid-color: #eee;
+    --accent-color-blue: #6b8edf;
+    --accent-color-red: #e65656;
+    --accent-color-orange: #eba732;
+    --accent-color-purple: #9f30b3;
+    --ruler-color: #333;
+
+    --bottom-menu-background-color: white;
+    --bottom-menu-shadow-color: black;
+    --bottom-menu-icon-color: #999;
+    --bottom-menu-icon-color-mix: #000;
+
+    --side-menu-background-color: white;
+    --side-menu-icon-color: #666;
+    --side-menu-icon-color-mix: #000;
+    --side-menu-line-color: #ddd;
+    --side-menu-button-color: #eee;
+
+    --pin-background-color: #ccc;
+
+    --orbit-color: #aaa;
+
+    --time-background-color: #e8e8e8;
+    --time-text-color: #444;
+
+    color: black;
+}
+
+body.dark-mode {
+    --background-color: #061225;
+    --grid-color: #0f2240;
+    --accent-color-purple: #bf60cf;
+    --ruler-color: #ccc;
+
+    --bottom-menu-background-color: #192e4f;
+    --bottom-menu-shadow-color: black;
+    --bottom-menu-icon-color: #aaa;
+    --bottom-menu-icon-color-mix: #000;
+
+    --side-menu-background-color: #192e4f;
+    --side-menu-icon-color: #aaa;
+    --side-menu-icon-color-mix: #000;
+    --side-menu-line-color: #152541;
+    --side-menu-button-color: #12213a;
+
+    --pin-background-color: #313f56;
+
+    --orbit-color: #33435b;
+
+    color: #ddd;
+
+    --time-background-color: #192e4f;
+    --time-text-color: #c1bf9d;
+}

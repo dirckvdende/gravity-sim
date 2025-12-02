@@ -177,7 +177,7 @@
 <style lang="scss" module>
     .container {
         position: fixed;
-        bottom: 3.2em;
+        bottom: calc(3.2em + env(safe-area-inset-bottom, 0px));
         left: .5em;
         display: flex;
         flex-direction: column;
@@ -187,13 +187,13 @@
 
         .label {
             font-size: .7em;
-            color: #333;
+            color: var(--ruler-color, #333);
             margin-bottom: -.2em;
             font-weight: bold;
         }
 
         .arrow {
-            stroke: #333;
+            stroke: var(--ruler-color, #333);
             stroke-linecap: round;
             fill: none;
         }

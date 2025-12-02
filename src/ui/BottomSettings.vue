@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
-    mdiTarget } from '@mdi/js';
-    import { computed, ref } from 'vue';
+    mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
+    mdiFullscreen, mdiFolderOpenOutline} from '@mdi/js';
+    import { computed } from 'vue';
     import { useKeyEvent } from '../util/keyEvent';
     import MenuSection from './templates/MenuSection.vue';
     import MenuButton from './templates/MenuButton.vue';
@@ -9,21 +10,33 @@
     import BottomMenu from './templates/BottomMenu.vue';
     import { useOptionsStore } from '@/stores/options';
     import { storeToRefs } from 'pinia';
-    import type { GravitySim } from '@/sim/sim';
+    import { useSimOptionsStore, useSimStore } from '@/stores/sim';
+    import { downloadFile } from '@/util/piniaStoreToFile';
+    import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
+    import { useMenuStore } from '@/stores/menu';
 
-    const { sim } = defineProps<{
-        /** Simulation object */
-        sim: GravitySim,
-    }>()
-
-    const { speed, showBarycenter } = storeToRefs(useOptionsStore())
+    const {
+        showBarycenter,
+        showOrbits,
+        darkMode,
+        showGrid,
+    } = storeToRefs(useOptionsStore())
+    const { speed, paused } = storeToRefs(useSimOptionsStore())
+    const { slowed } = storeToRefs(useSimStore())
 
     type Mode = {
         name: string,
         speed: number,
     }
 
-    const modes: Mode[] = [
+    const modes = [
+        { name: "-1 year / s", speed: -60 * 60 * 24 * 365.25 },
+        { name: "-1 month / s", speed: -60 * 60 * 24 * 365.25 / 12 },
+        { name: "-1 week / s", speed: -60 * 60 * 24 * 7 },
+        { name: "-1 day / s", speed: -60 * 60 * 24 },
+        { name: "-1 hour / s", speed: -60 * 60 },
+        { name: "-1 minute / s", speed: -60 },
+        { name: "-1 second /s", speed: -1 },
         { name: "1 second / s", speed: 1 },
         { name: "1 minute / s", speed: 60 },
         { name: "1 hour / s", speed: 60 * 60 },
@@ -31,44 +44,74 @@
         { name: "1 week / s", speed: 60 * 60 * 24 * 7 },
         { name: "1 month / s", speed: 60 * 60 * 24 * 365.25 / 12 },
         { name: "1 year / s", speed: 60 * 60 * 24 * 365.25 },
-    ]
-    
-    const paused = ref(false)
-    const index = ref(0)
-    
-    const name = computed(() => {
-        if (paused.value)
-            return "Paused"
-        return modes[index.value]?.name ?? "Paused"
-    })
+    ] as const
 
-    function updateSpeed() {
-        speed.value = paused.value ? 0 : (modes[index.value]?.speed ?? 0)
-    }
+    // Pair of [index, mode]
+    const mode = computed(() => {
+        let closestDiff = Infinity
+        let closest: [number, Mode] = [0, modes[0]]
+        for (const [index, mode] of modes.entries()) {
+            if (Math.abs(speed.value - mode.speed) < closestDiff) {
+                closestDiff = Math.abs(speed.value - mode.speed)
+                closest = [index, mode]
+            }
+        }
+        return closest
+    })
 
     function pause() {
         paused.value = !paused.value
-        updateSpeed()
-    }
-
-    function slowDown() {
-        paused.value = false
-        index.value = Math.max(0, index.value - 1)
-        updateSpeed()
     }
 
     function speedUp() {
-        paused.value = false
-        index.value = Math.min(modes.length - 1, index.value + 1)
-        updateSpeed()
+        const nextMode = modes[mode.value[0] + 1]
+        if (nextMode != undefined)
+            speed.value = nextMode.speed
     }
-    
-    useKeyEvent(" ", pause)
+
+    function slowDown() {
+        const prevMode = modes[mode.value[0] - 1]
+        if (prevMode != undefined)
+            speed.value = prevMode.speed
+    }
+
+    useKeyEvent(" ", pause, { preventDefault: true })
     useKeyEvent("[", slowDown)
     useKeyEvent("]", speedUp)
 
     function toggleBarycenter() {
         showBarycenter.value = !showBarycenter.value
+    }
+
+    function resetToBarycenter() {
+        useSimStore().resetToBarycenter()
+    }
+
+    useKeyEvent("B", toggleBarycenter, { caseInsensitive: true })
+    useKeyEvent("R", resetToBarycenter, { caseInsensitive: true })
+
+    function toggleOrbits() {
+        showOrbits.value = !showOrbits.value
+    }
+
+    useKeyEvent("O", toggleOrbits, { caseInsensitive: true })
+
+    function toggleDarkMode() {
+        darkMode.value = !darkMode.value
+    }
+
+    function toggleGrid() {
+        showGrid.value = !showGrid.value
+    }
+
+    function saveFile() {
+        downloadFile("state", "gravity-sim.grav")
+    }
+
+    const { activeMenu } = storeToRefs(useMenuStore())
+
+    function loadFile() {
+        activeMenu.value = "load"
     }
 </script>
 
@@ -76,84 +119,74 @@
     <BottomMenu>
         <MenuSection>
             <MenuButton
-                :icon="paused ? mdiPlay : mdiPause"
+                :path-icon="paused ? mdiPlay : mdiPause"
                 @click="pause"
                 :style="{
-                    '--icon-color': paused ? '#6b8edf' : '#e16262',
+                    '--icon-color': paused ? 'var(--accent-color-blue, #6b8edf)'
+                    : 'var(--accent-color-red, #e16262)',
                 }">{{ paused ? "Play (_)" : "Pause (_)" }}</MenuButton>
             <MenuButton
-                :icon="mdiRewind"
+                :path-icon="mdiRewind"
                 @click="slowDown">Slower ([)</MenuButton>
-            <MenuText>{{ name }}</MenuText>
+            <MenuText :style="{
+                color: slowed ? 'var(--accent-color-orange)' : undefined,
+            }">{{ mode[1].name }}{{ slowed ? " *" : "" }}</MenuText>
             <MenuButton
-                :icon="mdiFastForward"
+                :path-icon="mdiFastForward"
                 @click="speedUp">Faster (])</MenuButton>
         </MenuSection>
         <MenuSection>
             <MenuButton
-                :icon="mdiBullseye"
+                :path-icon="mdiBullseye"
                 @click="toggleBarycenter"
                 :style="{
-                    '--icon-color': showBarycenter ? '#9f30b3' : undefined,
-                }">Barycenter</MenuButton>
+                    '--icon-color': showBarycenter ?
+                    'var(--accent-color-purple, #9f30b3)' : undefined,
+                }">Show barycenter (B)</MenuButton>
             <MenuButton
-                :icon="mdiTarget"
-                @click="() => sim.resetToBarycenter()"
-            >Reset to barycenter</MenuButton>
+                :path-icon="mdiTarget"
+                @click="resetToBarycenter"
+            >Reset to barycenter (R)</MenuButton>
+        </MenuSection>
+        <MenuSection>
+            <MenuButton
+                :path-icon="mdiOrbit"
+                @click="toggleOrbits"
+                :style="{
+                    '--icon-color': showOrbits ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Show orbits (O)</MenuButton>
+            <MenuButton
+                :path-icon="mdiGrid"
+                @click="toggleGrid"
+                :style="{
+                    '--icon-color': showGrid ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Show grid</MenuButton>
+            <MenuButton
+                :path-icon="mdiWeatherNight"
+                @click="toggleDarkMode"
+                :style="{
+                    '--icon-color': darkMode ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Dark mode</MenuButton>
+            <MenuButton
+                :path-icon="mdiFullscreen"
+                @click="() => toggleFullscreen()"
+                :style="{
+                    '--icon-color': isFullscreenRef ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">Full screen</MenuButton>
+        </MenuSection>
+        <MenuSection>
+            <MenuButton
+                :path-icon="mdiContentSaveOutline"
+                @click="saveFile"
+                >Save file</MenuButton>
+            <MenuButton
+                :path-icon="mdiFolderOpenOutline"
+                @click="loadFile"
+                >Load file</MenuButton>
         </MenuSection>
     </BottomMenu>
 </template>
-
-<style lang="scss" module>
-    .menu {
-        position: fixed;
-        bottom: .6em;
-        left: .6em;
-        display: flex;
-        align-items: center;
-        padding: 0 .4em;
-        background-color: white;
-        border-radius: .5em;
-        box-shadow: 0 .15em .6em -.4em black;
-        user-select: none;
-
-        .speed-button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-
-            .icon {
-                width: 2em;
-                height: 2em;
-                fill: #999;
-            }
-
-            &:hover .icon {
-                fill: #555;
-            }
-        }
-
-        .pause-button .icon {
-            fill: #e16262;
-
-            &:hover {
-                fill: #9d3131;
-            }
-        }
-        
-        .pause-button.paused .icon {
-            fill: #6b8edf;
-
-            &:hover {
-                fill: #4065bb;
-            }
-        }
-
-        .speed-text {
-            width: 7em;
-            text-align: center;
-            font-size: .9em;
-            font-weight: 500;
-        }
-    }
-</style>

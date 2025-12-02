@@ -38,18 +38,22 @@ export function stateToObjects(state: Vector2[], objects: GravityObject[]): void
  * Get a slope function given a list of objects
  * @param objects Objects array, of which the masses will be used to determine
  * the slope
+ * @param backward Whether the slope should be multiplied with -1 (default
+ * false)
  * @returns A function that returns the slope based on the current state
  */
-export function slopeFunction(objects: GravityObject[]): (state: Vector2[]) =>
-Vector2[] {
+export function slopeFunction(objects: GravityObject[], backward: boolean =
+false): (state: Vector2[]) => Vector2[] {
     const masses = objects.map((object) => object.mass)
+    const mult = backward ? -1 : 1
     return (state) => {
         if (state.length != 2 * masses.length)
             throw new Error("Invalid state length")
         const slope = state.map(() => Vector2.Zero)
         for (const [index, mass] of masses.entries()) {
-            slope[index * 2] = state[index * 2 + 1]!
-            slope[index * 2 + 1] = forceOn(index, state, masses).scale(1 / mass)
+            slope[index * 2] = state[index * 2 + 1]!.scale(mult)
+            slope[index * 2 + 1] = forceOn(index, state, masses).scale(
+                mult / mass)
         }
         return slope
     }

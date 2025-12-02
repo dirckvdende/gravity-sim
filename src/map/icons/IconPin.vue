@@ -28,7 +28,7 @@
         }">
         <!-- Aspect ratio 10 / 16 -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -25 100 160"
-        fill="#ccc" stroke="#fff" stroke-width="8">
+        :class="$style.svg">
             <path d="
                 M 10 50
                 A 44 44 0 1 1 90 50
@@ -50,11 +50,9 @@
         user-select: none;
 
         .svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
+            fill: var(--pin-background-color, #ccc);
+            stroke: var(--background-color, white);
+            stroke-width: 8;
         }
 
         .icon {

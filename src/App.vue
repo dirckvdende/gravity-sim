@@ -1,21 +1,36 @@
 <script setup lang="ts">
     import Map from './map/Map.vue';
-    import { useGravitySim } from './sim/sim';
     import Vector2 from './util/Vector2';
     import { computed, ref, watch } from 'vue';
     import BottomSettings from './ui/BottomSettings.vue';
     import { useOptionsStore } from './stores/options';
     import { storeToRefs } from 'pinia';
     import type { RenderedIcon } from './map/icons/IconRenderer.vue';
+    import PathRenderer from './map/PathRenderer.vue';
+    import GridRenderer from './map/GridRenderer.vue';
+    import IconRenderer from './map/icons/IconRenderer.vue';
+    import Ruler from './ui/Ruler.vue';
+    import { useSimStore } from './stores/sim';
+    import GlobalMapSync from './stores/GlobalMapSync.vue';
+    import TimeDisplay from './ui/TimeDisplay.vue';
+    import DemoOverlay from './ui/DemoOverlay.vue';
+    import LoadMenu from './ui/LoadMenu.vue';
+import UIContainer from './ui/UIContainer.vue';
 
-    const { speed, showBarycenter } = storeToRefs(useOptionsStore())
-    const sim = useGravitySim(ref({ speed }))
-    const { objects, barycenter } = sim
-
+    const {
+        showBarycenter,
+        showOrbits,
+        showGrid,
+    } = storeToRefs(useOptionsStore())
+    const { objects, barycenter, timestamp } = storeToRefs(useSimStore())
 
     const history = ref<Vector2[][]>([])
 
     watch(objects, (newObjects) => {
+        if (!showOrbits.value) {
+            history.value = []
+            return
+        }
         while (history.value.length < newObjects.length)
             history.value.push([])
         for (const [index, object] of newObjects.entries()) {
@@ -29,6 +44,7 @@
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
+    timestamp.value = new Date("2013-1-1 0:00:00 UTC")
     // Pluto
     objects.value.push({
         icon: './icons/pluto.svg',
@@ -112,10 +128,27 @@
 </script>
 
 <template>
-    <Map
-        :icons="icons"
-        :paths="history" />
-    <BottomSettings ref="bottom-settings" :sim="sim" />
+    <Map v-slot="{ tracker }">
+        <GridRenderer
+            v-if="showGrid"
+            :tracker="tracker" />
+        <PathRenderer
+            v-if="showOrbits"
+            v-for="path in history"
+            :tracker="tracker"
+            :points="path" />
+        <IconRenderer
+            :tracker="tracker"
+            :icons="icons" />
+        <Ruler :tracker="tracker" />
+        <GlobalMapSync :tracker="tracker" />
+    </Map>
+    <UIContainer>
+        <BottomSettings ref="bottom-settings" />
+        <TimeDisplay />
+        <LoadMenu />
+    </UIContainer>
+    <DemoOverlay />
 </template>
 
 <style lang="scss" module>
@@ -123,10 +156,20 @@
         font-family: "Nunito", sans-serif;
         font-size: 18px;
         font-weight: 500;
+        background-color: var(--background-color, white);
     }
 
     button {
         font-family: inherit;
         font-weight: inherit;
+        color: inherit;
     }
+
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+</style>
+
+<style lang="scss">
+    @use "./colors.scss";
 </style>

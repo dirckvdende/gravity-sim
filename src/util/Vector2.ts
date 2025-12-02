@@ -5,7 +5,7 @@
 export default class Vector2 {
 
     // Zero vector
-    static readonly Zero = new Vector2(0, 0)
+    static get Zero() { return new Vector2(0, 0) }
 
     // Coordinates
     readonly x: number

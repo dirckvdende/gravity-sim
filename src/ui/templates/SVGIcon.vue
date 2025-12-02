@@ -7,7 +7,7 @@
 </script>
 
 <template>
-    <svg viewBox="0 0 25 25" style="translate: 0 2px">
+    <svg viewBox="0 0 25 25" style="translate: 0 1px">
         <path :d="path" />
     </svg>
 </template>

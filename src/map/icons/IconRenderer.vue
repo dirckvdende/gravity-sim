@@ -54,8 +54,12 @@
         showPinAt?: number,
     }>()
 
-    const unitSizeIcons = computed(() => icons.map((icon) => ({
+    // List of icons with sizes and positions in pixel values. The list also
+    // sorted from back to front (lowest to highest y coord). The original index
+    // is stored as property "index"
+    const unitSizeIcons = computed(() => icons.map((icon, index) => ({
         ...icon,
+        index,
         position: tracker.toPixelCoords(icon.position),
         size:  icon.size / (icon.ignoreScaling ? 1 : tracker.pixelSize.value),
     })).sort((iconA, iconB) => {
@@ -68,7 +72,7 @@
 </script>
 
 <template>
-    <template v-for="icon in unitSizeIcons">
+    <template v-for="icon in unitSizeIcons" :key="icon.index">
         <IconPin
             v-if="icon.size < showPinAt && !icon.ignoreScaling"
             :src="icon.src"

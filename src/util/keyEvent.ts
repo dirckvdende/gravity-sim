@@ -11,7 +11,17 @@ export type KeyEventOptions = {
      * Hold means it will be emitted as long as the key is held (event frame)
      * (default press)
      */
-    mode?: "press" | "hold"
+    mode?: "press" | "hold",
+    /**
+     * Whether the keys should be case insensitive, meaning holding the shift
+     * key or not doesn't have an effect (default false)
+     */
+    caseInsensitive?: boolean,
+    /**
+     * Prevent default event handler when this specific key is pressed (default
+     * false). Only has an effect for mode "press"
+     */
+    preventDefault?: boolean,
 }
 
 /**
@@ -43,11 +53,25 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
     }
 
     /**
+     * Whether the given key is being pressed, keeping case sensitivity settings
+     * in mind
+     * @param key The key to check
+     * @returns Boolean indicating if the key is the same as the configured key
+     */
+    function isKey(key: string): boolean {
+        const requiredKey = keyRef.value
+        if (requiredKey == null)
+            return false
+        return key == requiredKey || (!!optionsRef.value?.caseInsensitive &&
+            key.toUpperCase() === requiredKey.toUpperCase())
+    }
+
+    /**
      * Keydown event callback
      * @param event Emitted keydown event
      */
     function keydown(event: KeyboardEvent): void {
-        if (event.key != toValue(key))
+        if (!isKey(event.key))
             return
         if ((optionsRef.value?.mode ?? "press") == "hold")
             requestAnimationFrame(() => holdEmit(event))
@@ -58,11 +82,14 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
      * @param event Emitted keyup event
      */
     function keyup(event: KeyboardEvent): void {
-        if (event.key != toValue(key))
+        if (!isKey(event.key))
             return
         holdActive = false
-        if ((optionsRef.value?.mode ?? "press") == "press")
+        if ((optionsRef.value?.mode ?? "press") == "press") {
             callback(event)
+            if (optionsRef.value?.preventDefault)
+                event.preventDefault()
+        }
     }
 
     /**
