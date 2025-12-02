@@ -34,7 +34,6 @@
     useScrollWheel(target, ({ x, y, delta, deltaMode }) => {
         if (disabled)
             return
-        console.log(deltaMode, wheelRatios)
         zoom(-delta * wheelRatios[deltaMode], toMapCoords(new Vector2(x, y)))
     })
 </script>
