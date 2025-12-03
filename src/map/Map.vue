@@ -20,6 +20,7 @@
         targetSize,
     })
     provide(mapStateKey, state)
+    defineExpose({ state })
 </script>
 
 <template>

@@ -4,22 +4,37 @@
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
     import IconRenderer from '@/map/renderers/icons/IconRenderer.vue';
-    import Vector2 from '@/util/Vector2';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
+    import { useSettingsStore } from '@/stores/useSettingsStore';
+    import { storeToRefs } from 'pinia';
+    import { onMounted, useTemplateRef } from 'vue';
+
+    const { objects } = useGravitySimStore()
+    const map = useTemplateRef("map")
+    // Zoom out far (temporary)
+    onMounted(() => {
+        if (!map.value)
+            return
+        const { zoom } = map.value.state
+        zoom(-12)
+    })
+    const { speed } = storeToRefs(useSettingsStore())
+    speed.value = 1e3
 </script>
 
 <template>
-    <Map :class="$style.map">
+    <Map :class="$style.map" ref="map">
         <PanInteractor />
         <ZoomInteractor />
         <GridRenderer
             :separation-interval="[2, 5]"
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
-        <IconRenderer :icons="[{
-            src: './icons/earth.svg',
-            position: new Vector2(10, 10),
-            size: 5,
-        }]" />
+        <IconRenderer :icons="objects.map(({ position }) => ({
+            src: './icons/moon.svg',
+            size: 100,
+            position,
+        }))" />
     </Map>
 </template>
 
