@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { useSimStore } from '@/stores/sim';
+    import { useSimStore } from '@/oldstores/sim';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef, watch } from 'vue';
 

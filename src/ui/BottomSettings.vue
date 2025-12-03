@@ -8,12 +8,12 @@
     import MenuButton from './templates/MenuButton.vue';
     import MenuText from './templates/MenuText.vue';
     import BottomMenu from './templates/BottomMenu.vue';
-    import { useOptionsStore } from '@/stores/options';
+    import { useOptionsStore } from '@/oldstores/options';
     import { storeToRefs } from 'pinia';
-    import { useSimOptionsStore, useSimStore } from '@/stores/sim';
+    import { useSimOptionsStore, useSimStore } from '@/oldstores/sim';
     import { downloadFile } from '@/util/piniaStoreToFile';
     import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
-    import { useMenuStore } from '@/stores/menu';
+    import { useMenuStore } from '@/oldstores/menu';
 
     const {
         showBarycenter,

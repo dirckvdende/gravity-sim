@@ -5,7 +5,7 @@
     import { mdiFolderOpenOutline } from '@mdi/js';
     import MenuText from './templates/MenuText.vue';
     import { storeToRefs } from 'pinia';
-    import { useMenuStore } from '@/stores/menu';
+    import { useMenuStore } from '@/oldstores/menu';
     import { computed } from 'vue';
     import { uploadFile } from '@/util/piniaStoreToFile';
 
