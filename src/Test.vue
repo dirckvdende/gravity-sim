@@ -6,6 +6,8 @@
     './newmap/renderers/GridRendererAtScale.vue';
     import SVGRenderer from './newmap/renderers/SVGRenderer.vue';
     import GridRenderer from './newmap/renderers/GridRenderer.vue';
+    import IconRenderer from './newmap/renderers/icons/IconRenderer.vue';
+    import Vector2 from './util/Vector2';
 </script>
 
 <template>
@@ -19,6 +21,11 @@
             :separation-interval="[2, 5]"
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
+        <IconRenderer :icons="[{
+            src: './icons/earth.svg',
+            position: new Vector2(10, 10),
+            size: 5,
+        }]" />
     </Map>
 </template>
 
