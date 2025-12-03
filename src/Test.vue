@@ -2,8 +2,6 @@
     import PanInteractor from './newmap/interactors/PanInteractor.vue';
     import ZoomInteractor from './newmap/interactors/ZoomInteractor.vue';
     import Map from './newmap/Map.vue';
-    import GridRendererAtScale from
-    './newmap/renderers/GridRendererAtScale.vue';
     import SVGRenderer from './newmap/renderers/SVGRenderer.vue';
     import GridRenderer from './newmap/renderers/GridRenderer.vue';
     import IconRenderer from './newmap/renderers/icons/IconRenderer.vue';
