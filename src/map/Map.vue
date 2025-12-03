@@ -20,9 +20,6 @@
         targetSize,
     })
     provide(mapStateKey, state)
-
-    watch(state.position, (newState) => console.log(newState), {
-        immediate: true })
 </script>
 
 <template>
