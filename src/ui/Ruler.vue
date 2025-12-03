@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import type { PositionRectTracker } from '@/map/positionRectTracker';
+    import type { PositionRectTracker } from '@/oldmap/positionRectTracker';
     import Vector2 from '@/util/Vector2';
     import { computed } from 'vue';
 

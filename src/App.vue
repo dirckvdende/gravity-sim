@@ -1,14 +1,14 @@
 <script setup lang="ts">
-    import Map from './map/Map.vue';
+    import Map from './oldmap/Map.vue';
     import Vector2 from './util/Vector2';
     import { computed, ref, watch } from 'vue';
     import BottomSettings from './ui/BottomSettings.vue';
     import { useOptionsStore } from './stores/options';
     import { storeToRefs } from 'pinia';
-    import type { RenderedIcon } from './map/icons/IconRenderer.vue';
-    import PathRenderer from './map/PathRenderer.vue';
-    import GridRenderer from './map/GridRenderer.vue';
-    import IconRenderer from './map/icons/IconRenderer.vue';
+    import type { RenderedIcon } from './oldmap/icons/IconRenderer.vue';
+    import PathRenderer from './oldmap/PathRenderer.vue';
+    import GridRenderer from './oldmap/GridRenderer.vue';
+    import IconRenderer from './oldmap/icons/IconRenderer.vue';
     import Ruler from './ui/Ruler.vue';
     import { useSimStore } from './stores/sim';
     import GlobalMapSync from './stores/GlobalMapSync.vue';

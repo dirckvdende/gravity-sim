@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { storeToRefs } from 'pinia';
-    import type { PositionRectTracker } from '@/map/positionRectTracker';
+    import type { PositionRectTracker } from '@/oldmap/positionRectTracker';
     import { useMapStateStore } from './mapState';
     import { syncRef } from '@vueuse/core';
 

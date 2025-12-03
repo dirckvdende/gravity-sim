@@ -1,36 +1,43 @@
 <script setup lang="ts">
-    import { useTemplateRef } from 'vue';
-    import { useDragInteractor } from './interactors/dragInteractor';
-    import { usePositionRectTracker } from './positionRectTracker';
-    import { useZoomInteractor } from './interactors/zoomInteractor';
+    import { computed, provide, ref, useTemplateRef, watch } from 'vue';
+    import { extendMapState, mapStateKey } from './state';
+    import Vector2 from '@/util/Vector2';
+    import { useElementSize } from '@vueuse/core';
 
     const target = useTemplateRef("target")
-    const tracker = usePositionRectTracker(target)
-    const { pan, zoom, toUnitCoords } = tracker
-    // Zoom out a lot
-    zoom(-13)
-    useDragInteractor(target, { drag: pan })
-    useZoomInteractor(target, { zoom: (diff, position) => {
-        zoom(diff / 1000, toUnitCoords(position))
-    }})
+    const elementSize = useElementSize(target)
+    const position = ref(Vector2.Zero)
+    const zoomLevel = ref(0)
+    const targetSize = computed(() => new Vector2(
+        elementSize.width.value,
+        elementSize.height.value,
+    ))
+    
+    const state = extendMapState({
+        target,
+        position,
+        zoomLevel,
+        targetSize,
+    })
+    provide(mapStateKey, state)
+
+    watch(state.position, (newState) => console.log(newState), {
+        immediate: true })
 </script>
 
 <template>
     <div :class="$style.target" ref="target">
-        <slot :tracker="tracker" />
+        <slot />
     </div>
 </template>
 
 <style lang="scss" module>
     .target {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: var(--background-color, white);
-        overflow: hidden;
+        width: 600px;
+        height: 400px;
+        background-color: red;
+        position: relative;
         touch-action: none;
-        user-select: none;
+        overflow: hidden;
     }
 </style>
