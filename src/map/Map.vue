@@ -26,18 +26,24 @@
 </script>
 
 <template>
-    <div :class="$style.target" ref="target">
-        <slot />
+    <div :class="$style.container">
+        <div :class="$style.target" ref="target">
+            <slot />
+        </div>
     </div>
 </template>
 
 <style lang="scss" module>
-    .target {
+    .container {
         width: 600px;
         height: 400px;
-        background-color: red;
-        position: relative;
-        touch-action: none;
-        overflow: hidden;
+
+        .target {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            touch-action: none;
+            overflow: hidden;
+        }
     }
 </style>

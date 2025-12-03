@@ -1,11 +1,11 @@
 
-import type { GravityObject } from "@/sim/object";
+import type { GravityObject } from "@/oldsim/object";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import Vector2 from "@/util/Vector2";
 import { objectsToState, stateToObjects, slopeFunction } from
-"@/sim/odeConvert";
-import { RKFSolver } from "@/sim/rkf45";
+"@/oldsim/odeConvert";
+import { RKFSolver } from "@/oldsim/rkf45";
 import { useAnimationFrame } from "@/util/animationFrame";
 import { serializer } from "./serializer";
 
