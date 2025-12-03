@@ -58,7 +58,7 @@ TimedGravitySimReturn {
 
     /** Function that is called every frame to evolve the sim */
     function frame(): void {
-        if (fullOptions.paused || toValue(fullOptions.speed) == 0) {
+        if (toValue(fullOptions.paused) || toValue(fullOptions.speed) == 0) {
             lastStep = performance.now()
             return
         }
