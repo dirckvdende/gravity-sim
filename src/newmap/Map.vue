@@ -38,5 +38,6 @@
         background-color: red;
         position: relative;
         touch-action: none;
+        overflow: hidden;
     }
 </style>
