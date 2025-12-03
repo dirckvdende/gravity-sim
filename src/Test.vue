@@ -5,6 +5,7 @@
     import GridRendererAtScale from
     './newmap/renderers/GridRendererAtScale.vue';
     import SVGRenderer from './newmap/renderers/SVGRenderer.vue';
+    import GridRenderer from './newmap/renderers/GridRenderer.vue';
 </script>
 
 <template>
@@ -14,7 +15,10 @@
         <SVGRenderer>
             <circle r="10" cx="0" cy="0" fill="purple" />
         </SVGRenderer>
-        <GridRendererAtScale color="grey" :line-width="3" :separation="20" />
+        <GridRenderer
+            :separation-interval="[2, 5]"
+            :visibility-range="[15, 50, 700, 800]"
+            color="var(--grid-color, #eee)" />
     </Map>
 </template>
 
