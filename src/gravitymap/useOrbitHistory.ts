@@ -17,15 +17,23 @@ export type OrbitHistoryOptions = {
     maxLength?: MaybeRefOrGetter<number>
 }
 
+/** Return type of the orbit history composable */
+export type OrbitHistoryReturn = {
+    /** List of tracked orbits */
+    orbits: Readonly<Ref<Orbit[]>>
+    /** Function that can be called to clear the entire history */
+    clearOrbits(): void
+}
+
 /**
  * Composable to keep track of the orbit of a gravity object
  * @param objects Gravity objects to keep the history of
  * @param options Orbit history options, such as maximum orbit length
  * @returns A readonly ref to the orbits, each with an object ID and list of
- * points
+ * points, and a clearOrbits() function to clear all history
  */
 export function useOrbitHistory(objects: Ref<GravityObject[]>,
-options?: OrbitHistoryOptions): Readonly<Ref<Orbit[]>> {
+options?: OrbitHistoryOptions): OrbitHistoryReturn {
     const orbits = ref<Orbit[]>([])
 
     watch(objects, (value) => {
@@ -52,5 +60,12 @@ options?: OrbitHistoryOptions): Readonly<Ref<Orbit[]>> {
         orbits.value = orbits.value.slice()
     })
 
-    return orbits
+    /**
+     * Clear the entire orbit history
+     */
+    function clearOrbits(): void {
+        orbits.value = []
+    }
+
+    return { orbits, clearOrbits }
 }

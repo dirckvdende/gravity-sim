@@ -4,6 +4,7 @@
     import { useGravitySimStore } from './stores/useGravitySimStore';
     import Vector2 from './util/Vector2';
     import { useObjectDisplayStore } from './stores/useObjectDisplayStore';
+    import UI from './ui/UI.vue';
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
@@ -87,6 +88,7 @@
 
 <template>
     <GravityMap />
+    <UI />
 </template>
 
 <style lang="scss" module>
