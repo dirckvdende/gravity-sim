@@ -5,7 +5,9 @@
 
     const { darkMode } = storeToRefs(useSettingsStore())
     watch(darkMode, (value) =>
-        document.body.classList.toggle("dark-mode", value))
+        document.body.classList.toggle("dark-mode", value),
+        { immediate: true },
+    )
 </script>
 
 <template></template>
