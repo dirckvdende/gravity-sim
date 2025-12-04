@@ -11,9 +11,11 @@
     import Ruler from './Ruler.vue';
     import { syncRef } from '@vueuse/core';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
+    import { useSettingsStore } from '@/stores/useSettingsStore';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
+    const { showGrid } = storeToRefs(useSettingsStore())
 
     /** Sync map state with gravity map store so it can be edited globally */
     function syncGravityMapStore(): void {
@@ -41,6 +43,7 @@
         <PanInteractor />
         <ZoomInteractor />
         <GridRenderer
+            v-if="showGrid"
             :separation-interval="[2, 5]"
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
