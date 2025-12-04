@@ -3,13 +3,12 @@
     import ZoomInteractor from '@/map/interactors/ZoomInteractor.vue';
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
-    import IconRenderer from '@/map/renderers/icons/IconRenderer.vue';
-    import { useObjectDisplayStore } from '@/stores/useObjectDisplayStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef } from 'vue';
+    import GravityIconRenderer from './GravityIconRenderer.vue';
+    import OrbitRenderer from './OrbitRenderer.vue';
 
-    const { styledObjects } = storeToRefs(useObjectDisplayStore())
     const map = useTemplateRef("map")
     // Zoom out far (temporary)
     onMounted(() => {
@@ -30,9 +29,8 @@
             :separation-interval="[2, 5]"
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
-        <IconRenderer :icons="styledObjects.map(({ position, icon, size }) => ({
-            src: icon, size, position,
-        }))" />
+        <OrbitRenderer />
+        <GravityIconRenderer />
     </Map>
 </template>
 
