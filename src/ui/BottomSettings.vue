@@ -38,7 +38,7 @@
         { name: "-1 day / s", speed: -60 * 60 * 24 },
         { name: "-1 hour / s", speed: -60 * 60 },
         { name: "-1 minute / s", speed: -60 },
-        { name: "-1 second /s", speed: -1 },
+        { name: "-1 second / s", speed: -1 },
         { name: "1 second / s", speed: 1 },
         { name: "1 minute / s", speed: 60 },
         { name: "1 hour / s", speed: 60 * 60 },
