@@ -16,6 +16,7 @@
     import { useMenuStore } from '@/stores/useMenuStore';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import Vector2 from '@/util/Vector2';
+    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
 
     const {
         showBarycenter,
@@ -88,6 +89,7 @@
     function resetToBarycenter() {
         useGravitySimStore().resetToBarycenter()
         useGravityMapStore().position = Vector2.Zero
+        useOrbitHistoryStore().clearOrbits()
     }
 
     useKeyEvent("B", toggleBarycenter, { caseInsensitive: true })

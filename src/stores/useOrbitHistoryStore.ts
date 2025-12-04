@@ -1,7 +1,9 @@
 
 import type { GravityObject } from "@/sim/object";
 import type Vector2 from "@/util/Vector2";
+import { defineStore, storeToRefs } from "pinia";
 import { ref, toValue, watch, type MaybeRefOrGetter, type Ref } from "vue";
+import { useGravitySimStore } from "./useGravitySimStore";
 
 /** Orbit of a gravity object */
 export type Orbit = {
@@ -42,9 +44,9 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
         for (const { id } of value)
             if (!orbitIds.has(id))
                 orbits.value.push({
-                    id,
-                    points: [],
-                })
+            id,
+            points: [],
+        })
         const removeIds: number[] = []
         for (const orbit of orbits.value) {
             const object = valueMap.get(orbit.id)
@@ -69,3 +71,11 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
 
     return { orbits, clearOrbits }
 }
+
+/** Store version of orbit history */
+export const useOrbitHistoryStore = defineStore("orbit-history", () => {
+    const { objects } = storeToRefs(useGravitySimStore())
+    const maxLength = ref(1000)
+    const orbitHistory = useOrbitHistory(objects, { maxLength })
+    return { ...orbitHistory, maxLength }
+})
