@@ -121,6 +121,11 @@
         position: new Vector2(848634613.9098889, -451849082.26611096),
         velocity: new Vector2(-0.4097221427660388, 12.55523946105921),
     })
+    objectStyles.value.push({
+        id: 1,
+        icon: "./icons/sun.svg",
+        size: 1_392_700_000,
+    })
     objects.value.push({
         id: 2,
         mass: 5.97219e+24,
