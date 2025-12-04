@@ -1,6 +1,7 @@
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { serializer } from "@/serializer";
 
 /** Store with global settings */
 export const useSettingsStore = defineStore("settings", () => ({
@@ -16,4 +17,6 @@ export const useSettingsStore = defineStore("settings", () => ({
     showOrbits: ref(true),
     /** Whether an icon should be displayed at the barycenter of the system */
     showBarycenter: ref(false),
-}))
+}), {
+    persist: { serializer },
+})

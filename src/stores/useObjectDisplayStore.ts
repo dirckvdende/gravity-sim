@@ -3,6 +3,7 @@ import { defineStore, storeToRefs } from "pinia";
 import { useGravitySimStore } from "./useGravitySimStore";
 import { computed, ref } from "vue";
 import type { GravityObject } from "@/sim/object";
+import { serializer } from "@/serializer";
 
 /** Display information of a gravity object */
 export type GravityObjectStyle = {
@@ -45,5 +46,11 @@ export const useObjectDisplayStore = defineStore("objects", () => {
          * display info are given with a size of 0 and an empty icon
          */
         styledObjects,
+    }
+}, {
+    saveToFiles: {
+        files: ["state"],
+        pick: ["objectStyles"],
+        serializer,
     }
 })

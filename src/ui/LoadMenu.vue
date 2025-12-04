@@ -8,6 +8,7 @@
     import { useMenuStore } from '@/oldstores/menu';
     import { computed } from 'vue';
     import { uploadFile } from '@/util/piniaStoreToFile';
+    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
 
     type Scenario = {
         name: string,
@@ -27,6 +28,7 @@
 
     const { activeMenu } = storeToRefs(useMenuStore())
     const visible = computed(() => activeMenu.value == "load")
+    const { clearOrbits } = useOrbitHistoryStore()
 
     function closeMenu(): void {
         activeMenu.value = "none"
@@ -43,8 +45,10 @@
             <MenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="() => {
-                    uploadFile('state', '.grav')
-                    closeMenu()
+                    uploadFile('state', '.grav', () => {
+                        clearOrbits()
+                        closeMenu()
+                    })
                 }">Load from file</MenuButton>
         </MenuSection>
         <MenuSection>
