@@ -9,6 +9,7 @@
     import GravityIconRenderer from './GravityIconRenderer.vue';
     import OrbitRenderer from './OrbitRenderer.vue';
     import BarycenterRenderer from './BarycenterRenderer.vue';
+    import Ruler from './Ruler.vue';
 
     const map = useTemplateRef("map")
     // Zoom out far (temporary)
@@ -33,6 +34,7 @@
         <OrbitRenderer />
         <GravityIconRenderer />
         <BarycenterRenderer />
+        <Ruler />
     </Map>
 </template>
 
