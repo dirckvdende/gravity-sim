@@ -47,7 +47,7 @@ function downloadString(content: string, filename: string): void {
     elt.click()
 }
 
-function loadFromString(name: string, content: string): void {
+export function loadFromString(name: string, content: string): void {
     const data = JSON.parse(content)
     for (const save of saves) {
         if (save.files.indexOf(name) == -1)

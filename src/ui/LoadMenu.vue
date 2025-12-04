@@ -7,7 +7,7 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
-    import { uploadFile } from '@/util/piniaStoreToFile';
+    import { loadFromString, uploadFile } from '@/util/piniaStoreToFile';
     import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
 
     type Scenario = {
@@ -34,8 +34,12 @@
         activeMenu.value = "none"
     }
 
-    function loadScenario(scenario: Scenario): void {
-        // TODO
+    function loadScenario({ file }: Scenario): void {
+        fetch(file).then((response) =>
+            response.text().then((text) => {
+                loadFromString("state", text)
+                clearOrbits()
+            }))
     }
 </script>
 
