@@ -68,6 +68,7 @@ TimedGravitySimReturn {
         ) * toValue(fullOptions.speed)
         const elapsedTime = sim.evolve(targetTime)
         slowed.value = Math.abs(targetTime - elapsedTime) > SLOWED_TRIGGER_DIFF
+        lastStep = performance.now()
     }
 
     useAnimationFrame(frame)
