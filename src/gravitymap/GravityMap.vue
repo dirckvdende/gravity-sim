@@ -3,24 +3,37 @@
     import ZoomInteractor from '@/map/interactors/ZoomInteractor.vue';
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
-    import { useSettingsStore } from '@/stores/useSettingsStore';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef } from 'vue';
     import GravityIconRenderer from './GravityIconRenderer.vue';
     import OrbitRenderer from './OrbitRenderer.vue';
     import BarycenterRenderer from './BarycenterRenderer.vue';
     import Ruler from './Ruler.vue';
+    import { syncRef } from '@vueuse/core';
+    import { useGravityMapStore } from '@/stores/useGravityMapStore';
 
     const map = useTemplateRef("map")
-    // Zoom out far (temporary)
+    const store = storeToRefs(useGravityMapStore())
+
+    /** Sync map state with gravity map store so it can be edited globally */
+    function syncGravityMapStore(): void {
+        if (!map.value)
+            return
+        const { position } = map.value.state
+        syncRef(position, store.position, {
+            direction: "both",
+            immediate: true,
+        })
+    }
+
     onMounted(() => {
+        // Zoom out far (temporary)
         if (!map.value)
             return
         const { zoom } = map.value.state
         zoom(-12)
+        syncGravityMapStore()
     })
-    const { speed } = storeToRefs(useSettingsStore())
-    speed.value = 1e3
 </script>
 
 <template>
