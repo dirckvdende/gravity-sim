@@ -5,7 +5,8 @@
     import TimeDisplay from './TimeDisplay.vue';
     import LoadMenu from './LoadMenu.vue';
     import { storeToRefs } from 'pinia';
-    import { useMenuStore } from '@/oldstores/menu';
+    import { useMenuStore } from '@/stores/useMenuStore';
+    import DemoOverlay from './DemoOverlay.vue';
 
     const { activeMenu } = storeToRefs(useMenuStore())
 </script>
@@ -17,4 +18,5 @@
         <LoadMenu :visible="activeMenu == 'load'" />
     </UIContainer>
     <DarkMode />
+    <DemoOverlay />
 </template>
