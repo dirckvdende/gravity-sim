@@ -4,7 +4,7 @@
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
     import { storeToRefs } from 'pinia';
-    import { onMounted, useTemplateRef } from 'vue';
+    import { onMounted, useTemplateRef, watch, type Ref } from 'vue';
     import GravityIconRenderer from './GravityIconRenderer.vue';
     import OrbitRenderer from './OrbitRenderer.vue';
     import BarycenterRenderer from './BarycenterRenderer.vue';
@@ -21,11 +21,13 @@
     function syncGravityMapStore(): void {
         if (!map.value)
             return
-        const { position } = map.value.state
-        syncRef(position, store.position, {
+        const mapState = map.value.state
+        const syncOptions: Parameters<typeof syncRef>[2] = {
             direction: "both",
             immediate: true,
-        })
+        }
+        syncRef(store.position, mapState.position, syncOptions)
+        syncRef(store.zoomLevel, mapState.zoomLevel, syncOptions)
     }
 
     onMounted(() => {
