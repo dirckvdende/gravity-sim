@@ -12,78 +12,78 @@
     const { objectStyles } = storeToRefs(useObjectDisplayStore())
 
     timestamp.value = new Date("2013-1-1 0:00:00 UTC")
-    // Pluto
-    objects.value.push({
-        id: 0,
-        position: new Vector2(2.12703919e+06, -3.08210900e-12),
-        mass: 869.3 * NORMALIZE_FACTOR,
-        velocity: new Vector2(-2.83643439e-03,  2.42173886e+01),
-    })
-    objectStyles.value.push({
-        id: 0,
-        icon: "./icons/pluto.svg",
-        size: 2_376_600,
-    })
-    // Charon
-    objects.value.push({
-        id: 1,
-        position: new Vector2(-1.74691048e+07, -1.48438086e+03),
-        mass: 106.1 * NORMALIZE_FACTOR,
-        velocity: new Vector2(2.59407652e-02, -1.98897004e+02),
-    })
-    objectStyles.value.push({
-        id: 1,
-        icon: "./icons/charon.svg",
-        size: 1_212_000,
-    })
-    // Nix
-    objects.value.push({
-        id: 2,
-        position: new Vector2(-4.83354857e+07, -7.42254914e+06),
-        mass: 1.50e-3 * NORMALIZE_FACTOR,
-        velocity: new Vector2(2.06564133e+01, -1.39465804e+02),
-    })
-    objectStyles.value.push({
-        id: 2,
-        icon: "./icons/nix.svg",
-        size: 50_000,
-    })
-    // Hydra
-    objects.value.push({
-        id: 3,
-        position: new Vector2(32554655.74929921, 56051327.32152872),
-        mass: 2.01e-3 * NORMALIZE_FACTOR,
-        velocity: new Vector2(-106.01932065, 62.51678508),
-    })
-    objectStyles.value.push({
-        id: 3,
-        icon: "./icons/hydra.svg",
-        size: 50_900,
-    })
-    // Kerberos
-    objects.value.push({
-        id: 4,
-        position: new Vector2(-51255243.15214943, -26846953.65410998),
-        mass: 1e-5 * NORMALIZE_FACTOR, // (very low mass)
-        velocity: new Vector2(60.15678687, -115.36690241),
-    })
-    objectStyles.value.push({
-        id: 4,
-        icon: "./icons/kerberos.svg",
-        size: 19_000,
-    })
-    // Styx
-    objects.value.push({
-        id: 5,
-        position: new Vector2(-4022208.59039472, 42121539.42213004),
-        mass: 1e-5 * NORMALIZE_FACTOR, // (very low mass)
-        velocity: new Vector2(-153.58637481, -15.71068336),
-    })
-    objectStyles.value.push({
-        id: 5,
-        icon: "./icons/styx.svg",
-        size: 16_000,
-    })
+    // // Pluto
+    // objects.value.push({
+    //     id: 0,
+    //     position: new Vector2(2.12703919e+06, -3.08210900e-12),
+    //     mass: 869.3 * NORMALIZE_FACTOR,
+    //     velocity: new Vector2(-2.83643439e-03,  2.42173886e+01),
+    // })
+    // objectStyles.value.push({
+    //     id: 0,
+    //     icon: "./icons/pluto.svg",
+    //     size: 2_376_600,
+    // })
+    // // Charon
+    // objects.value.push({
+    //     id: 1,
+    //     position: new Vector2(-1.74691048e+07, -1.48438086e+03),
+    //     mass: 106.1 * NORMALIZE_FACTOR,
+    //     velocity: new Vector2(2.59407652e-02, -1.98897004e+02),
+    // })
+    // objectStyles.value.push({
+    //     id: 1,
+    //     icon: "./icons/charon.svg",
+    //     size: 1_212_000,
+    // })
+    // // Nix
+    // objects.value.push({
+    //     id: 2,
+    //     position: new Vector2(-4.83354857e+07, -7.42254914e+06),
+    //     mass: 1.50e-3 * NORMALIZE_FACTOR,
+    //     velocity: new Vector2(2.06564133e+01, -1.39465804e+02),
+    // })
+    // objectStyles.value.push({
+    //     id: 2,
+    //     icon: "./icons/nix.svg",
+    //     size: 50_000,
+    // })
+    // // Hydra
+    // objects.value.push({
+    //     id: 3,
+    //     position: new Vector2(32554655.74929921, 56051327.32152872),
+    //     mass: 2.01e-3 * NORMALIZE_FACTOR,
+    //     velocity: new Vector2(-106.01932065, 62.51678508),
+    // })
+    // objectStyles.value.push({
+    //     id: 3,
+    //     icon: "./icons/hydra.svg",
+    //     size: 50_900,
+    // })
+    // // Kerberos
+    // objects.value.push({
+    //     id: 4,
+    //     position: new Vector2(-51255243.15214943, -26846953.65410998),
+    //     mass: 1e-5 * NORMALIZE_FACTOR, // (very low mass)
+    //     velocity: new Vector2(60.15678687, -115.36690241),
+    // })
+    // objectStyles.value.push({
+    //     id: 4,
+    //     icon: "./icons/kerberos.svg",
+    //     size: 19_000,
+    // })
+    // // Styx
+    // objects.value.push({
+    //     id: 5,
+    //     position: new Vector2(-4022208.59039472, 42121539.42213004),
+    //     mass: 1e-5 * NORMALIZE_FACTOR, // (very low mass)
+    //     velocity: new Vector2(-153.58637481, -15.71068336),
+    // })
+    // objectStyles.value.push({
+    //     id: 5,
+    //     icon: "./icons/styx.svg",
+    //     size: 16_000,
+    // })
 
     // objects.value.push({
     //     id: 0,
@@ -108,6 +108,30 @@
     //     icon: "./icons/moon.svg",
     //     size: 3_474_800,
     // })
+
+    objects.value.push({
+        id: 0,
+        mass: 6.4171e+23,
+        position: new Vector2(219331860751.8892, -3.07482006171276e-06),
+        velocity: new Vector2(-2161.201612056362, 25071.162096161017),
+    })
+    objects.value.push({
+        id: 1,
+        mass: 1.98841e+30,
+        position: new Vector2(848634613.9098889, -451849082.26611096),
+        velocity: new Vector2(-0.4097221427660388, 12.55523946105921),
+    })
+    objects.value.push({
+        id: 2,
+        mass: 5.97219e+24,
+        position: new Vector2(-141081000038.2215, 39474087820.45221),
+        velocity: new Vector2(-7915.160638621885, -29123.98240226964),
+    })
+    objectStyles.value.push({
+        id: 2,
+        icon: "./icons/earth.svg",
+        size: 12_742_000,
+    })
 </script>
 
 <template>
