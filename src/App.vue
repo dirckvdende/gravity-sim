@@ -110,6 +110,11 @@
     // })
 
     objectStyles.value.push({
+        id: 0,
+        icon: "./icons/mars.svg",
+        size: 6_779_000,
+    })
+    objectStyles.value.push({
         id: 1,
         icon: "./icons/sun.svg",
         size: 1_392_700_000,
@@ -118,6 +123,36 @@
         id: 2,
         icon: "./icons/earth.svg",
         size: 12_742_000,
+    })
+    objectStyles.value.push({
+        id: 3,
+        icon: "./icons/mercury.svg",
+        size: 4_879_400,
+    })
+    objectStyles.value.push({
+        id: 4,
+        icon: "./icons/venus.svg",
+        size: 12_104_000,
+    })
+    objectStyles.value.push({
+        id: 5,
+        icon: "./icons/jupiter.svg",
+        size: 139_820_000,
+    })
+    objectStyles.value.push({
+        id: 6,
+        icon: "./icons/saturn.svg",
+        size: 120_536_000,
+    })
+    objectStyles.value.push({
+        id: 7,
+        icon: "./icons/uranus.svg",
+        size: 51_118_000,
+    })
+    objectStyles.value.push({
+        id: 8,
+        icon: "./icons/neptune.svg",
+        size: 49_244_000,
     })
     objects.value.push({
         id: 0,
