@@ -109,6 +109,16 @@
     //     size: 3_474_800,
     // })
 
+    objectStyles.value.push({
+        id: 1,
+        icon: "./icons/sun.svg",
+        size: 1_392_700_000,
+    })
+    objectStyles.value.push({
+        id: 2,
+        icon: "./icons/earth.svg",
+        size: 12_742_000,
+    })
     objects.value.push({
         id: 0,
         mass: 6.4171e+23,
@@ -121,21 +131,47 @@
         position: new Vector2(848634613.9098889, -451849082.26611096),
         velocity: new Vector2(-0.4097221427660388, 12.55523946105921),
     })
-    objectStyles.value.push({
-        id: 1,
-        icon: "./icons/sun.svg",
-        size: 1_392_700_000,
-    })
     objects.value.push({
         id: 2,
         mass: 5.97219e+24,
         position: new Vector2(-141081000038.2215, 39474087820.45221),
         velocity: new Vector2(-7915.160638621885, -29123.98240226964),
     })
-    objectStyles.value.push({
-        id: 2,
-        icon: "./icons/earth.svg",
-        size: 12_742_000,
+    objects.value.push({
+        id: 3,
+        mass: 3.302e+23,
+        position: new Vector2(-29834537827.31945, -40455481011.01213),
+        velocity: new Vector2(37103.64877771851, -39634.69322681381),
+    })
+    objects.value.push({
+        id: 4,
+        mass: 4.8685e+24,
+        position: new Vector2(89656347232.53941, -62434220202.28404),
+        velocity: new Vector2(20223.571925826516, 28534.252011848803),
+    })
+    objects.value.push({
+        id: 5,
+        mass: 1.89819e+27,
+        position: new Vector2(-733770320394.0323, -256510379204.82162),
+        velocity: new Vector2(3697.9630469766134, -12519.091774373986),
+    })
+    objects.value.push({
+        id: 6,
+        mass: 5.6834e+26,
+        position: new Vector2(-77507984011.84268, 1422304621904.8862),
+        velocity: new Vector2(-9594.914243919056, -1057.6776389139093),
+    })
+    objects.value.push({
+        id: 7,
+        mass: 8.6813e+25,
+        position: new Vector2(-2568876601491.96, 1378270461947.779),
+        velocity: new Vector2(-2899.158837100163, -6037.676866393813),
+    })
+    objects.value.push({
+        id: 8,
+        mass: 1.02409e+26,
+        position: new Vector2(-263078058929.1874, 4462502936784.5205),
+        velocity: new Vector2(-5452.886561546886, -356.19481326340053),
     })
 </script>
 
