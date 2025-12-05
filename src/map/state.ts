@@ -110,8 +110,10 @@ export function extendMapState(base: MapStateBase): MapState {
     }
 
     function toPixelCoords(mapCoords: Vector2): Vector2 {
-        return mapCoords.subtract(viewport.value.topLeft).scale(1 /
-            pixelSize.value)
+        return new Vector2(
+            (mapCoords.x - viewport.value.topLeft.x) / pixelSize.value,
+            (mapCoords.y - viewport.value.topLeft.y) / pixelSize.value,
+        )
     }
 
     function panPixels(diff: Vector2): void {
