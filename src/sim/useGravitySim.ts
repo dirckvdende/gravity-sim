@@ -1,5 +1,6 @@
 
-import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter, type Ref } from "vue";
+import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter,
+type Ref } from "vue";
 import type { GravityObject } from "./object";
 import { objectsToState, slopeFunction, stateToObjects } from "./odeConvert";
 import { RKFSolver } from "./rkf45";
@@ -16,6 +17,12 @@ export type GravitySimOptions = {
      * (default 100)
      */
     maxStepsPerEvolve?: MaybeRefOrGetter<number>,
+    /**
+     * Threshold time in seconds after which evolve() call should stop
+     * performing steps. Steps are stopped as soon as maxStepsPerEvolve or
+     * maxEvolveComputeTime is exceeded (default 1/120)
+     */
+    maxComputeTime?: MaybeRefOrGetter<number>,
     /**
      * Error tolerance for the RKF solver, relative to the maximum distance
      * between any two objects (default 1e-8)
@@ -79,7 +86,7 @@ export function useGravitySim(options?: GravitySimOptions): GravitySimReturn {
             tolerance: toValue(fullOptions.tolerance) * maxDistance()
         })
         const { state: newState, time: elapsedTime } = solver.evolve(time,
-            toValue(fullOptions.maxStepsPerEvolve))
+            toValue(fullOptions.maxStepsPerEvolve), toValue(fullOptions.maxComputeTime))
         timestamp.value = new Date(Math.round(timestamp.value.getTime() +
             elapsedTime * 1000 * (backward ? -1 : 1)))
         const newObjects = objects.value.slice()
@@ -150,6 +157,7 @@ Required<GravitySimOptions> {
     return {
         maxEvolveTime: Infinity,
         maxStepsPerEvolve: 1000,
+        maxComputeTime: 1 / 120,
         tolerance: 1e-8,
         ...options,
     }
