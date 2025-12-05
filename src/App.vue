@@ -11,7 +11,7 @@
     const { timestamp, objects } = storeToRefs(useGravitySimStore())
     const { objectStyles } = storeToRefs(useObjectDisplayStore())
 
-    timestamp.value = new Date("2013-1-1 0:00:00 UTC")
+    // timestamp.value = new Date("2013-1-1 0:00:00 UTC")
     // // Pluto
     // objects.value.push({
     //     id: 0,
@@ -109,6 +109,7 @@
     //     size: 3_474_800,
     // })
 
+    timestamp.value = new Date("2025-12-4 0:00:00 UTC")
     objectStyles.value.push({
         id: 0,
         icon: "./icons/mars.svg",
