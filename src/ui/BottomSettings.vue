@@ -8,21 +8,24 @@
     import MenuButton from './templates/MenuButton.vue';
     import MenuText from './templates/MenuText.vue';
     import BottomMenu from './templates/BottomMenu.vue';
-    import { useOptionsStore } from '@/stores/options';
     import { storeToRefs } from 'pinia';
-    import { useSimOptionsStore, useSimStore } from '@/stores/sim';
     import { downloadFile } from '@/util/piniaStoreToFile';
     import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
-    import { useMenuStore } from '@/stores/menu';
+    import { useSettingsStore } from '@/stores/useSettingsStore';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
+    import { useMenuStore } from '@/stores/useMenuStore';
+    import { useGravityMapStore } from '@/stores/useGravityMapStore';
+    import Vector2 from '@/util/Vector2';
+    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
 
     const {
         showBarycenter,
         showOrbits,
         darkMode,
         showGrid,
-    } = storeToRefs(useOptionsStore())
-    const { speed, paused } = storeToRefs(useSimOptionsStore())
-    const { slowed } = storeToRefs(useSimStore())
+    } = storeToRefs(useSettingsStore())
+    const { speed, paused } = storeToRefs(useSettingsStore())
+    const { slowed } = storeToRefs(useGravitySimStore())
 
     type Mode = {
         name: string,
@@ -36,7 +39,7 @@
         { name: "-1 day / s", speed: -60 * 60 * 24 },
         { name: "-1 hour / s", speed: -60 * 60 },
         { name: "-1 minute / s", speed: -60 },
-        { name: "-1 second /s", speed: -1 },
+        { name: "-1 second / s", speed: -1 },
         { name: "1 second / s", speed: 1 },
         { name: "1 minute / s", speed: 60 },
         { name: "1 hour / s", speed: 60 * 60 },
@@ -84,7 +87,9 @@
     }
 
     function resetToBarycenter() {
-        useSimStore().resetToBarycenter()
+        useGravitySimStore().resetToBarycenter()
+        useGravityMapStore().position = Vector2.Zero
+        useOrbitHistoryStore().clearOrbits()
     }
 
     useKeyEvent("B", toggleBarycenter, { caseInsensitive: true })

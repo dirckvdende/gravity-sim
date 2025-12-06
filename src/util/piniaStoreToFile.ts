@@ -47,7 +47,7 @@ function downloadString(content: string, filename: string): void {
     elt.click()
 }
 
-function loadFromString(name: string, content: string): void {
+export function loadFromString(name: string, content: string): void {
     const data = JSON.parse(content)
     for (const save of saves) {
         if (save.files.indexOf(name) == -1)
@@ -113,12 +113,17 @@ export function downloadFile(name: string, filename?: string): void {
  * the same filename registered
  * @param name The filename to load the file to
  * @param extension Filename extension to use (default ".txt")
+ * @param callback Function to call once finished, which success parameter
  * @note Loading file happens asynchronously
  */
-export function uploadFile(name: string, extension: string = ".txt"): void {
+export function uploadFile(name: string, extension: string = ".txt", callback?:
+(success: boolean) => void): void {
     uploadString((content) => {
-        if (content == null)
-            throw new Error("Could read file")
+        if (content == null) {
+            callback?.(false)
+            return
+        }
         loadFromString(name, content)
+        callback?.(true)
     }, extension)
 }

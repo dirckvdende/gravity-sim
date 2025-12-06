@@ -1,12 +1,9 @@
 <script lang="ts" setup>
-    import type { PositionRectTracker } from '@/map/positionRectTracker';
+    import { defaultState, mapStateKey } from '@/map/state';
     import Vector2 from '@/util/Vector2';
-    import { computed } from 'vue';
+    import { computed, inject } from 'vue';
 
-    const { tracker } = defineProps<{
-        /** Tracker used to display the map */
-        tracker: PositionRectTracker,
-    }>()
+    const { pixelSize } = inject(mapStateKey, defaultState())
 
     // Space left at the sides of the arrow
     const SIDE_SPACE = 5
@@ -103,10 +100,10 @@
 
     // Unit to display
     const unit = computed(() =>
-        bestUnit(MIN_ARROW_WIDTH * tracker.pixelSize.value))
+        bestUnit(MIN_ARROW_WIDTH * pixelSize.value))
     // Size of a pixel in the displayed units
     const unitPixelSize = computed(() =>
-        tracker.pixelSize.value / unit.value.meters)
+        pixelSize.value / unit.value.meters)
     // Length of the arrow in displayed units, separated into multiple and
     // exponent (log10)
     const unitLength = computed(() =>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-    import { useSimStore } from '@/stores/sim';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef, watch } from 'vue';
 
-    const { timestamp } = storeToRefs(useSimStore())
+    const { timestamp } = storeToRefs(useGravitySimStore())
     const input = useTemplateRef("input")
 
     function formatDate(date: Date): string {

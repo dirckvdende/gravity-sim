@@ -4,7 +4,7 @@ import type { StateTree } from "pinia";
 import type { Serializer } from "pinia-plugin-persistedstate";
 
 /**
- * Serialize a state
+ * Custom serializer with support for Vector2, infinity, and dates
  * @param value The state to serialize
  * @returns The serialized state as a string
  */
@@ -29,7 +29,7 @@ function serialize(value: StateTree): string {
 }
 
 /**
- * Deserialize a state
+ * Custom deserializer with support for Vector2, infinity, and dates
  * @param value The state to deserialize as a string
  * @returns Deserialized state as an object
  */

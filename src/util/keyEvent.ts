@@ -1,5 +1,5 @@
 
-import { onMounted, onUnmounted, toRef, toValue, watch, type MaybeRefOrGetter } from
+import { onMounted, onUnmounted, toRef, watch, type MaybeRefOrGetter } from
 "vue";
 
 /**
@@ -22,6 +22,21 @@ export type KeyEventOptions = {
      * false). Only has an effect for mode "press"
      */
     preventDefault?: boolean,
+    /**
+     * Whether the ctrl key should be pressed with the key, or "ignore" to
+     * ignore it (default false)
+     */
+    ctrlKey?: boolean | "ignore",
+    /**
+     * Whether the alt key should be pressed with the key, or "ignore" to
+     * ignore it (default false)
+     */
+    altKey?: boolean | "ignore",
+    /**
+     * Whether the meta key should be pressed with the key, or "ignore" to
+     * ignore it (default false)
+     */
+    metaKey?: boolean | "ignore",
 }
 
 /**
@@ -67,12 +82,27 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
     }
 
     /**
+     * Check if a key press has a correct combination of ctrl, alt and meta keys
+     * pressed
+     * @param event The keyboard event of the key press
+     */
+    function hasCtrlAltMeta(event: KeyboardEvent): boolean {
+        const ctrlKey = optionsRef.value?.ctrlKey ?? false
+        const altKey = optionsRef.value?.altKey ?? false
+        const metaKey = optionsRef.value?.metaKey ?? false
+        return (ctrlKey === "ignore" || ctrlKey === event.ctrlKey)
+            && (altKey === "ignore" || altKey === event.altKey)
+            && (metaKey === "ignore" || metaKey === event.metaKey)
+    }
+
+    /**
      * Keydown event callback
      * @param event Emitted keydown event
      */
     function keydown(event: KeyboardEvent): void {
-        if (!isKey(event.key))
+        if (!isKey(event.key) || !hasCtrlAltMeta(event))
             return
+        holdActive = true
         if ((optionsRef.value?.mode ?? "press") == "hold")
             requestAnimationFrame(() => holdEmit(event))
     }
@@ -82,10 +112,11 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
      * @param event Emitted keyup event
      */
     function keyup(event: KeyboardEvent): void {
-        if (!isKey(event.key))
+        if (!isKey(event.key) || !holdActive)
             return
         holdActive = false
-        if ((optionsRef.value?.mode ?? "press") == "press") {
+        if ((optionsRef.value?.mode ?? "press") == "press" &&
+        hasCtrlAltMeta(event)) {
             callback(event)
             if (optionsRef.value?.preventDefault)
                 event.preventDefault()

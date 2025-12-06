@@ -27,21 +27,15 @@
 
 <script lang="ts" setup>
     import type Vector2 from '@/util/Vector2';
-    import type { PositionRectTracker } from '../positionRectTracker';
     import Icon from './Icon.vue';
-    import { computed } from 'vue';
+    import { computed, inject } from 'vue';
     import IconPin from './IconPin.vue';
+    import { defaultState, mapStateKey } from '@/map/state';
 
     const {
-        tracker,
         icons = [],
         showPinAt = 10,
     } = defineProps<{
-        /**
-         * Position rect tracker that is used to determine position and zoom
-         * level
-         */
-        tracker: PositionRectTracker,
         /**
          * Array of rendered icons
          */
@@ -54,14 +48,16 @@
         showPinAt?: number,
     }>()
 
+    const { toPixelCoords, pixelSize } = inject(mapStateKey, defaultState())
+
     // List of icons with sizes and positions in pixel values. The list also
     // sorted from back to front (lowest to highest y coord). The original index
     // is stored as property "index"
     const unitSizeIcons = computed(() => icons.map((icon, index) => ({
         ...icon,
         index,
-        position: tracker.toPixelCoords(icon.position),
-        size:  icon.size / (icon.ignoreScaling ? 1 : tracker.pixelSize.value),
+        position: toPixelCoords(icon.position),
+        size:  icon.size / (icon.ignoreScaling ? 1 : pixelSize.value),
     })).sort((iconA, iconB) => {
         const ignoreA = iconA.ignoreScaling ?? false
         const ignoreB = iconB.ignoreScaling ?? false

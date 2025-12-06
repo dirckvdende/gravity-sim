@@ -5,9 +5,10 @@
     import { mdiFolderOpenOutline } from '@mdi/js';
     import MenuText from './templates/MenuText.vue';
     import { storeToRefs } from 'pinia';
-    import { useMenuStore } from '@/stores/menu';
+    import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
-    import { uploadFile } from '@/util/piniaStoreToFile';
+    import { loadFromString, uploadFile } from '@/util/piniaStoreToFile';
+    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
 
     type Scenario = {
         name: string,
@@ -27,13 +28,18 @@
 
     const { activeMenu } = storeToRefs(useMenuStore())
     const visible = computed(() => activeMenu.value == "load")
+    const { clearOrbits } = useOrbitHistoryStore()
 
     function closeMenu(): void {
         activeMenu.value = "none"
     }
 
-    function loadScenario(scenario: Scenario): void {
-        // TODO
+    function loadScenario({ file }: Scenario): void {
+        fetch(file).then((response) =>
+            response.text().then((text) => {
+                loadFromString("state", text)
+                clearOrbits()
+            }))
     }
 </script>
 
@@ -43,8 +49,10 @@
             <MenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="() => {
-                    uploadFile('state', '.grav')
-                    closeMenu()
+                    uploadFile('state', '.grav', () => {
+                        clearOrbits()
+                        closeMenu()
+                    })
                 }">Load from file</MenuButton>
         </MenuSection>
         <MenuSection>

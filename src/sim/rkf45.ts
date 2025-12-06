@@ -59,15 +59,22 @@ export class RKFSolver<T extends {
      * @param time The amount of time to evolve the sim by. Depending on error
      * tolerance this may mean multiple steps are executed
      * @param maxSteps Maximum number of steps to execute. If this is exceeded
-     * the solver stops earlier, simulating a shorter amount of time
+     * the solver stops earlier, simulating a shorter amount of time (defualt
+     * Infinity)
+     * @param maxComputeTime Maximum time in seconds to spend on this evolve
+     * call. Once this theshold is reached no more steps are executed (default
+     * Infinity)
      * @returns The evolved state and the amount of time it was evolved by
      */
-    evolve(time: number, maxSteps: number = Infinity): {
+    evolve(time: number, maxSteps: number = Infinity, maxComputeTime: number =
+    Infinity): {
         state: T[],
         time: number,
     } {
         const initialTime = time
-        while (time > 0 && maxSteps > 0) {
+        const startTime = performance.now()
+        while (time > 0 && maxSteps > 0 && performance.now() - startTime <
+        maxComputeTime * 1000) {
             let errorTooHigh = true
             let h = time
             while (errorTooHigh) {
