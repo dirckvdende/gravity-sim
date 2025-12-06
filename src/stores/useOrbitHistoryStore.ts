@@ -17,6 +17,12 @@ export type Orbit = {
 export type OrbitHistoryOptions = {
     /** Maximum length of an orbit (default 1000) */
     maxLength?: MaybeRefOrGetter<number>
+    /**
+     * Minimum angle in radian between line segment. If the angle between
+     * previous two lines is smaller, the point connecting these two lines is
+     * removed (default 0)
+     */
+    minAngle?: MaybeRefOrGetter<number>
 }
 
 /** Return type of the orbit history composable */
@@ -55,6 +61,20 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
                 continue
             }
             orbit.points.push(object.position)
+            if (orbit.points.length >= 3 &&
+            toValue(options?.minAngle ?? 0) != 0) {
+                const curLine = orbit.points[orbit.points.length - 1]!
+                    .subtract(orbit.points[orbit.points.length - 2]!)
+                const prevLine = orbit.points[orbit.points.length - 2]!
+                    .subtract(orbit.points[orbit.points.length - 3]!)
+                const angle = curLine.angle(prevLine)
+                if (Math.min(angle, 2 * Math.PI - angle) < toValue(
+                options?.minAngle ?? 0)) {
+                    orbit.points.pop()
+                    orbit.points.pop()
+                    orbit.points.push(object.position)
+                }
+            }
             if (orbit.points.length > toValue(options?.maxLength ?? 1000))
                 orbit.points.splice(0, 1)
         }
@@ -75,7 +95,8 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
 /** Store version of orbit history */
 export const useOrbitHistoryStore = defineStore("orbit-history", () => {
     const { objects } = storeToRefs(useGravitySimStore())
-    const maxLength = ref(1000)
-    const orbitHistory = useOrbitHistory(objects, { maxLength })
-    return { ...orbitHistory, maxLength }
+    const maxLength = ref(100)
+    const minAngle = ref(2 * Math.PI / 100)
+    const orbitHistory = useOrbitHistory(objects, { maxLength, minAngle })
+    return { ...orbitHistory, maxLength, minAngle }
 })
