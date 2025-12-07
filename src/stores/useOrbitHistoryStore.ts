@@ -88,8 +88,6 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
             if (orbit.points.length > (1 + nullBufferSize) * maxLength)
                 orbit.points = orbit.points.filter((value) => value != null)
         }
-        // Force update ref
-        orbits.value = orbits.value.slice()
     })
 
     /**
