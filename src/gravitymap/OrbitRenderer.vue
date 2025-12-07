@@ -16,5 +16,5 @@
     <PathRenderer
         v-if="showOrbits"
         v-for="orbit in orbits"
-        :points="orbit.points" />
+        :points="orbit.points.filter((value) => value != null)" />
 </template>

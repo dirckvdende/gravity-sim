@@ -9,8 +9,8 @@ import { useGravitySimStore } from "./useGravitySimStore";
 export type Orbit = {
     /** ID of the gravity object */
     id: number
-    /** Points that make up the orbit */
-    points: Vector2[]
+    /** Points that make up the orbit, where null should be ignored */
+    points: (Vector2 | null)[]
 }
 
 /** Options to pass to the orbit history composable */
@@ -23,6 +23,12 @@ export type OrbitHistoryOptions = {
      * removed (default 0)
      */
     minAngle?: MaybeRefOrGetter<number>
+    /**
+     * Maximum number of null entries at the start of the orbit points list, as
+     * a proportion of the max length. This improves performance since it
+     * prevents many array slice() calls (default 0.2)
+     */
+    nullPaddingSize?: number
 }
 
 /** Return type of the orbit history composable */
@@ -75,8 +81,12 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
                     orbit.points.push(object.position)
                 }
             }
-            if (orbit.points.length > toValue(options?.maxLength ?? 1000))
-                orbit.points.splice(0, 1)
+            const maxLength = toValue(options?.maxLength ?? 1000)
+            const nullBufferSize = toValue(options?.nullPaddingSize ?? 0.2)
+            if (orbit.points.length > maxLength)
+                orbit.points[orbit.points.length - maxLength - 1] = null
+            if (orbit.points.length > (1 + nullBufferSize) * maxLength)
+                orbit.points = orbit.points.filter((value) => value != null)
         }
         // Force update ref
         orbits.value = orbits.value.slice()
