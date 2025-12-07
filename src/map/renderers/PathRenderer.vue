@@ -19,13 +19,12 @@
 
     const {
         toPixelCoords,
-        position,
-        zoomLevel,
+        viewport,
     } = inject(mapStateKey, defaultState())
 
     const cached: Map<Vector2, Vector2> = new Map()
     onMounted(() => cached.clear())
-    watch([position, zoomLevel], () => cached.clear())
+    watch([viewport], () => cached.clear())
 
     // SVG path definition
     const pathDef = computed(() => {
