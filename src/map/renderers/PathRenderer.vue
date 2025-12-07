@@ -1,7 +1,9 @@
 <script lang="ts" setup>
     import Vector2 from '@/util/Vector2';
-    import { computed, inject } from 'vue';
+    import { computed, inject, onMounted, watch } from 'vue';
     import { defaultState, mapStateKey } from '../state';
+
+    const MAX_CACHE_SIZE = 10000
 
     const {
         points,
@@ -15,7 +17,14 @@
         className?: string,
     }>()
 
-    const { toPixelCoords } = inject(mapStateKey, defaultState())
+    const {
+        toPixelCoords,
+        viewport,
+    } = inject(mapStateKey, defaultState())
+
+    const cached: Map<Vector2, Vector2> = new Map()
+    onMounted(() => cached.clear())
+    watch([viewport], () => cached.clear())
 
     // SVG path definition
     const pathDef = computed(() => {
@@ -23,12 +32,18 @@
             return ""
         const result: string[] = []
         for (const [index, point] of points.entries()) {
-            const coords = toPixelCoords(point)
+            let coords = cached.get(point)
+            if (coords == undefined) {
+                coords = toPixelCoords(point)
+                cached.set(point, coords)
+            }
             if (index == 0)
                 result.push(`M ${coords.x} ${coords.y}`)
             else
                 result.push(`L ${coords.x} ${coords.y}`)
         }
+        if (cached.size > MAX_CACHE_SIZE)
+            cached.clear()
         return result.join(" ")
     })
 </script>
