@@ -19,7 +19,10 @@
 </script>
 
 <template>
-    <SideMenu :visible="visible" menu-title="Load scenario" @close="closeMenu">
+    <SideMenu
+        :visible="visible"
+        :menu-title="focusedObject?.name"
+        @close="closeMenu">
         <MenuSection>
             <MenuText>Velocity: {{ absVelocity }}</MenuText>
         </MenuSection>
