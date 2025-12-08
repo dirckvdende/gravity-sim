@@ -1,6 +1,6 @@
 
 import { useEventListener } from "@vueuse/core";
-import type { MaybeRefOrGetter } from "vue";
+import { toValue, type MaybeRefOrGetter } from "vue";
 
 /** Scroll wheel event with position and scroll difference */
 type ScrollWheelEvent = {
@@ -25,9 +25,10 @@ callback: (event: ScrollWheelEvent) => void): void {
     useEventListener(target, "wheel", (event) => {
         if (event.ctrlKey)
             return
+        const rect = (toValue(target) ?? document.body).getBoundingClientRect()
         callback({
-            x: event.offsetX,
-            y: event.offsetY,
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
             delta: event.deltaY,
             deltaMode: [0, 1, 2].indexOf(event.deltaMode) != -1
                 ? (event.deltaMode as 0 | 1 | 2) : 0,
