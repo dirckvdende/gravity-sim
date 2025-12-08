@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-    import SVGIcon from './SVGIcon.vue';
+    import SVGIcon from '@/ui/SVGIcon.vue';
     import { ref, useTemplateRef, computed, onMounted } from 'vue';
     
     const container = useTemplateRef("container")
@@ -124,89 +124,5 @@
     .menu {
         display: flex;
         pointer-events: all;
-        
-        & > :global(.menu-section) {
-            display: flex;
-            align-items: center;
-            padding: 0 .4em;
-            background-color: var(--bottom-menu-background-color, white);
-            border-radius: .5em;
-            box-shadow: colors.$menu-shadow;
-            user-select: none;
-            margin-right: .5em;
-            flex-shrink: 0;
-
-            & > :global(.menu-button) {
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-                font-size: .8em;
-                --icon-color: var(--bottom-menu-icon-color, #999);
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 2.6em;
-                outline: none;
-
-                :global(.menu-button-path-icon) {
-                    width: 2em;
-                    height: 2em;
-                    fill: var(--icon-color);
-                }
-
-                :global(.menu-button-icon) {
-                    width: 2em;
-                    height: 2em;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    box-sizing: border-box;
-                    padding: .1em;
-
-                    & > img {
-                        flex-grow: 1;
-                        flex-shrink: 1;
-                        max-width: 100%;
-                        max-height: 100%;
-                    }
-                }
-
-                :global(.menu-button-text) {
-                    position: absolute;
-                    left: 50%;
-                    top: -80%;
-                    translate: -50% 0;
-                    user-select: none;
-                    background-color: var(--bottom-menu-background-color, 
-                        white);
-                    box-shadow: colors.$menu-shadow;
-                    font-size: .9em;
-                    border-radius: .5em;
-                    padding: .3em .7em;
-                    display: none;
-                    width: auto;
-                    white-space: preserve nowrap;
-                }
-
-                &:hover {
-                    :global(.menu-button-path-icon) {
-                        fill: color-mix(in srgb, var(--icon-color),
-                            var(--bottom-menu-icon-color-mix, black) 20%);
-                    }
-
-                    :global(.menu-button-text) {
-                        display: block;
-                    }
-                }
-            }
-
-            & > :global(.menu-text) {
-                width: 7em;
-                text-align: center;
-                font-size: .9em;
-                font-weight: 600;
-            }
-        }
     }
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-    import MenuSection from './templates/MenuSection.vue';
-    import SideMenu from './templates/SideMenu.vue';
-    import MenuText from './templates/MenuText.vue';
+    import SideMenu from './side/SideMenu.vue';
+    import SideMenuSection from './side/SideMenuSection.vue';
+    import SideMenuText from './side/SideMenuText.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
@@ -23,8 +23,8 @@
         :visible="visible"
         :menu-title="focusedObject?.name"
         @close="closeMenu">
-        <MenuSection>
-            <MenuText>Velocity: {{ absVelocity }}</MenuText>
-        </MenuSection>
+        <SideMenuSection>
+            <SideMenuText>Velocity: {{ absVelocity }}</SideMenuText>
+        </SideMenuSection>
     </SideMenu>
 </template>

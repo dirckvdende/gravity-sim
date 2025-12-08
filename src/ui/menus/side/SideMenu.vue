@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { mdiClose } from '@mdi/js';
-    import SVGIcon from './SVGIcon.vue';
+    import SVGIcon from '@/ui/SVGIcon.vue';
 
     const { visible = false, menuTitle = "" } = defineProps<{
         /** Whether the side menu is currently visible */
@@ -32,14 +32,7 @@
 
 <style lang="scss" module>
     @use "@/colors.scss";
-
-    %hr {
-        border: none;
-        width: calc(100% - 2em);
-        height: .1em;
-        margin: 0 1em;
-        background-color: var(--side-menu-line-color);
-    }
+    @use "./style.scss";
 
     .container {
         position: absolute;
@@ -115,72 +108,5 @@
         margin-top: .6em;
         overflow-y: auto;
         flex-shrink: 1;
-
-        & > :global(.menu-section) {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            margin: .3em 0;
-
-            & > :global(.menu-button) {
-                width: calc(100% - 2em);
-                font-size: 1em;
-                display: flex;
-                height: 3.4em;
-                align-items: center;
-                box-sizing: border-box;
-                margin: .2em 1em;
-                border: none;
-                background-color: var(--side-menu-button-color);
-                border-radius: .5em;
-                padding: 0 1em;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: color-mix(in srgb,
-                        var(--side-menu-button-color), black 5%);
-                }
-
-                :global(.menu-button-path-icon) {
-                    height: 2em;
-                    width: 2em;
-                    fill: var(--side-menu-icon-color);
-                }
-
-                :global(.menu-button-icon) {
-                    height: 2em;
-                    width: 2em;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    box-sizing: border-box;
-
-                    & > img {
-                        flex-grow: 1;
-                        flex-shrink: 1;
-                        max-width: 100%;
-                        max-height: 100%;
-                    }
-                }
-                :global(.menu-button-text) {
-                    margin-left: 1em;
-                    font-size: 1em;
-                }
-            }
-
-            & > :global(.menu-text) {
-                width: 100%;
-                box-sizing: border-box;
-                padding: 0 1em;
-                text-align: center;
-                font-weight: 800;
-                font-size: .9em;
-                color: var(--side-menu-icon-color);
-            }
-
-            &:not(:last-child)::after {
-                @extend %hr;
-            }
-        }
     }
 </style>

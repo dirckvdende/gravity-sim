@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-    import MenuSection from './templates/MenuSection.vue';
-    import SideMenu from './templates/SideMenu.vue';
-    import MenuButton from './templates/MenuButton.vue';
+    import SideMenu from './side/SideMenu.vue';
+    import SideMenuSection from './side/SideMenuSection.vue';
+    import SideMenuButton from './side/SideMenuButton.vue';
+    import SideMenuText from './side/SideMenuText.vue';
     import { mdiFolderOpenOutline } from '@mdi/js';
-    import MenuText from './templates/MenuText.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
@@ -45,25 +45,25 @@
 
 <template>
     <SideMenu :visible="visible" menu-title="Load scenario" @close="closeMenu">
-        <MenuSection>
-            <MenuButton
+        <SideMenuSection>
+            <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="() => {
                     uploadFile('state', '.grav', () => {
                         clearOrbits()
                         closeMenu()
                     })
-                }">Load from file</MenuButton>
-        </MenuSection>
-        <MenuSection>
-            <MenuText>Presets:</MenuText>
-            <MenuButton
+                }">Load from file</SideMenuButton>
+        </SideMenuSection>
+        <SideMenuSection>
+            <SideMenuText>Presets:</SideMenuText>
+            <SideMenuButton
                 v-for="scenario in scenarios"
                 :icon="scenario.icon"
                 @click="() => {
                     loadScenario(scenario)
                     closeMenu()
-                }">{{ scenario.name }}</MenuButton>
-        </MenuSection>
+                }">{{ scenario.name }}</SideMenuButton>
+        </SideMenuSection>
     </SideMenu>
 </template>
