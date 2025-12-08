@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { inject } from 'vue';
     import { defaultState, mapStateKey } from '../state';
-    import { usePointerDrag } from './usePointerDrag';
-    import Vector2 from '@/util/Vector2';
+    import { usePointerPan } from './usePointerPan';
 
     const { disabled = false } = defineProps<{
         /** Whether panning is enabled (default false) */
@@ -11,12 +10,10 @@
 
     const { target, panPixels } = inject(mapStateKey, defaultState())
 
-    usePointerDrag((state) => {
+    usePointerPan((diff) => {
         if (disabled)
             return
-        const t = state.length
-        for (const pointer of state)
-            panPixels(new Vector2(-pointer.moveX / t, -pointer.moveY / t))
+        panPixels(diff)
     }, { target })
 </script>
 
