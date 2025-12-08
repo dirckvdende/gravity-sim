@@ -22,6 +22,11 @@
          * pin (default false)
          */
         ignoreScaling?: boolean,
+        /**
+         * Emitted when the user clicks/taps on the icon/pin
+         * @param event Pointer event from the click
+         */
+        click?: (event: PointerEvent) => void,
     };
 </script>
 
@@ -72,12 +77,14 @@
         <IconPin
             v-if="icon.size < showPinAt && !icon.ignoreScaling"
             :src="icon.src"
-            :position="icon.position" />
+            :position="icon.position"
+            @click="(event) => icon.click?.(event)" />
         <Icon
             v-else
             :src="icon.src"
             :position="icon.position"
-            :size="icon.size" />
+            :size="icon.size"
+            @click="(event) => icon.click?.(event)" />
     </template>
 </template>
 

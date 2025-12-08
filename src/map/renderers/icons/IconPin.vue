@@ -15,6 +15,11 @@
          */
         size?: number,
     }>()
+
+    const emit = defineEmits<{
+        /** Emitted when the user clicks/taps on the pin */
+        (e: "click", event: PointerEvent): void
+    }>()
 </script>
 
 <template>
@@ -25,7 +30,8 @@
             left: `${position.x}px`,
             top: `${position.y + 2}px`,
             translate: '-50% -100%',
-        }">
+        }"
+        @click="(event) => emit('click', event)">
         <!-- Aspect ratio 10 / 16 -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -25 100 160"
         :class="$style.svg">
@@ -46,16 +52,16 @@
     .pin {
         position: absolute;
         aspect-ratio: 10 / 16;
-        pointer-events: none;
         user-select: none;
-
+        
         .svg {
             fill: var(--pin-background-color, #ccc);
             stroke: var(--background-color, white);
             stroke-width: 8;
         }
-
+        
         .icon {
+            pointer-events: none;
             position: absolute;
             object-fit: contain;
             aspect-ratio: 1 / 1;

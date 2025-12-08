@@ -15,6 +15,11 @@
          */
         size: number,
     }>()
+
+    const emit = defineEmits<{
+        /** Emitted when the user clicks/taps on the icon */
+        (e: "click", event: PointerEvent): void
+    }>()
 </script>
 
 <template>
@@ -27,14 +32,15 @@
             left: `${position.x}px`,
             top: `${position.y}px`,
             translate: '-50% -50%',
-        }" />
+        }"
+        @click="(event) => emit('click', event)" />
 </template>
 
 <style lang="scss" module>
     .icon {
         position: absolute;
         object-fit: contain;
-        pointer-events: none;
+        -webkit-user-drag: none;
         user-select: none;
     }
 </style>
