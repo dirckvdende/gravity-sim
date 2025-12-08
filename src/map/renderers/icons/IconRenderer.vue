@@ -78,13 +78,15 @@
             v-if="icon.size < showPinAt && !icon.ignoreScaling"
             :src="icon.src"
             :position="icon.position"
-            @click="(event) => icon.click?.(event)" />
+            @click="(event) => icon.click?.(event)"
+            :hover-effect="icon.click !== undefined" />
         <Icon
             v-else
             :src="icon.src"
             :position="icon.position"
             :size="icon.size"
-            @click="(event) => icon.click?.(event)" />
+            @click="(event) => icon.click?.(event)"
+            :hover-effect="icon.click !== undefined" />
     </template>
 </template>
 

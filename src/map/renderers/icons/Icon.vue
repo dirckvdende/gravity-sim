@@ -14,6 +14,11 @@
          * Size of the icon (max. of width and height)
          */
         size: number,
+        /**
+         * Whether a hover effect and different cursor should be shown while
+         * hovering the icon (default false)
+         */
+        hoverEffect?: boolean,
     }>()
 
     const emit = defineEmits<{
@@ -24,7 +29,10 @@
 
 <template>
     <img
-        :class="$style.icon"
+        :class="[
+            $style.icon,
+            { [$style['hover-effect']]: hoverEffect }
+        ]"
         :src="src"
         :style="{
             width: `${size}px`,
@@ -42,5 +50,13 @@
         object-fit: contain;
         -webkit-user-drag: none;
         user-select: none;
+    }
+
+    .icon-hover-effect {
+        cursor: pointer;
+    }
+
+    .icon.hover-effect:hover {
+        opacity: .9;
     }
 </style>

@@ -14,6 +14,11 @@
          * Size of the pin (height in pixels, default 50)
          */
         size?: number,
+        /**
+         * Whether a hover effect and different cursor should be shown while
+         * hovering the icon (default false)
+         */
+        hoverEffect?: boolean,
     }>()
 
     const emit = defineEmits<{
@@ -24,7 +29,10 @@
 
 <template>
     <div
-        :class="$style.pin"
+        :class="[
+            $style.pin,
+            { [$style['hover-effect']]: hoverEffect },
+        ]"
         :style="{
             height: `${size}px`,
             left: `${position.x}px`,
@@ -68,6 +76,19 @@
             top: 16%;
             left: 18%;
             width: 64%;
+        }
+    }
+
+    .pin.hover-effect {
+        cursor: pointer;
+    }
+
+    .pin.pin.hover-effect:hover {
+        scale: 1.1;
+
+        .svg {
+            fill: color-mix(in srgb, var(--pin-background-color, #ccc),
+            black 10%);
         }
     }
 </style>
