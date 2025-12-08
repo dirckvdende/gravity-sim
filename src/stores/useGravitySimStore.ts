@@ -1,14 +1,17 @@
 
-import { useTimedGravitySim } from "@/sim/useTimedGravitySim";
-import { defineStore, storeToRefs } from "pinia";
-import { useSettingsStore } from "./useSettingsStore";
-import { serializer } from "@/serializer";
+import { defineStore, storeToRefs } from "pinia"
+import { useSettingsStore } from "./useSettingsStore"
+import { ref } from "vue"
+import { type StyledGravityObject } from "@/sim/object"
+import { useTimedGravitySim } from "@/sim/useTimedGravitySim"
+import { serializer } from "@/serializer"
 
-/** Timed gravity sim store */
-export const useGravitySimStore = defineStore("sim", () => {
+/** Store running the gravity sim and storing tracked objects */
+export const useGravitySimStore = defineStore("objects", () => {
+    const objects = ref<StyledGravityObject[]>([])
     const { paused, speed } = storeToRefs(useSettingsStore())
-    const sim = useTimedGravitySim({ paused, speed })
-    return { ...sim }
+    const sim = useTimedGravitySim(objects, { paused, speed })
+    return { ...sim, objects }
 }, {
     saveToFiles: {
         files: ["state"],

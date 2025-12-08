@@ -12,3 +12,16 @@ export type GravityObject = {
     /** Mass of the object */
     mass: number
 }
+
+/**
+ * Gravity object with style info, which isn't needed for simulation, but is for
+ * display to the user
+ */
+export type StyledGravityObject = GravityObject & {
+    /** Name of the object */
+    name: string
+    /** Size (diameter) of the object */
+    size: number
+    /** Object icon URL */
+    icon: string
+}

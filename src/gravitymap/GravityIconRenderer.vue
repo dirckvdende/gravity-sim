@@ -1,13 +1,13 @@
 <script setup lang="ts">
     import IconRenderer from '@/map/renderers/icons/IconRenderer.vue';
-    import { useObjectDisplayStore } from '@/stores/useObjectDisplayStore';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { storeToRefs } from 'pinia';
 
-    const { styledObjects } = storeToRefs(useObjectDisplayStore())
+    const { objects } = storeToRefs(useGravitySimStore())
 </script>
 
 <template>
-    <IconRenderer :icons="styledObjects.map(({ position, icon, size }) => ({
+    <IconRenderer :icons="objects.map(({ position, icon, size }) => ({
         src: icon,
         size,
         position,

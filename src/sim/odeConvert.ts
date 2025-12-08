@@ -20,7 +20,7 @@ export function objectsToState(objects: GravityObject[]): Vector2[] {
 
 /**
  * Convert a state into positions and velocities and put these into an array of
- * objects
+ * objects. The objects or modified in-place
  * @param state State to convert
  * @param objects Objects to put the position and velocity into, from the state
  */

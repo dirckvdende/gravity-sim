@@ -32,8 +32,6 @@ export type GravitySimOptions = {
 
 /** Return value of the gravity sim composable */
 export type GravitySimReturn = {
-    /** Ref to array of tracked objects */
-    objects: Ref<GravityObject[]>
     /**
      * Evolve the gravity sim by a given amount of time. Returns the actual
      * evolved time, which may be lower due to performance constraints set in
@@ -60,12 +58,14 @@ export type GravitySimReturn = {
 /**
  * Gravity sim with initially zero objects. An evolve function can be called to
  * simulate gravity
+ * @param objects Ref to objects array that should be evolved by the gravity
+ * sim. Objects are modified in-place to keep reactivity
  * @param options Options for the gravity sim, such as max step size, error
  * tolerance
  * @returns Gravity sim objects, evolve function, and current timestamp
  */
-export function useGravitySim(options?: GravitySimOptions): GravitySimReturn {
-    const objects = ref<GravityObject[]>([])
+export function useGravitySim(objects: Ref<GravityObject[]>,
+options?: GravitySimOptions): GravitySimReturn {
     const fullOptions = fillOptionsDefaults(options)
     const timestamp = ref(new Date())
 
@@ -86,12 +86,11 @@ export function useGravitySim(options?: GravitySimOptions): GravitySimReturn {
             tolerance: toValue(fullOptions.tolerance) * maxDistance()
         })
         const { state: newState, time: elapsedTime } = solver.evolve(time,
-            toValue(fullOptions.maxStepsPerEvolve), toValue(fullOptions.maxComputeTime))
+            toValue(fullOptions.maxStepsPerEvolve), toValue(
+            fullOptions.maxComputeTime))
         timestamp.value = new Date(Math.round(timestamp.value.getTime() +
             elapsedTime * 1000 * (backward ? -1 : 1)))
-        const newObjects = objects.value.slice()
-        stateToObjects(newState, newObjects)
-        objects.value = newObjects
+        stateToObjects(newState, objects.value)
         return elapsedTime * (backward ? -1 : 1)
     }
 
@@ -115,6 +114,8 @@ export function useGravitySim(options?: GravitySimOptions): GravitySimReturn {
             total = total.add(object.position.scale(object.mass))
             mass += object.mass
         }
+        if (mass == 0)
+            return Vector2.Zero
         return total.scale(1 / mass)
     })
 
@@ -144,7 +145,7 @@ export function useGravitySim(options?: GravitySimOptions): GravitySimReturn {
         }
     }
 
-    return { objects, evolve, timestamp, barycenter, resetToBarycenter }
+    return { evolve, timestamp, barycenter, resetToBarycenter }
 }
 
 /**
