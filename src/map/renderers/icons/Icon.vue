@@ -52,7 +52,7 @@
         user-select: none;
     }
 
-    .icon-hover-effect {
+    .icon.hover-effect {
         cursor: pointer;
     }
 
