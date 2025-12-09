@@ -163,7 +163,10 @@ function exponentFormat(value: number, options: FormatOptions): {
         base: thousandsSep(
             roundToSignificance(
                 value,
-                options.significance ?? 3,
+                Math.min(
+                    options.significance ?? 3,
+                    -(options.minDigits ?? -3) + exponent + 1,
+                ),
             ),
             options.thousandSeparator,
         ),
