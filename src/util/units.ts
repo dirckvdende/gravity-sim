@@ -216,7 +216,7 @@ FormatOptions): string {
     if (exponent)
         return `<span class='base'>${base}</span> `
             + `<span class='multiplier'>× 10<sup class='exponent'>${exponent}`
-            + `</sup></span>${suffixSpace}<span class'suffix'>${suffix}</span>`
+            + `</sup></span>${suffixSpace}<span class='suffix'>${suffix}</span>`
     return `<span class='base'>${base}</span>${suffixSpace}`
         + `<span class='suffix'>${suffix}</span>`
 }
