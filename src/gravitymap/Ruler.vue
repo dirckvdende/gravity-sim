@@ -175,7 +175,7 @@
     .container {
         position: fixed;
         bottom: calc(3.2em + env(safe-area-inset-bottom, 0px));
-        left: .5em;
+        left: calc(.5em + env(safe-area-inset-left, 0px));
         display: flex;
         flex-direction: column;
         align-items: center;
