@@ -31,12 +31,11 @@
             <SideMenuCenterImage v-if="focusedObject" style="margin-top: 0;"
                 :src="focusedObject?.icon" />
 
-            <SideMenuStat :value="focusedObject?.name"
-                :units="MASS_UNITS">Name</SideMenuStat>
+            <SideMenuStat :value="focusedObject?.name">Name</SideMenuStat>
             <SideMenuStat :value="focusedObject?.mass"
                 :units="MASS_UNITS">Mass</SideMenuStat>
             <SideMenuStat :value="focusedObject?.size"
-                :units="MASS_UNITS">Diameter</SideMenuStat>
+                :units="LENGTH_UNITS">Diameter</SideMenuStat>
 
             <SideMenuStat :value="null">Position</SideMenuStat>
             <SideMenuStat v-if="position" :value="position.x"
