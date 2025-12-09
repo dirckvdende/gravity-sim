@@ -66,7 +66,7 @@ export const VELOCITY_UNITS: UnitsList = [
  * Find the best unit to use for the given value. This is the largest unit for
  * which the scale is is smaller than the value (or the smallest unit if this
  * doesn't exist)
- * @param value The value to find the unit for
+ * @param value The (positive) value to find the unit for
  * @param units List of units
  * @returns The best unit as an item from the list of units
  */
@@ -83,7 +83,7 @@ function bestUnit(value: number, units: UnitsList): UnitsList[0] {
  * Round a number to some significance, or to the nearest integer if the number
  * of digits before the decimal point in the value is larger than the
  * significance
- * @param value The value to round
+ * @param value The (positive) value to round
  * @param significance The significance to round to
  * @returns The rounded number as a string
  */
@@ -119,7 +119,7 @@ reverse: boolean = false): string {
 
 /**
  * Add thousand separators to a number
- * @param value The value to add thousand separators to as a string
+ * @param value The (positive) value to add thousand separators to as a string
  * @param sep The thousand separator to use (default " ")
  * @returns The value formatted with thousand separators
  */
@@ -135,7 +135,7 @@ function thousandsSep(value: string, sep: string = " "): string {
  * Convert a value to an exponential format (scientific notation), if it is very
  * low or high. If this is for the case it is simply formatted with thousand
  * separators
- * @param value The value to format into exponential form
+ * @param value The (positive) value to format into exponential form
  * @param options Formatting options
  * @returns The base and (possible) exponent as formatted strings
  */
@@ -143,6 +143,9 @@ function exponentFormat(value: number, options: FormatOptions): {
     base: string
     exponent?: string
 } {
+    // Special case when value is zero
+    if (value == 0)
+        return { base: roundToSignificance(value, options.significance ?? 3) }
     // Exponent when formatting with exponent, equal to number of digits minus 1
     const exponent = Math.floor(Math.log10(value))
     if (value < Math.pow(10, options.minDigits ?? -3)
@@ -186,9 +189,16 @@ function exponentFormat(value: number, options: FormatOptions): {
  */
 function unitToFormat(value: number, units: UnitsList, options: FormatOptions):
 FormattedUnit {
+    const negative = value < 0
+    if (negative)
+        value = -value
     const { suffix, scale } = bestUnit(value, units)
     const { base, exponent } = exponentFormat(value / scale, options)
-    return { base, exponent, suffix }
+    return {
+        base: (negative ? "-" : "") + base,
+        exponent,
+        suffix,
+    }
 }
 
 /**
