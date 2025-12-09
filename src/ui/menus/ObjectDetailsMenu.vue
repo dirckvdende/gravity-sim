@@ -6,6 +6,7 @@
     import { computed } from 'vue';
     import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS } from '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
+    import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
 
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
@@ -26,6 +27,9 @@
         :menu-title="focusedObject?.name"
         @close="closeMenu">
         <SideMenuSection>
+
+            <SideMenuCenterImage v-if="focusedObject" style="margin-top: 0;"
+                :src="focusedObject?.icon" />
 
             <SideMenuStat :value="focusedObject?.name"
                 :units="MASS_UNITS">Name</SideMenuStat>
