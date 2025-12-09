@@ -202,7 +202,11 @@ FormattedUnit {
 export function unitToHTML(value: number, units: UnitsList, options?:
 FormatOptions): string {
     const { base, exponent, suffix } = unitToFormat(value, units, options ?? {})
+    const suffixSpace = suffix == "" ? "" : " "
     if (exponent)
-        return `${base} × 10<sup>${exponent}</sup> ${suffix}`
-    return `${base} ${suffix}`
+        return `<span class='base'>${base}</span> `
+            + `<span class='multiplier'>× 10<sup class='exponent'>${exponent}`
+            + `</sup></span>${suffixSpace}<span class'suffix'>${suffix}</span>`
+    return `<span class='base'>${base}</span>${suffixSpace}`
+        + `<span class='suffix'>${suffix}</span>`
 }
