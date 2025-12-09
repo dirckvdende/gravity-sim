@@ -29,7 +29,7 @@
         :menu-title="focusedObject?.name"
         @close="closeMenu">
         <SideMenuSection>
-            <SideMenuText>Velocity: {{ absVelocity }}</SideMenuText>
+            <SideMenuText>Velocity: <span v-html="absVelocity"></span></SideMenuText>
         </SideMenuSection>
     </SideMenu>
 </template>
