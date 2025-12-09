@@ -1,12 +1,14 @@
 
+import type { StyledGravityObject } from "@/sim/object";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 /** Store for which menu is currently being displayed */
-export const useMenuStore = defineStore("menu-state", () => {
-    const activeMenu = ref<"none" | "load">("none")
-    return {
-        /** Currently displayed menu */
-        activeMenu,
-    }
-})
+export const useMenuStore = defineStore("menu-state", () => ({
+    /** Currently displayed menu */
+    activeMenu: ref<"none" | "load" | "object-details">("none"),
+    /**
+     * Object of which details are currently shown (if object-details is active)
+     */
+    focusedObject: ref<StyledGravityObject | null>(null)
+}))

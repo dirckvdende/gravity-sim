@@ -3,6 +3,7 @@ import { ref, toValue, type MaybeRefOrGetter, type Ref } from "vue";
 import { useGravitySim, type GravitySimOptions, type GravitySimReturn } from
 "./useGravitySim";
 import { useAnimationFrame } from "@/util/animationFrame";
+import type { GravityObject } from "./object";
 
 // Difference between target time and elapsed time where sim is marked as
 // "slowed"
@@ -33,16 +34,18 @@ export type TimedGravitySimReturn = GravitySimReturn & {
 
 /**
  * Continuously running gravity sim, which calls evolve() every frame
+ * @param objects Ref to array of objects to evolve. Objects are modified
+ * in-place to keep reactivity
  * @param options Options for the timed gravity sim, extended version of the
  * options passed to the base gravity sim
  * @returns Same as base gravity sim, plus a ref which indicates if the sim is
  * running slower than targeted
  */
-export function useTimedGravitySim(options?: TimedGravitySimOptions):
-TimedGravitySimReturn {
+export function useTimedGravitySim(objects: Ref<GravityObject[]>,
+options?: TimedGravitySimOptions): TimedGravitySimReturn {
 
     // Non-timed gravity sim
-    const sim = useGravitySim(options)
+    const sim = useGravitySim(objects, options)
     // Whether sim is running more slowly than set in the options
     const slowed = ref(false)
     // Timestamp of last step, so sim speed will be constant

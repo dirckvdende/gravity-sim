@@ -31,11 +31,8 @@
     }
 
     onMounted(() => {
-        // Zoom out far (temporary)
         if (!map.value)
             return
-        const { zoom } = map.value.state
-        zoom(-12)
         syncGravityMapStore()
     })
 </script>

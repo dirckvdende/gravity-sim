@@ -14,12 +14,25 @@
          * Size of the icon (max. of width and height)
          */
         size: number,
+        /**
+         * Whether a hover effect and different cursor should be shown while
+         * hovering the icon (default false)
+         */
+        hoverEffect?: boolean,
+    }>()
+
+    const emit = defineEmits<{
+        /** Emitted when the user clicks/taps on the icon */
+        (e: "click", event: PointerEvent): void
     }>()
 </script>
 
 <template>
     <img
-        :class="$style.icon"
+        :class="[
+            $style.icon,
+            { [$style['hover-effect']]: hoverEffect }
+        ]"
         :src="src"
         :style="{
             width: `${size}px`,
@@ -27,14 +40,23 @@
             left: `${position.x}px`,
             top: `${position.y}px`,
             translate: '-50% -50%',
-        }" />
+        }"
+        @click="(event) => emit('click', event)" />
 </template>
 
 <style lang="scss" module>
     .icon {
         position: absolute;
         object-fit: contain;
-        pointer-events: none;
+        -webkit-user-drag: none;
         user-select: none;
+    }
+
+    .icon.hover-effect {
+        cursor: pointer;
+    }
+
+    .icon.hover-effect:hover {
+        opacity: .9;
     }
 </style>

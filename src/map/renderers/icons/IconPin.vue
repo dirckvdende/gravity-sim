@@ -14,18 +14,32 @@
          * Size of the pin (height in pixels, default 50)
          */
         size?: number,
+        /**
+         * Whether a hover effect and different cursor should be shown while
+         * hovering the icon (default false)
+         */
+        hoverEffect?: boolean,
+    }>()
+
+    const emit = defineEmits<{
+        /** Emitted when the user clicks/taps on the pin */
+        (e: "click", event: PointerEvent): void
     }>()
 </script>
 
 <template>
     <div
-        :class="$style.pin"
+        :class="[
+            $style.pin,
+            { [$style['hover-effect']]: hoverEffect },
+        ]"
         :style="{
             height: `${size}px`,
             left: `${position.x}px`,
             top: `${position.y + 2}px`,
             translate: '-50% -100%',
-        }">
+        }"
+        @click="(event) => emit('click', event)">
         <!-- Aspect ratio 10 / 16 -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -25 100 160"
         :class="$style.svg">
@@ -46,22 +60,35 @@
     .pin {
         position: absolute;
         aspect-ratio: 10 / 16;
-        pointer-events: none;
         user-select: none;
-
+        
         .svg {
             fill: var(--pin-background-color, #ccc);
             stroke: var(--background-color, white);
             stroke-width: 8;
         }
-
+        
         .icon {
+            pointer-events: none;
             position: absolute;
             object-fit: contain;
             aspect-ratio: 1 / 1;
             top: 16%;
             left: 18%;
             width: 64%;
+        }
+    }
+
+    .pin.hover-effect {
+        cursor: pointer;
+    }
+
+    .pin.pin.hover-effect:hover {
+        scale: 1.1;
+
+        .svg {
+            fill: color-mix(in srgb, var(--pin-background-color, #ccc),
+            black 10%);
         }
     }
 </style>

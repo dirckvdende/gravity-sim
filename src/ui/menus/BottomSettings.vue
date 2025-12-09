@@ -3,11 +3,11 @@
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
     mdiFullscreen, mdiFolderOpenOutline} from '@mdi/js';
     import { computed } from 'vue';
-    import { useKeyEvent } from '../util/keyEvent';
-    import MenuSection from './templates/MenuSection.vue';
-    import MenuButton from './templates/MenuButton.vue';
-    import MenuText from './templates/MenuText.vue';
-    import BottomMenu from './templates/BottomMenu.vue';
+    import { useKeyEvent } from '../../util/keyEvent';
+    import BottomMenu from './bottom/BottomMenu.vue';
+    import BottomMenuButton from './bottom/BottomMenuButton.vue';
+    import BottomMenuSection from './bottom/BottomMenuSection.vue';
+    import BottomMenuText from './bottom/BottomMenuText.vue';
     import { storeToRefs } from 'pinia';
     import { downloadFile } from '@/util/piniaStoreToFile';
     import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
@@ -122,76 +122,76 @@
 
 <template>
     <BottomMenu>
-        <MenuSection>
-            <MenuButton
+        <BottomMenuSection>
+            <BottomMenuButton
                 :path-icon="paused ? mdiPlay : mdiPause"
                 @click="pause"
                 :style="{
                     '--icon-color': paused ? 'var(--accent-color-blue, #6b8edf)'
                     : 'var(--accent-color-red, #e16262)',
-                }">{{ paused ? "Play (_)" : "Pause (_)" }}</MenuButton>
-            <MenuButton
+                }">{{ paused ? "Play (_)" : "Pause (_)" }}</BottomMenuButton>
+            <BottomMenuButton
                 :path-icon="mdiRewind"
-                @click="slowDown">Slower ([)</MenuButton>
-            <MenuText :style="{
+                @click="slowDown">Slower ([)</BottomMenuButton>
+            <BottomMenuText :style="{
                 color: slowed ? 'var(--accent-color-orange)' : undefined,
-            }">{{ mode[1].name }}{{ slowed ? " *" : "" }}</MenuText>
-            <MenuButton
+            }">{{ mode[1].name }}{{ slowed ? " *" : "" }}</BottomMenuText>
+            <BottomMenuButton
                 :path-icon="mdiFastForward"
-                @click="speedUp">Faster (])</MenuButton>
-        </MenuSection>
-        <MenuSection>
-            <MenuButton
+                @click="speedUp">Faster (])</BottomMenuButton>
+        </BottomMenuSection>
+        <BottomMenuSection>
+            <BottomMenuButton
                 :path-icon="mdiBullseye"
                 @click="toggleBarycenter"
                 :style="{
                     '--icon-color': showBarycenter ?
                     'var(--accent-color-purple, #9f30b3)' : undefined,
-                }">Show barycenter (B)</MenuButton>
-            <MenuButton
+                }">Show barycenter (B)</BottomMenuButton>
+            <BottomMenuButton
                 :path-icon="mdiTarget"
                 @click="resetToBarycenter"
-            >Reset to barycenter (R)</MenuButton>
-        </MenuSection>
-        <MenuSection>
-            <MenuButton
+            >Reset to barycenter (R)</BottomMenuButton>
+        </BottomMenuSection>
+        <BottomMenuSection>
+            <BottomMenuButton
                 :path-icon="mdiOrbit"
                 @click="toggleOrbits"
                 :style="{
                     '--icon-color': showOrbits ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Show orbits (O)</MenuButton>
-            <MenuButton
+                }">Show orbits (O)</BottomMenuButton>
+            <BottomMenuButton
                 :path-icon="mdiGrid"
                 @click="toggleGrid"
                 :style="{
                     '--icon-color': showGrid ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Show grid</MenuButton>
-            <MenuButton
+                }">Show grid</BottomMenuButton>
+            <BottomMenuButton
                 :path-icon="mdiWeatherNight"
                 @click="toggleDarkMode"
                 :style="{
                     '--icon-color': darkMode ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Dark mode</MenuButton>
-            <MenuButton
+                }">Dark mode</BottomMenuButton>
+            <BottomMenuButton
                 :path-icon="mdiFullscreen"
                 @click="() => toggleFullscreen()"
                 :style="{
                     '--icon-color': isFullscreenRef ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Full screen</MenuButton>
-        </MenuSection>
-        <MenuSection>
-            <MenuButton
+                }">Full screen</BottomMenuButton>
+        </BottomMenuSection>
+        <BottomMenuSection>
+            <BottomMenuButton
                 :path-icon="mdiContentSaveOutline"
                 @click="saveFile"
-                >Save file</MenuButton>
-            <MenuButton
+                >Save file</BottomMenuButton>
+            <BottomMenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="loadFile"
-                >Load file</MenuButton>
-        </MenuSection>
+                >Load file</BottomMenuButton>
+        </BottomMenuSection>
     </BottomMenu>
 </template>
