@@ -5,13 +5,18 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
+    import { VELOCITY_UNITS, unitToHTML } from '@/util/units';
 
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
 
-    const absVelocity = computed(() =>
-        focusedObject.value?.velocity?.length() ?? "N/A")
+    const absVelocity = computed(() => {
+        const v = focusedObject.value?.velocity?.length()
+        if (v === undefined)
+            return "N/A"
+        return unitToHTML(v, VELOCITY_UNITS)
+    })
 
     function closeMenu(): void {
         activeMenu.value = "none"

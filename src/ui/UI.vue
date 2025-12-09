@@ -10,10 +10,10 @@
 
 <template>
     <UIContainer>
-        <BottomSettings />
         <TimeDisplay />
         <LoadMenu />
         <ObjectDetailsMenu />
+        <BottomSettings />
     </UIContainer>
     <DarkMode />
     <DemoOverlay />
