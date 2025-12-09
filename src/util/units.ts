@@ -19,7 +19,7 @@ export type FormatOptions = {
     minDigits?: number
     /**
      * Maximum number of digits, after which scientific notation is used. A
-     * negative number indicates a number of decimals after dot (default 3)
+     * negative number indicates a number of decimals after dot (default 6)
      */
     maxDigits?: number
     /** Thousands separator to use (if applicable, default " ") */
@@ -156,7 +156,7 @@ function exponentFormat(value: number, options: FormatOptions): {
     // Exponent when formatting with exponent, equal to number of digits minus 1
     const exponent = Math.floor(Math.log10(value))
     if (value < Math.pow(10, options.minDigits ?? -3)
-    || value >= Math.pow(10, options.maxDigits ?? 3))
+    || value >= Math.pow(10, options.maxDigits ?? 6))
         // Format with exponent
         return {
             base: thousandsSep(
