@@ -62,6 +62,13 @@ export const VELOCITY_UNITS: UnitsList = [
     { suffix: "km/s", scale: 1000 },
 ]
 
+/** Mass units in milligrams, grams and kilograms */
+export const MASS_UNITS: UnitsList = [
+    { suffix: "mg", scale: 1e-6 },
+    { suffix: "g", scale: 1e-3 },
+    { suffix: "kg", scale: 1 },
+]
+
 /**
  * Find the best unit to use for the given value. This is the largest unit for
  * which the scale is is smaller than the value (or the smallest unit if this

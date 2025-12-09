@@ -4,7 +4,7 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
-    import { LENGTH_UNITS, VELOCITY_UNITS } from '@/util/units';
+    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS } from '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
 
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
@@ -26,6 +26,13 @@
         :menu-title="focusedObject?.name"
         @close="closeMenu">
         <SideMenuSection>
+
+            <SideMenuStat :value="focusedObject?.name"
+                :units="MASS_UNITS">Name</SideMenuStat>
+            <SideMenuStat :value="focusedObject?.mass"
+                :units="MASS_UNITS">Mass</SideMenuStat>
+            <SideMenuStat :value="focusedObject?.size"
+                :units="MASS_UNITS">Diameter</SideMenuStat>
 
             <SideMenuStat :value="null">Position</SideMenuStat>
             <SideMenuStat v-if="position" :value="position.x"

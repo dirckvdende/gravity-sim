@@ -11,9 +11,10 @@
     } = defineProps<{
         /**
          * The value of the stat to display. Displays a placeholder ("N/A") when
-         * undefined. Displays nothing when null
+         * undefined. Displays nothing when null. Displays the literal string in
+         * case of a string
          */
-        value?: number | null
+        value?: number | string | null
         /** List of units to use to format the value (default no units) */
         units?: UnitsList
         /** Optional formatting options */
@@ -29,6 +30,8 @@
             return ""
         if (value === undefined)
             return "N/A"
+        if (typeof value == "string")
+            return value
         return unitToHTML(value, units, formatOptions)
     })
 </script>
@@ -41,8 +44,8 @@
         <div :class="$style.name"><div v-if="level > 0" :style="{
             display: 'inline-block',
             width: `${level}em`,
-        }" /><slot /></div>
-        <div :class="$style.stat" v-html="displayValue"></div>
+        }" /><span><slot /></span></div>
+        <div :class="$style.stat"><span v-html="displayValue" /></div>
     </div>
 </template>
 
@@ -53,7 +56,7 @@
         width: 100%;
         box-sizing: border-box;
         padding: 0 1.2em;
-        margin: .4em 0;
+        margin-top: .4em;
         justify-content: space-between;
         font-size: .8em;
         color: var(--side-menu-text-color, black);
@@ -71,15 +74,22 @@
             overflow: hidden;
             white-space: nowrap;
             text-align: right;
+            justify-content: flex-end;
 
             :global(.suffix) {
                 color: color-mix(in srgb, var(--side-menu-text-color, black),
                     transparent 60%);
             }
         }
+
+        .stat, .name {
+            display: flex;
+            align-items: center;
+            min-height: 1.7em;
+        }
     }
 
     .container.deep {
-        margin: 0;
+        margin-top: -.1em;;
     }
 </style>
