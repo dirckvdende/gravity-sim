@@ -23,7 +23,6 @@
                 <SVGIcon :path="mdiClose" :class="$style.icon" />
             </button>
         </div>
-        <hr />
         <div :class="$style.menu">
             <slot />
         </div>
@@ -48,7 +47,6 @@
         translate: 2em 0;
         opacity: 0;
         transition: translate .2s, opacity .2s;
-        padding: .5em 0 0 0;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -65,6 +63,8 @@
             justify-content: space-between;
             align-items: center;
             padding: .6em .8em;
+            background-color: var(--side-menu-head-color);
+            user-select: none;
 
             .spacer {
                 width: 2em;
@@ -72,12 +72,13 @@
 
             h1 {
                 margin: 0;
-                font-size: 1.3em;
+                font-size: 1.1em;
+                color: var(--side-menu-head-text-color);
             }
 
             .close-button {
-                width: 2em;
-                height: 2em;
+                width: 1.7em;
+                height: 1.7em;
                 border: none;
                 background-color: transparent;
                 padding: 0;
@@ -86,18 +87,14 @@
                 cursor: pointer;
 
                 .icon {
-                    fill: var(--side-menu-icon-color);
+                    fill: var(--side-menu-head-text-color);
                 }
 
                 &:hover .icon {
-                    fill: color-mix(in srgb, var(--side-menu-icon-color),
-                        black 20%);
+                    fill: color-mix(in srgb, var(--side-menu-head-text-color),
+                        transparent 20%);
                 }
             }
-        }
-
-        hr {
-            @extend %hr;
         }
     }
 
