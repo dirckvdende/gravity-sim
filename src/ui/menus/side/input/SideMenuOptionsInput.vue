@@ -2,7 +2,7 @@
     import { onClickOutside } from '@vueuse/core';
     import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-    const { options } = defineProps<{
+    const { options, maxItems = 5 } = defineProps<{
         /**
          * Different options to let the user choose between, with a value to
          * pass back and the name to display to the user
@@ -11,6 +11,8 @@
             value: OptionValue
             name: string
         }[]
+        /** Maximum number of items to display in the dropdown (default 5) */
+        maxItems?: number
     }>()
 
     // Currently selected option
@@ -23,6 +25,8 @@
 
     // Input field element
     const inputField = useTemplateRef("input-field")
+    // Input field value, should only be modified through this ref
+    const text = ref("")
 
     // When selected value changes, update input field to display the new value
     watch(selected, updateInputField)
@@ -39,41 +43,46 @@
     
     /** Clear the input field value */
     function clearInputField(): void {
-        if (!inputField.value)
-            return
-        inputField.value.value = ""
+        text.value = ""
     }
 
     /** Update the input field value to reflect the currently selected option */
     function updateInputField(): void {
-        if (!inputField.value)
-            return
-        inputField.value.value = selected.value?.name ?? ""
+        text.value = selected.value?.name ?? ""
     }
 
     onMounted(updateInputField)
 
+    // Ref that indicates if the dropdown is currently visible
     const dropdownVisible = ref(false)
 
+    /**
+     * Function called when the input element gains focus
+     */
     function onFocus(): void {
         clearInputField()
         dropdownVisible.value = true
     }
 
+    // Hide dropdown when clicking outside it
     onClickOutside(useTemplateRef("dropdown"), () => {
         dropdownVisible.value = false
     }, { ignore: [inputField] })
+
+    const displayedOptions = computed(() => options.filter(({ name }) =>
+        name.toUpperCase().includes(text.value.toUpperCase())
+    ).slice(0, maxItems))
 </script>
 
 <template>
     <div :class="$style.container">
         <input :class="$style.input" type="text" @focus="onFocus"
-            ref="input-field" />
+            ref="input-field" v-model="text" />
         <div :class="$style.dropdown" :style="{
             display: dropdownVisible ? undefined : 'none'
         }" ref="dropdown">
             <button
-                v-for="option in options"
+                v-for="option in displayedOptions"
                 :class="$style.option"
                 @click="() => selectOption(option)">{{ option.name }}</button>
         </div>
