@@ -1,4 +1,5 @@
 
+import { useActiveElement } from "@vueuse/core";
 import { onMounted, onUnmounted, toRef, watch, type MaybeRefOrGetter } from
 "vue";
 
@@ -52,6 +53,7 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
     // Ref to the passed options
     const keyRef = toRef(key)
     const optionsRef = toRef(options)
+    const activeElement = useActiveElement()
     // Whether the target key is currently being held. Used by the holdEmit
     // function to detect when to stop
     let holdActive = false
@@ -100,7 +102,8 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
      * @param event Emitted keydown event
      */
     function keydown(event: KeyboardEvent): void {
-        if (!isKey(event.key) || !hasCtrlAltMeta(event))
+        if (!isKey(event.key) || !hasCtrlAltMeta(event)
+        || activeElement.value?.tagName == "INPUT")
             return
         holdActive = true
         if ((optionsRef.value?.mode ?? "press") == "hold")
