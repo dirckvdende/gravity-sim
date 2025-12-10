@@ -94,13 +94,23 @@ Vector2 {
 }
 
 /**
- * Update the force vectors on an array of objects. The forces are updated
- * in-place such that the gravity objects remain the same
- * @param objects The objects to update the forces of
+ * Get the force acting on a gravity object given a list of objects. Equivalent
+ * to the forceOn function, but using GravityObject types
+ * @param sourceObject The source object to calculate the force on
+ * @param objects The objects that are acting forces on the source object
+ * @returns The acting force as a vector
  */
-export function updateForcesOnObjects(objects: GravityObject[]): void {
-    const masses = objectMasses(objects)
-    const state = objectsToState(objects)
-    for (const [index, object] of objects.entries())
-        object.force = forceOn(index, state, masses)
+export function forceOnObject(sourceObject: GravityObject,
+objects: GravityObject[]): Vector2 {
+    let total = Vector2.Zero
+    for (const object of objects) {
+        if (object == sourceObject)
+            continue
+        const diff = object.position.subtract(sourceObject.position)
+        const distance = diff.length() + DISTANCE_SMOOTHING
+        const force = diff.scale(GRAV_CONSTANT * sourceObject.mass * object.mass
+            / Math.pow(distance, 3))
+        total = total.add(force)
+    }
+    return total
 }

@@ -8,7 +8,10 @@
     '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
     import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
+    import { forceOnObject } from '@/sim/odeConvert';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
 
+    const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
@@ -16,7 +19,11 @@
     const position = computed(() => focusedObject.value?.position)
     const velocity = computed(() => focusedObject.value?.velocity)
     const absVelocity = computed(() => velocity.value?.length())
-    const force = computed(() => focusedObject.value?.force)
+    const force = computed(() => {
+        if (!focusedObject.value)
+            return undefined
+        return forceOnObject(focusedObject.value, objects.value)
+    })
     const absForce = computed(() => force.value?.length())
 
     function closeMenu(): void {

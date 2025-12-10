@@ -11,8 +11,6 @@ export type GravityObject = {
     velocity: Vector2
     /** Mass of the object */
     mass: number
-    /** Current force acting on the object. Automatically updated by sim */
-    force?: Vector2
 }
 
 /**
