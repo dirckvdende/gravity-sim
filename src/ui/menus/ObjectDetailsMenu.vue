@@ -3,13 +3,17 @@
     import SideMenuSection from './side/SideMenuSection.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
-    import { computed } from 'vue';
+    import { computed, ref, type ComputedRef } from 'vue';
     import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS } from
     '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
     import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
     import { forceOnObject } from '@/sim/odeConvert';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
+    import SideMenuInputContainer from
+    './side/input/SideMenuInputContainer.vue';
+    import SideMenuOptionsInput from './side/input/SideMenuOptionsInput.vue';
+    import type { StyledGravityObject } from '@/sim/object';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
@@ -28,6 +32,25 @@
 
     function closeMenu(): void {
         activeMenu.value = "none"
+    }
+
+    const compareOptions: ComputedRef<{
+        value: StyledGravityObject
+        name: string
+        icon: string
+    }[]> = computed(() => 
+        objects.value.filter((object) => object != focusedObject.value)
+        .map((object) => ({
+            value: object,
+            name: object.name,
+            icon: object.icon,
+        }))
+    )
+
+    // Object selector for comparisons
+    const compareObject = ref<StyledGravityObject | undefined>(undefined)
+    function updateCompareObject(value: StyledGravityObject | undefined): void {
+        compareObject.value = value
     }
 </script>
 
@@ -66,6 +89,19 @@
                 :units="FORCE_UNITS" :level=1>x</SideMenuStat>
             <SideMenuStat v-if="force" :value="force.y"
                 :units="FORCE_UNITS" :level=1>y</SideMenuStat>
+
+        </SideMenuSection>
+        <SideMenuSection>
+
+            <SideMenuInputContainer name="Compare">
+                <SideMenuOptionsInput
+                    :options="compareOptions"
+                    @update="updateCompareObject" />
+            </SideMenuInputContainer>
+
+            <template v-if="compareObject">
+                {{ compareObject.name }}
+            </template>
 
         </SideMenuSection>
     </SideMenu>
