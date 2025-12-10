@@ -103,6 +103,10 @@
                 <SideMenuStat :value="(compareObject.position.subtract(
                     focusedObject?.position)).length()"
                     :units="LENGTH_UNITS">Distance</SideMenuStat>
+                <SideMenuStat :value="focusedObject.mass / compareObject.mass">
+                    Relative mass</SideMenuStat>
+                <SideMenuStat :value="focusedObject.size / compareObject.size">
+                    Relative size</SideMenuStat>
             </template>
 
         </SideMenuSection>
