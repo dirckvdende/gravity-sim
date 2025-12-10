@@ -25,6 +25,16 @@
 
     // Currently selected option
     const selected = ref(options[0])
+    // Reset selected option when options list changes and selected option is
+    // not in it
+    watch(() => options, (newOptions) => {
+        if (!selected.value)
+            return
+        if (newOptions.findIndex((option) =>
+            option.value == selected.value?.value) != -1)
+            return
+        selected.value = newOptions[0]
+    }, { deep: true })
     // Value of the selected option
     const value = computed(() =>
         !selected.value ? undefined : selected.value.value)
