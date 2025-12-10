@@ -5,11 +5,14 @@
     const { options, maxItems = 5 } = defineProps<{
         /**
          * Different options to let the user choose between, with a value to
-         * pass back and the name to display to the user
+         * pass back and the name to display to the user. An icon can also be
+         * passed (as a URL), which will be displayed on the right of the input
+         * field
          */
         options: {
             value: OptionValue
             name: string
+            icon?: string,
         }[]
         /** Maximum number of items to display in the dropdown (default 5) */
         maxItems?: number
@@ -78,13 +81,26 @@
     <div :class="$style.container">
         <input :class="$style.input" type="text" @focus="onFocus"
             ref="input-field" v-model="text" />
+        <img
+            v-if="selected?.icon"
+            :src="selected.icon"
+            :class="$style['main-icon']" />
         <div :class="$style.dropdown" :style="{
             display: dropdownVisible ? undefined : 'none'
         }" ref="dropdown">
             <button
                 v-for="option in displayedOptions"
                 :class="$style.option"
-                @click="() => selectOption(option)">{{ option.name }}</button>
+                @click="() => selectOption(option)">
+                <span>{{ option.name }}</span>
+                <img
+                    v-if="option?.icon"
+                    :src="option.icon"
+                    :class="$style.icon" />
+            </button>
+            <p
+                v-if="displayedOptions.length == 0"
+                :class="$style['no-results']">No results found</p>
         </div>
     </div>
 </template>
@@ -96,9 +112,22 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        position: relative;
 
         .input {
             @extend %text-input;
+            padding-right: 2em;
+        }
+
+        .main-icon {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            right: .5em;
+            top: .4em;
+            object-fit: contain;
+            height: 1.4em;
+            width: 1.4em;
         }
 
         .dropdown {
@@ -110,7 +139,7 @@
             box-sizing: border-box;
             width: 100%;
             padding: .2em;
-
+            
             .option {
                 text-align: start;
                 box-sizing: border-box;
@@ -121,10 +150,32 @@
                 background-color: transparent;
                 border-radius: .3em;
                 cursor: pointer;
+                position: relative;
 
                 &:hover {
                     background-color: var(--side-menu-option-hover-color);
                 }
+
+                .icon {
+                    position: absolute;
+                    user-select: none;
+                    pointer-events: none;
+                    right: .5em;
+                    top: .25em;
+                    object-fit: contain;
+                    height: 1.4em;
+                    width: 1.4em;
+                }
+            }
+
+            .no-results {
+                margin: .3em 0;
+                opacity: .5;
+                user-select: none;
+                font-size: .8em;
+                font-style: italic;
+                padding: 0 1em;
+                text-align: start;
             }
         }
     }
