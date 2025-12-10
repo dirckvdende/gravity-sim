@@ -70,6 +70,7 @@
     // Hide dropdown when clicking outside it
     onClickOutside(useTemplateRef("dropdown"), () => {
         dropdownVisible.value = false
+        updateInputField()
     }, { ignore: [inputField] })
 
     const displayedOptions = computed(() => options.filter(({ name }) =>
