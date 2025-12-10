@@ -99,7 +99,7 @@ function bestUnit(value: number, units: UnitsList): UnitsList[0] {
  * @returns The rounded number as a string
  */
 function roundToSignificance(value: number, significance: number): string {
-    const digits = Math.floor(Math.log10(value)) + 1
+    const digits = value == 0 ? 1 : Math.floor(Math.log10(value)) + 1
     if (digits >= significance)
         return value.toFixed(0)
     return value.toFixed(Math.max(-20, significance - digits))
