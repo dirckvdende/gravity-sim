@@ -18,13 +18,20 @@
         maxItems?: number
     }>()
 
+    const emit = defineEmits<{
+        /** Called when the current value updated */
+        (e: "update", value: OptionValue | undefined): void
+    }>()
+
     // Currently selected option
     const selected = ref(options[0])
     // Value of the selected option
     const value = computed(() =>
         !selected.value ? undefined : selected.value.value)
-    // Expose the value
-    defineExpose({ value })
+    // Emit event once value updated
+    watch(value, (v) => emit("update", v as OptionValue | undefined), {
+        immediate: true,
+    })
 
     // Input field element
     const inputField = useTemplateRef("input-field")
