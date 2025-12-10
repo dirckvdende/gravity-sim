@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import { mdiClose } from '@mdi/js';
     import SVGIcon from '@/ui/SVGIcon.vue';
-    import { vOnClickOutside } from '@vueuse/components';
+    import { onClickOutside } from '@vueuse/core';
+    import { useTemplateRef } from 'vue';
 
     const { visible = false, menuTitle = "" } = defineProps<{
         /** Whether the side menu is currently visible */
@@ -28,11 +29,16 @@
             return
         emit("close")
     }
+
+    // Clicking outside the menu (except on ignored elements), causes the menu
+    // to close
+    const container = useTemplateRef("container")
+    onClickOutside(container, close, { ignore: [".ignore-side-menu-close"] })
 </script>
 
 <template>
     <div :class="[$style.container, { [$style.visible]: visible }]"
-    v-on-click-outside="close">
+    ref="container">
         <div :class="$style.top">
             <div :class="$style.spacer" />
             <h1>{{ menuTitle }}</h1>
