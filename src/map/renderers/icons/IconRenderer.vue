@@ -55,38 +55,47 @@
 
     const { toPixelCoords, pixelSize } = inject(mapStateKey, defaultState())
 
-    // List of icons with sizes and positions in pixel values. The list also
-    // sorted from back to front (lowest to highest y coord). The original index
-    // is stored as property "index"
-    const unitSizeIcons = computed(() => icons.map((icon, index) => ({
+    // List of icons with sizes and positions in pixel values
+    const unitSizeIcons = computed(() => icons.map((icon) => ({
         ...icon,
-        index,
         position: toPixelCoords(icon.position),
         size:  icon.size / (icon.ignoreScaling ? 1 : pixelSize.value),
-    })).sort((iconA, iconB) => {
-        const ignoreA = iconA.ignoreScaling ?? false
-        const ignoreB = iconB.ignoreScaling ?? false
-        if (ignoreA != ignoreB)
-            return Number(ignoreA) - Number(ignoreB)
-        return iconA.position.y - iconB.position.y
-    }))
+    })))
+
+    // List of icons with z-index added, such that icons with higher y coord are
+    // displayed on top of those with a lower y coord
+    const iconsWithZ = computed(() => {
+        const icons = unitSizeIcons.value
+        const indexedIcons = Array.from(icons.entries())
+        indexedIcons.sort(([_indexA, a], [_indexB, b]) =>
+            a.position.y - b.position.y)
+        const zIndices = indexedIcons.map(() => 0)
+        for (const [zIndex, [index]] of indexedIcons.entries())
+            zIndices[index] = zIndex
+        return icons.map((icon, index) => ({
+            ...icon,
+            zIndex: zIndices[index]!
+        }))
+    })
 </script>
 
 <template>
-    <template v-for="icon in unitSizeIcons" :key="icon.index">
+    <template v-for="icon in iconsWithZ">
         <IconPin
             v-if="icon.size < showPinAt && !icon.ignoreScaling"
             :src="icon.src"
             :position="icon.position"
             @click="(event) => icon.click?.(event)"
-            :hover-effect="icon.click !== undefined" />
+            :hover-effect="icon.click !== undefined"
+            :style="{ zIndex: icon.zIndex }" />
         <Icon
             v-else
             :src="icon.src"
             :position="icon.position"
             :size="icon.size"
             @click="(event) => icon.click?.(event)"
-            :hover-effect="icon.click !== undefined" />
+            :hover-effect="icon.click !== undefined"
+            :style="{ zIndex: icon.zIndex }" />
     </template>
 </template>
 
