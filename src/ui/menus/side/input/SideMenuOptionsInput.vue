@@ -12,7 +12,7 @@
         options: {
             value: OptionValue
             name: string
-            icon?: string,
+            icon?: string
         }[]
         /** Maximum number of items to display in the dropdown (default 5) */
         maxItems?: number
