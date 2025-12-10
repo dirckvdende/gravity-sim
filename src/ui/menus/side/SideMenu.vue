@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     import { mdiClose } from '@mdi/js';
     import SVGIcon from '@/ui/SVGIcon.vue';
+    import { vOnClickOutside } from '@vueuse/components';
 
     const { visible = false, menuTitle = "" } = defineProps<{
         /** Whether the side menu is currently visible */
@@ -10,16 +11,32 @@
     }>()
 
     const emit = defineEmits<{
+        /**
+         * Emitted to indicate that the side menu should be closed. This
+         * component doesn't handle the closing itself
+         */
         (e: "close"): void,
     }>()
+
+    /**
+     * Close the side menu if it is visible. The actual closing should happen in
+     * the parent element, by listening to the "close" emit. If the menu isn't
+     * visible nothing is emitted
+     */
+    function close(): void {
+        if (!visible)
+            return
+        emit("close")
+    }
 </script>
 
 <template>
-    <div :class="[$style.container, { [$style.visible]: visible }]">
+    <div :class="[$style.container, { [$style.visible]: visible }]"
+    v-on-click-outside="close">
         <div :class="$style.top">
             <div :class="$style.spacer" />
             <h1>{{ menuTitle }}</h1>
-            <button :class="$style['close-button']" @click="emit('close')">
+            <button :class="$style['close-button']" @click="close">
                 <SVGIcon :path="mdiClose" :class="$style.icon" />
             </button>
         </div>
