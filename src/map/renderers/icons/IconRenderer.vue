@@ -80,24 +80,29 @@
 </script>
 
 <template>
-    <template v-for="icon in iconsWithZ">
-        <IconPin
-            v-if="icon.size < showPinAt && !icon.ignoreScaling"
-            :src="icon.src"
-            :position="icon.position"
-            @click="(event) => icon.click?.(event)"
-            :hover-effect="icon.click !== undefined"
-            :style="{ zIndex: icon.zIndex }" />
-        <Icon
-            v-else
-            :src="icon.src"
-            :position="icon.position"
-            :size="icon.size"
-            @click="(event) => icon.click?.(event)"
-            :hover-effect="icon.click !== undefined"
-            :style="{ zIndex: icon.zIndex }" />
-    </template>
+    <div :class="$style.container">
+        <template v-for="icon in iconsWithZ">
+            <IconPin
+                v-if="icon.size < showPinAt && !icon.ignoreScaling"
+                :src="icon.src"
+                :position="icon.position"
+                @click="(event) => icon.click?.(event)"
+                :hover-effect="icon.click !== undefined"
+                :style="{ zIndex: icon.zIndex }" />
+            <Icon
+                v-else
+                :src="icon.src"
+                :position="icon.position"
+                :size="icon.size"
+                @click="(event) => icon.click?.(event)"
+                :hover-effect="icon.click !== undefined"
+                :style="{ zIndex: icon.zIndex }" />
+        </template>
+    </div>
 </template>
 
 <style lang="scss" module>
+    .container {
+        isolation: isolate;
+    }
 </style>
