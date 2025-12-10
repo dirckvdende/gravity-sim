@@ -48,7 +48,7 @@
 </script>
 
 <template>
-    <div :class="$style.container" ref="container">
+    <div :class="$style.container" ref="container" v-bind="$attrs">
         <div :class="$style.menu" ref="menu">
             <slot />
             <!-- Extra div for spacing at the end -->

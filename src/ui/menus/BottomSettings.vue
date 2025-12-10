@@ -121,7 +121,7 @@
 </script>
 
 <template>
-    <BottomMenu>
+    <BottomMenu class="ignore-side-menu-close">
         <BottomMenuSection>
             <BottomMenuButton
                 :path-icon="paused ? mdiPlay : mdiPause"
