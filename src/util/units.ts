@@ -69,6 +69,10 @@ export const MASS_UNITS: UnitsList = [
     { suffix: "kg", scale: 1 },
 ]
 
+export const FORCE_UNITS: UnitsList = [
+    { suffix: "N", scale: 1 },
+]
+
 /**
  * Find the best unit to use for the given value. This is the largest unit for
  * which the scale is is smaller than the value (or the smallest unit if this
