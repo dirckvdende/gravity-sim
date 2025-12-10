@@ -44,7 +44,7 @@ export function stateToObjects(state: Vector2[], objects: GravityObject[]): void
  */
 export function slopeFunction(objects: GravityObject[], backward: boolean =
 false): (state: Vector2[]) => Vector2[] {
-    const masses = objects.map((object) => object.mass)
+    const masses = objectMasses(objects)
     const mult = backward ? -1 : 1
     return (state) => {
         if (state.length != 2 * masses.length)
@@ -60,13 +60,23 @@ false): (state: Vector2[]) => Vector2[] {
 }
 
 /**
+ * Get the masses of an array of gravity objects
+ * @param objects The array of objects to get the masses of
+ * @returns Array of numbers with the masses of the objects
+ */
+export function objectMasses(objects: GravityObject[]): number[] {
+    return objects.map(({ mass }) => mass)
+}
+
+/**
  * Calculate the total force acting on an object
  * @param index Index of the object
  * @param state Current state
  * @param masses Masses of all objects
  * @returns The force acting on the object from the other objects
  */
-function forceOn(index: number, state: Vector2[], masses: number[]): Vector2 {
+export function forceOn(index: number, state: Vector2[], masses: number[]):
+Vector2 {
     const mass = masses[index]!
     const pos = state[index * 2]!
     let total = Vector2.Zero
@@ -78,6 +88,28 @@ function forceOn(index: number, state: Vector2[], masses: number[]): Vector2 {
         const distance = diff.length() + DISTANCE_SMOOTHING
         const force = diff.scale(GRAV_CONSTANT * mass * otherMass /
         Math.pow(distance, 3))
+        total = total.add(force)
+    }
+    return total
+}
+
+/**
+ * Get the force acting on a gravity object given a list of objects. Equivalent
+ * to the forceOn function, but using GravityObject types
+ * @param sourceObject The source object to calculate the force on
+ * @param objects The objects that are acting forces on the source object
+ * @returns The acting force as a vector
+ */
+export function forceOnObject(sourceObject: GravityObject,
+objects: GravityObject[]): Vector2 {
+    let total = Vector2.Zero
+    for (const object of objects) {
+        if (object == sourceObject)
+            continue
+        const diff = object.position.subtract(sourceObject.position)
+        const distance = diff.length() + DISTANCE_SMOOTHING
+        const force = diff.scale(GRAV_CONSTANT * sourceObject.mass * object.mass
+            / Math.pow(distance, 3))
         total = total.add(force)
     }
     return total

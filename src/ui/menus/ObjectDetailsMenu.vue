@@ -4,10 +4,14 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
-    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS } from '@/util/units';
+    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS } from
+    '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
     import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
+    import { forceOnObject } from '@/sim/odeConvert';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
 
+    const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
@@ -15,6 +19,12 @@
     const position = computed(() => focusedObject.value?.position)
     const velocity = computed(() => focusedObject.value?.velocity)
     const absVelocity = computed(() => velocity.value?.length())
+    const force = computed(() => {
+        if (!focusedObject.value)
+            return undefined
+        return forceOnObject(focusedObject.value, objects.value)
+    })
+    const absForce = computed(() => force.value?.length())
 
     function closeMenu(): void {
         activeMenu.value = "none"
@@ -49,6 +59,13 @@
                 :units="VELOCITY_UNITS" :level=1>x</SideMenuStat>
             <SideMenuStat v-if="velocity" :value="velocity.y"
                 :units="VELOCITY_UNITS" :level=1>y</SideMenuStat>
+
+            <SideMenuStat :value="absForce"
+                :units="FORCE_UNITS">Acting force</SideMenuStat>
+            <SideMenuStat v-if="force" :value="force.x"
+                :units="FORCE_UNITS" :level=1>x</SideMenuStat>
+            <SideMenuStat v-if="force" :value="force.y"
+                :units="FORCE_UNITS" :level=1>y</SideMenuStat>
 
         </SideMenuSection>
     </SideMenu>
