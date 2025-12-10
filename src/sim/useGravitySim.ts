@@ -2,7 +2,8 @@
 import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter,
 type Ref } from "vue";
 import type { GravityObject } from "./object";
-import { objectsToState, slopeFunction, stateToObjects } from "./odeConvert";
+import { objectsToState, slopeFunction, stateToObjects, updateForcesOnObjects }
+from "./odeConvert";
 import { RKFSolver } from "./rkf45";
 import Vector2 from "@/util/Vector2";
 
@@ -91,6 +92,7 @@ options?: GravitySimOptions): GravitySimReturn {
         timestamp.value = new Date(Math.round(timestamp.value.getTime() +
             elapsedTime * 1000 * (backward ? -1 : 1)))
         stateToObjects(newState, objects.value)
+        updateForcesOnObjects(objects.value)
         return elapsedTime * (backward ? -1 : 1)
     }
 

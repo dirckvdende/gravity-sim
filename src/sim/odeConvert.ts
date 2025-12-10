@@ -44,7 +44,7 @@ export function stateToObjects(state: Vector2[], objects: GravityObject[]): void
  */
 export function slopeFunction(objects: GravityObject[], backward: boolean =
 false): (state: Vector2[]) => Vector2[] {
-    const masses = objects.map((object) => object.mass)
+    const masses = objectMasses(objects)
     const mult = backward ? -1 : 1
     return (state) => {
         if (state.length != 2 * masses.length)
@@ -60,13 +60,23 @@ false): (state: Vector2[]) => Vector2[] {
 }
 
 /**
+ * Get the masses of an array of gravity objects
+ * @param objects The array of objects to get the masses of
+ * @returns Array of numbers with the masses of the objects
+ */
+export function objectMasses(objects: GravityObject[]): number[] {
+    return objects.map(({ mass }) => mass)
+}
+
+/**
  * Calculate the total force acting on an object
  * @param index Index of the object
  * @param state Current state
  * @param masses Masses of all objects
  * @returns The force acting on the object from the other objects
  */
-function forceOn(index: number, state: Vector2[], masses: number[]): Vector2 {
+export function forceOn(index: number, state: Vector2[], masses: number[]):
+Vector2 {
     const mass = masses[index]!
     const pos = state[index * 2]!
     let total = Vector2.Zero
@@ -81,4 +91,16 @@ function forceOn(index: number, state: Vector2[], masses: number[]): Vector2 {
         total = total.add(force)
     }
     return total
+}
+
+/**
+ * Update the force vectors on an array of objects. The forces are updated
+ * in-place such that the gravity objects remain the same
+ * @param objects The objects to update the forces of
+ */
+export function updateForcesOnObjects(objects: GravityObject[]): void {
+    const masses = objectMasses(objects)
+    const state = objectsToState(objects)
+    for (const [index, object] of objects.entries())
+        object.force = forceOn(index, state, masses)
 }
