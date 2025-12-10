@@ -99,8 +99,10 @@
                     @update="updateCompareObject" />
             </SideMenuInputContainer>
 
-            <template v-if="compareObject">
-                {{ compareObject.name }}
+            <template v-if="compareObject && focusedObject">
+                <SideMenuStat :value="(compareObject.position.subtract(
+                    focusedObject?.position)).length()"
+                    :units="LENGTH_UNITS">Distance</SideMenuStat>
             </template>
 
         </SideMenuSection>
