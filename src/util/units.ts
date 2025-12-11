@@ -73,6 +73,15 @@ export const FORCE_UNITS: UnitsList = [
     { suffix: "N", scale: 1 },
 ]
 
+/** Units of time: seconds, minutes, hours, etc. */
+export const TIME_UNITS: UnitsList = [
+    { suffix: "s", scale: 1 },
+    { suffix: "min", scale: 60 },
+    { suffix: "h", scale: 60 * 60 },
+    { suffix: "d", scale: 60 * 60 * 24 },
+    { suffix: "yr", scale: 60 * 60 * 24 * 365.25 },
+]
+
 /**
  * Find the best unit to use for the given value. This is the largest unit for
  * which the scale is is smaller than the value (or the smallest unit if this
@@ -99,7 +108,7 @@ function bestUnit(value: number, units: UnitsList): UnitsList[0] {
  * @returns The rounded number as a string
  */
 function roundToSignificance(value: number, significance: number): string {
-    const digits = Math.floor(Math.log10(value)) + 1
+    const digits = value == 0 ? 1 : Math.floor(Math.log10(value)) + 1
     if (digits >= significance)
         return value.toFixed(0)
     return value.toFixed(Math.max(-20, significance - digits))

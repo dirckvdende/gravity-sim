@@ -1,0 +1,18 @@
+
+%text-input {
+    box-sizing: border-box;
+    width: 100%;
+    border: .12em solid var(--side-menu-input-border-color);
+    margin: 0;
+    padding: .3em .8em;
+    outline: none;
+    font-family: inherit;
+    font-size: 1em;
+    border-radius: .3em;
+    background-color: transparent;
+    color: inherit;
+
+    &:focus, &:hover {
+        border-color: var(--side-menu-input-border-color-focus);
+    }
+}

@@ -23,6 +23,11 @@ body {
     --side-menu-head-text-color: white;
     --side-menu-text-color: black;
 
+    --side-menu-input-border-color: #bbb;
+    --side-menu-input-border-color-focus: #555;
+    --side-menu-option-background-color: #eee;
+    --side-menu-option-hover-color: #ccc;
+
     --side-menu-icon-color: #666;
     --side-menu-icon-color-mix: #000;
     --side-menu-line-color: #ddd;
@@ -56,6 +61,11 @@ body.dark-mode {
     --side-menu-head-color: #eee;
     --side-menu-head-text-color: #333;
     --side-menu-text-color: #ddd;
+
+    --side-menu-input-border-color: #375c97;
+    --side-menu-input-border-color-focus: #5d7cac;
+    --side-menu-option-background-color: #121e34;
+    --side-menu-option-hover-color: #2e4b7e;
 
     --side-menu-icon-color: #aaa;
     --side-menu-icon-color-mix: #000;
