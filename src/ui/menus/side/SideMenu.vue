@@ -104,7 +104,6 @@
                 height: 1.7em;
                 border: none;
                 background-color: transparent;
-                padding: 0;
                 box-sizing: border-box;
                 padding: .2em;
                 cursor: pointer;
@@ -125,7 +124,7 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        margin-top: .6em;
+        padding: .6em 0;
         overflow-y: auto;
         flex-shrink: 1;
     }
