@@ -2,6 +2,9 @@
 $menu-shadow: 0 .15em .6em -.35em var(--bottom-menu-shadow-color, black);
 
 body {
+    color-scheme: light;
+    scrollbar-color: #333 transparent;
+
     --background-color: white;
     --grid-color: #eee;
     --accent-color-blue: #6b8edf;
@@ -36,6 +39,9 @@ body {
 }
 
 body.dark-mode {
+    color-scheme: dark;
+    scrollbar-color: #eee transparent;
+
     --background-color: #061225;
     --grid-color: #0f2240;
     --accent-color-purple: #bf60cf;
