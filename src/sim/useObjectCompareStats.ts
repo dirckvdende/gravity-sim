@@ -104,21 +104,10 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
             .add(otherObject.position.scale(otherObject.mass))
             .scale(1 / totalMass)
     })
-    const barycenterVelocity = definedComputed((object, otherObject) => {
-        const totalMass = object.mass + otherObject.mass
-        if (totalMass == 0)
-            return undefined
-        return object.velocity
-            .scale(object.mass)
-            .add(otherObject.velocity.scale(otherObject.mass))
-            .scale(1 / totalMass)
-    })
-    // TODO: Fix the three 3 stats below for large mass source objects
     const eccentricityVector = definedComputed((object, otherObject) => {
         // Equation: https://en.wikipedia.org/wiki/Eccentricity_vector
-        const r = object.position.subtract(barycenter.value ?? Vector2.Zero)
-        const v = object.velocity.subtract(barycenterVelocity.value ??
-            Vector2.Zero)
+        const r = object.position.subtract(otherObject.position)
+        const v = object.velocity.subtract(otherObject.velocity)
         const mu = GRAV_CONSTANT * (object.mass + otherObject.mass)
         if (mu == 0 || r.length() == 0)
             return undefined
@@ -129,9 +118,8 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
     const semiMajorAxis = definedComputed((object, otherObject) => {
         // https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;
         // _calculation_of_semi-major_axis_from_state_vectors
-        const r = object.position.subtract(barycenter.value ?? Vector2.Zero)
-        const v = object.velocity.subtract(barycenterVelocity.value ??
-            Vector2.Zero)
+        const r = object.position.subtract(otherObject.position)
+        const v = object.velocity.subtract(otherObject.velocity)
         const mu = GRAV_CONSTANT * (object.mass + otherObject.mass)
         if (v.length() == 0 || mu == 0 || r.length() == 0)
             return undefined
