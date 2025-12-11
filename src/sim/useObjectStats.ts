@@ -22,7 +22,7 @@ export type ObjectStatsReturn = {
 }
 
 /**
- * 
+ * Gravity object stats composable
  * @param object The object to get the stats of
  * @param allObjects List of all objects to use for calculating things like
  * gravitational attraction
