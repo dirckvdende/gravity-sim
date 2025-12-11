@@ -8,28 +8,22 @@
     '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
     import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
-    import { forceOnObject } from '@/sim/odeConvert';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import SideMenuInputContainer from
     './side/input/SideMenuInputContainer.vue';
     import SideMenuOptionsInput from './side/input/SideMenuOptionsInput.vue';
     import type { StyledGravityObject } from '@/sim/object';
     import { DISTANCE_SMOOTHING, GRAV_CONSTANT } from '@/sim/constants';
+    import { useObjectStats } from '@/sim/useObjectStats';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
 
-    const position = computed(() => focusedObject.value?.position)
-    const velocity = computed(() => focusedObject.value?.velocity)
-    const absVelocity = computed(() => velocity.value?.length())
-    const force = computed(() => {
-        if (!focusedObject.value)
-            return undefined
-        return forceOnObject(focusedObject.value, objects.value)
-    })
-    const absForce = computed(() => force.value?.length())
+    const {
+        name, mass, size, position, velocity, force,
+    } = useObjectStats(focusedObject, objects)
 
     function closeMenu(): void {
         activeMenu.value = "none"
@@ -89,37 +83,36 @@
 <template>
     <SideMenu
         :visible="visible"
-        :menu-title="focusedObject?.name"
+        :menu-title="name"
         @close="closeMenu">
         <SideMenuSection>
 
             <SideMenuCenterImage v-if="focusedObject" style="margin-top: 0;"
                 :src="focusedObject?.icon" />
 
-            <SideMenuStat :value="focusedObject?.name">Name</SideMenuStat>
-            <SideMenuStat :value="focusedObject?.mass"
-                :units="MASS_UNITS">Mass</SideMenuStat>
-            <SideMenuStat :value="focusedObject?.size"
-                :units="LENGTH_UNITS">Diameter</SideMenuStat>
+            <SideMenuStat :value="name">Name</SideMenuStat>
+            <SideMenuStat :value="mass" :units="MASS_UNITS">Mass</SideMenuStat>
+            <SideMenuStat :value="size" :units="LENGTH_UNITS">Diameter
+                </SideMenuStat>
 
             <SideMenuStat :value="null">Position</SideMenuStat>
-            <SideMenuStat v-if="position" :value="position.x"
-                :units="LENGTH_UNITS" :level=1>x</SideMenuStat>
-            <SideMenuStat v-if="position" :value="position.y"
-                :units="LENGTH_UNITS" :level=1>y</SideMenuStat>
+            <SideMenuStat :value="position?.x" :units="LENGTH_UNITS"
+                :level=1>x</SideMenuStat>
+            <SideMenuStat :value="position?.y" :units="LENGTH_UNITS"
+                :level=1>y</SideMenuStat>
 
-            <SideMenuStat :value="absVelocity"
+            <SideMenuStat :value="velocity?.length()"
                 :units="VELOCITY_UNITS">Velocity</SideMenuStat>
-            <SideMenuStat v-if="velocity" :value="velocity.x"
-                :units="VELOCITY_UNITS" :level=1>x</SideMenuStat>
-            <SideMenuStat v-if="velocity" :value="velocity.y"
-                :units="VELOCITY_UNITS" :level=1>y</SideMenuStat>
+            <SideMenuStat :value="velocity?.x" :units="VELOCITY_UNITS"
+                :level=1>x</SideMenuStat>
+            <SideMenuStat :value="velocity?.y" :units="VELOCITY_UNITS"
+                :level=1>y</SideMenuStat>
 
-            <SideMenuStat :value="absForce"
+            <SideMenuStat :value="force?.length()"
                 :units="FORCE_UNITS">Acting force</SideMenuStat>
-            <SideMenuStat v-if="force" :value="force.x"
+            <SideMenuStat :value="force?.x"
                 :units="FORCE_UNITS" :level=1>x</SideMenuStat>
-            <SideMenuStat v-if="force" :value="force.y"
+            <SideMenuStat :value="force?.y"
                 :units="FORCE_UNITS" :level=1>y</SideMenuStat>
 
         </SideMenuSection>
