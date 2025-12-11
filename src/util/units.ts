@@ -76,10 +76,10 @@ export const FORCE_UNITS: UnitsList = [
 /** Units of time: seconds, minutes, hours, etc. */
 export const TIME_UNITS: UnitsList = [
     { suffix: "s", scale: 1 },
-    { suffix: "min.", scale: 60 },
-    { suffix: "hrs.", scale: 60 * 60 },
-    { suffix: "days", scale: 60 * 60 * 24 },
-    { suffix: "years", scale: 60 * 60 * 24 * 365.25 },
+    { suffix: "min", scale: 60 },
+    { suffix: "h", scale: 60 * 60 },
+    { suffix: "d", scale: 60 * 60 * 24 },
+    { suffix: "yr", scale: 60 * 60 * 24 * 365.25 },
 ]
 
 /**
