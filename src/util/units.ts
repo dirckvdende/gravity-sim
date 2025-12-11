@@ -73,6 +73,15 @@ export const FORCE_UNITS: UnitsList = [
     { suffix: "N", scale: 1 },
 ]
 
+/** Units of time: seconds, minutes, hours, etc. */
+export const TIME_UNITS: UnitsList = [
+    { suffix: "s", scale: 1 },
+    { suffix: "min.", scale: 60 },
+    { suffix: "hrs.", scale: 60 * 60 },
+    { suffix: "days", scale: 60 * 60 * 24 },
+    { suffix: "years", scale: 60 * 60 * 24 * 365.25 },
+]
+
 /**
  * Find the best unit to use for the given value. This is the largest unit for
  * which the scale is is smaller than the value (or the smallest unit if this

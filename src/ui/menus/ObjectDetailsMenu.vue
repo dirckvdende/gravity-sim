@@ -4,7 +4,7 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, ref, type ComputedRef } from 'vue';
-    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS } from
+    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS, TIME_UNITS } from
     '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
     import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
@@ -50,7 +50,8 @@
 
     const {
         distance, massRatio, sizeRatio, relativePosition, relativeVelocity,
-        escapeVelocity, gravBound, eccentricityVector,
+        escapeVelocity, gravBound, eccentricityVector, semiMajorAxis,
+        orbitalPeriod,
     } = useObjectCompareStats(focusedObject, compareObject, objects)
 </script>
 
@@ -125,6 +126,10 @@
 
                 <SideMenuStat :value="eccentricityVector?.length()">
                     Orbital eccentricity</SideMenuStat>
+                <SideMenuStat :value="semiMajorAxis" :units="LENGTH_UNITS">
+                    Semi-major axis</SideMenuStat>
+                <SideMenuStat :value="orbitalPeriod" :units="TIME_UNITS">
+                    Orbital period</SideMenuStat>
             </template>
 
         </SideMenuSection>

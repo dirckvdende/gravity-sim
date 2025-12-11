@@ -31,6 +31,16 @@ export type ObjectCompareStatsReturn = {
      * length of this vector is the orbital eccentricity
      */
     eccentricityVector: ComputedRef<Vector2 | undefined>
+    /**
+     * Semi-major axis of the orbit around the compare object (also works for
+     * objects that aren't gravitationally bound)
+     */
+    semiMajorAxis: ComputedRef<number | undefined>
+    /**
+     * Orbital period around the compare object (undefined if not
+     * gravitationally bound)
+     */
+    orbitalPeriod: ComputedRef<number | undefined>
 }
 
 /**
@@ -94,10 +104,21 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
             .add(otherObject.position.scale(otherObject.mass))
             .scale(1 / totalMass)
     })
+    const barycenterVelocity = definedComputed((object, otherObject) => {
+        const totalMass = object.mass + otherObject.mass
+        if (totalMass == 0)
+            return undefined
+        return object.velocity
+            .scale(object.mass)
+            .add(otherObject.velocity.scale(otherObject.mass))
+            .scale(1 / totalMass)
+    })
+    // TODO: Fix the three 3 stats below for large mass source objects
     const eccentricityVector = definedComputed((object, otherObject) => {
         // Equation: https://en.wikipedia.org/wiki/Eccentricity_vector
         const r = object.position.subtract(barycenter.value ?? Vector2.Zero)
-        const v = object.velocity
+        const v = object.velocity.subtract(barycenterVelocity.value ??
+            Vector2.Zero)
         const mu = GRAV_CONSTANT * (object.mass + otherObject.mass)
         if (mu == 0 || r.length() == 0)
             return undefined
@@ -105,10 +126,35 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
         const right = v.scale(r.dot(v) / mu)
         return left.subtract(right)
     })
+    const semiMajorAxis = definedComputed((object, otherObject) => {
+        // https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;
+        // _calculation_of_semi-major_axis_from_state_vectors
+        const r = object.position.subtract(barycenter.value ?? Vector2.Zero)
+        const v = object.velocity.subtract(barycenterVelocity.value ??
+            Vector2.Zero)
+        const mu = GRAV_CONSTANT * (object.mass + otherObject.mass)
+        if (v.length() == 0 || mu == 0 || r.length() == 0)
+            return undefined
+        const epsilon = v.length() * v.length() / 2 - mu / r.length()
+        if (epsilon == 0)
+            return undefined
+        return -mu / (2 * epsilon)
+    })
+    const orbitalPeriod = definedComputed((object, otherObject) => {
+        // https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#
+        // Orbital_period
+        if (!gravBound.value)
+            return undefined
+        const mu = GRAV_CONSTANT * (object.mass + otherObject.mass)
+        if (semiMajorAxis.value === undefined || mu == 0)
+            return undefined
+        return 2 * Math.PI * Math.sqrt(Math.pow(semiMajorAxis.value, 3) / mu)
+    })
 
     return {
         relativePosition, relativeVelocity, distance, massRatio, sizeRatio,
         escapeVelocity, gravBound, barycenter, eccentricityVector,
+        semiMajorAxis, orbitalPeriod,
     }
 
 }
