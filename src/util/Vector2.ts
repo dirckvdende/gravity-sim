@@ -126,4 +126,13 @@ export default class Vector2 {
         return this.subtract(other).length()
     }
 
+    /**
+     * Dot product between two vectors
+     * @param other The other vector in the product
+     * @return The value of the dot product
+     */
+    dot(other: Vector2): number {
+        return this.x * other.x + this.y * other.y
+    }
+
 }

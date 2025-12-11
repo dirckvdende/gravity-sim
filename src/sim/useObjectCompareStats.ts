@@ -2,7 +2,7 @@
 import type { MaybeRefOrGetter } from "vue";
 import type { StyledGravityObject } from "./object";
 import { computed, toValue, type ComputedRef } from "vue";
-import type Vector2 from "@/util/Vector2";
+import Vector2 from "@/util/Vector2";
 import { DISTANCE_SMOOTHING, GRAV_CONSTANT } from "./constants";
 
 /** Return value of the object compare stats composable */
@@ -24,6 +24,13 @@ export type ObjectCompareStatsReturn = {
      * is larger than relative velocity)
      */
     gravBound: ComputedRef<boolean | undefined>
+    /** Center of mass of the two objects */
+    barycenter: ComputedRef<Vector2 | undefined>
+    /**
+     * Eccentricity vector of the objects orbit around the other object. The
+     * length of this vector is the orbital eccentricity
+     */
+    eccentricityVector: ComputedRef<Vector2 | undefined>
 }
 
 /**
@@ -78,10 +85,30 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
     })
     const gravBound = definedComputed(() =>
         (relativeVelocity.value?.length() ?? 0) < (escapeVelocity.value ?? 0))
+    const barycenter = definedComputed((object, otherObject) => {
+        const totalMass = object.mass + otherObject.mass
+        if (totalMass == 0)
+            return undefined
+        return object.position
+            .scale(object.mass)
+            .add(otherObject.position.scale(otherObject.mass))
+            .scale(1 / totalMass)
+    })
+    const eccentricityVector = definedComputed((object, otherObject) => {
+        // Equation: https://en.wikipedia.org/wiki/Eccentricity_vector
+        const r = object.position.subtract(barycenter.value ?? Vector2.Zero)
+        const v = object.velocity
+        const mu = GRAV_CONSTANT * (object.mass + otherObject.mass)
+        if (mu == 0 || r.length() == 0)
+            return undefined
+        const left = r.scale(v.length() * v.length() / mu - 1 / r.length())
+        const right = v.scale(r.dot(v) / mu)
+        return left.subtract(right)
+    })
 
     return {
         relativePosition, relativeVelocity, distance, massRatio, sizeRatio,
-        escapeVelocity, gravBound,
+        escapeVelocity, gravBound, barycenter, eccentricityVector,
     }
 
 }

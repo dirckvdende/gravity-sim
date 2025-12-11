@@ -50,7 +50,7 @@
 
     const {
         distance, massRatio, sizeRatio, relativePosition, relativeVelocity,
-        escapeVelocity, gravBound
+        escapeVelocity, gravBound, eccentricityVector,
     } = useObjectCompareStats(focusedObject, compareObject, objects)
 </script>
 
@@ -122,6 +122,9 @@
                 <SideMenuStat :value="gravBound === undefined ? undefined 
                     : gravBound ? 'yes' : 'no'" :units="VELOCITY_UNITS">
                     Grav. bound</SideMenuStat>
+
+                <SideMenuStat :value="eccentricityVector?.length()">
+                    Orbital eccentricity</SideMenuStat>
             </template>
 
         </SideMenuSection>
