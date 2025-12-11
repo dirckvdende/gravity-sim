@@ -11,15 +11,12 @@
         pointer-events: none;
         user-select: none;
         position: fixed;
-        top: 50%;
-        left: 0;
-        translate: 0 -50%;
-        width: 100%;
+        top: -.1em;
+        right: .2em;
         text-align: center;
-        font-size: min(30vh, 30vw);
+        font-size: min(10vh, 10vw);
         opacity: .1;
         font-weight: 800;
         font-family: sans-serif;
-        rotate: -45deg;
     }
 </style>
