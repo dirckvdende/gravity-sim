@@ -13,17 +13,13 @@
     './side/input/SideMenuInputContainer.vue';
     import SideMenuOptionsInput from './side/input/SideMenuOptionsInput.vue';
     import type { StyledGravityObject } from '@/sim/object';
-    import { DISTANCE_SMOOTHING, GRAV_CONSTANT } from '@/sim/constants';
     import { useObjectStats } from '@/sim/useObjectStats';
+    import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
-
-    const {
-        name, mass, size, position, velocity, force,
-    } = useObjectStats(focusedObject, objects)
 
     function closeMenu(): void {
         activeMenu.value = "none"
@@ -48,36 +44,14 @@
         compareObject.value = value
     }
 
-    const comparePosition = computed(() => {
-        if (!focusedObject.value || !compareObject.value)
-            return
-        return focusedObject.value.position.subtract(
-            compareObject.value.position)
-    })
+    const {
+        name, mass, size, position, velocity, force,
+    } = useObjectStats(focusedObject, objects)
 
-    const compareVelocity = computed(() => {
-        if (!focusedObject.value || !compareObject.value)
-            return
-        return focusedObject.value.velocity.subtract(
-            compareObject.value.velocity)
-    })
-
-    const compareEscapeVelocity = computed(() => {
-        if (!compareObject.value || !focusedObject.value)
-            return
-        const mass = compareObject.value.mass + focusedObject.value.mass
-        const distance = compareObject.value.position.distanceTo(
-            focusedObject.value.position)
-        return Math.sqrt(2 * GRAV_CONSTANT * mass / (distance +
-            DISTANCE_SMOOTHING))
-    })
-
-    const compareGravBound = computed(() => {
-        if (compareEscapeVelocity.value === undefined
-        || compareVelocity.value === undefined)
-            return undefined
-        return compareVelocity.value.length() < compareEscapeVelocity.value
-    })
+    const {
+        distance, massRatio, sizeRatio, relativePosition, relativeVelocity,
+        escapeVelocity, gravBound
+    } = useObjectCompareStats(focusedObject, compareObject, objects)
 </script>
 
 <template>
@@ -125,32 +99,29 @@
             </SideMenuInputContainer>
 
             <template v-if="compareObject && focusedObject">
-                <SideMenuStat :value="compareObject.position.distanceTo(
-                    focusedObject?.position)"
-                    :units="LENGTH_UNITS">Distance</SideMenuStat>
-                <SideMenuStat :value="focusedObject.mass / compareObject.mass">
-                    Relative mass</SideMenuStat>
-                <SideMenuStat :value="focusedObject.size / compareObject.size">
-                    Relative size</SideMenuStat>
+                <SideMenuStat :value="distance" :units="LENGTH_UNITS">Distance
+                    </SideMenuStat>
+                <SideMenuStat :value="massRatio">Relative mass</SideMenuStat>
+                <SideMenuStat :value="sizeRatio">Relative size</SideMenuStat>
 
                 <SideMenuStat :value="null">Relative position</SideMenuStat>
-                <SideMenuStat :value="comparePosition?.x" :units="LENGTH_UNITS"
+                <SideMenuStat :value="relativePosition?.x" :units="LENGTH_UNITS"
                     :level=1>x</SideMenuStat>
-                <SideMenuStat :value="comparePosition?.y" :units="LENGTH_UNITS"
+                <SideMenuStat :value="relativePosition?.y" :units="LENGTH_UNITS"
                     :level=1>y</SideMenuStat>
 
-                <SideMenuStat :value="compareVelocity?.length()"
+                <SideMenuStat :value="relativeVelocity?.length()"
                     :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>
-                <SideMenuStat :value="compareVelocity?.x"
+                <SideMenuStat :value="relativeVelocity?.x"
                     :units="VELOCITY_UNITS" :level=1>x</SideMenuStat>
-                <SideMenuStat :value="compareVelocity?.y"
+                <SideMenuStat :value="relativeVelocity?.y"
                     :units="VELOCITY_UNITS" :level=1>y</SideMenuStat>
 
-                <SideMenuStat :value="compareEscapeVelocity"
-                    :units="VELOCITY_UNITS">Rel. escape velocity</SideMenuStat>
-                <SideMenuStat :value="compareGravBound === undefined ? undefined 
-                    : compareGravBound ? 'yes' : 'no'"
-                    :units="VELOCITY_UNITS">Grav. bound</SideMenuStat>
+                <SideMenuStat :value="escapeVelocity" :units="VELOCITY_UNITS">
+                    Rel. escape velocity</SideMenuStat>
+                <SideMenuStat :value="gravBound === undefined ? undefined 
+                    : gravBound ? 'yes' : 'no'" :units="VELOCITY_UNITS">
+                    Grav. bound</SideMenuStat>
             </template>
 
         </SideMenuSection>
