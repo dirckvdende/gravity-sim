@@ -126,8 +126,6 @@
     }
 
     .menu {
-        display: flex;
-        flex-direction: column;
         width: 100%;
         padding: .6em 1.2em;
         box-sizing: border-box;

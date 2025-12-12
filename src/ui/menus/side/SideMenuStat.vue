@@ -40,11 +40,11 @@
     <div :class="[
         $style.container,
         { [$style.deep]: level > 0 },
-    ]">
-        <div :class="$style.name"><div v-if="level > 0" :style="{
-            display: 'inline-block',
-            width: `${level}em`,
-        }" /><span><slot /></span></div>
+    ]" :style="{
+        '--level': level,
+    }">
+        <div :class="$style.name"><div :class="$style['level-padding']" />
+            <span><slot /></span></div>
         <div :class="$style.stat"><span v-html="displayValue" /></div>
     </div>
 </template>
@@ -55,10 +55,11 @@
         flex-direction: row;
         width: 100%;
         box-sizing: border-box;
-        margin-top: .4em;
+        margin: .4em 0;
         justify-content: space-between;
         font-size: .8em;
         color: var(--side-menu-text-color, black);
+        --level: 0;
 
         .name {
             flex-grow: 1;
@@ -66,6 +67,17 @@
             overflow: hidden;
             color: color-mix(in srgb, var(--side-menu-text-color, black),
                 transparent 60%);
+
+            .level-padding {
+                display: none;
+            }
+
+            @container not style(--level: 0) {
+                .level-padding {
+                    display: inline-block;
+                    width: calc(var(--level, 0) * 1.75em);
+                }
+            }
         }
 
         .stat {
@@ -89,6 +101,6 @@
     }
 
     .container.deep {
-        margin-top: -.1em;;
+        margin-top: -.4em;
     }
 </style>

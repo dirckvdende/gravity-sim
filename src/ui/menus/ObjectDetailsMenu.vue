@@ -60,10 +60,11 @@
         :visible="visible"
         :menu-title="name"
         @close="closeMenu">
-        <SideMenuSection>
 
-            <SideMenuCenterImage v-if="focusedObject" style="margin-top: .5em;"
-                :src="focusedObject?.icon" />
+        <SideMenuCenterImage v-if="focusedObject" style="margin-top: .5em;"
+            :src="focusedObject?.icon" />
+
+        <SideMenuSection>
 
             <SideMenuStat :value="name">Name</SideMenuStat>
             <SideMenuStat :value="mass" :units="MASS_UNITS">Mass</SideMenuStat>

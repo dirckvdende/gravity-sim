@@ -7,10 +7,9 @@
 <style lang="scss" module>
     @use "./style.scss";
     .section {
-        display: flex;
-        flex-direction: column;
         width: 100%;
-        margin: .3em 0;
+        padding: .8em 0;
+        border-top: .1em solid #bbb;
 
         &:not(:last-child)::after {
             @extend %hr;
