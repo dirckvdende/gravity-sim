@@ -3,7 +3,7 @@
     import SideMenuSection from './side/SideMenuSection.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
-    import { computed, ref, type ComputedRef } from 'vue';
+    import { computed, ref, useTemplateRef, watch, type ComputedRef } from 'vue';
     import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS, TIME_UNITS } from
     '@/util/units';
     import SideMenuStat from './side/SideMenuStat.vue';
@@ -54,6 +54,10 @@
         escapeVelocity, gravBound, eccentricityVector, semiMajorAxis,
         orbitalPeriod,
     } = useObjectCompareStats(focusedObject, compareObject, objects)
+
+    const relPosGraph = useTemplateRef("relative-position-graph")
+    watch([compareObject, focusedObject], () => relPosGraph.value?.clear(), {
+        deep: false })
 </script>
 
 <template>
@@ -119,7 +123,8 @@
                 <SideMenuStat :value="relativePosition?.y" :units="LENGTH_UNITS"
                     :level=1>y</SideMenuStat>
 
-                <LineGraph2D :point="relativePosition" draw-point />
+                <LineGraph2D :point="relativePosition" draw-point
+                    ref="relative-position-graph" />
 
                 <SideMenuStat :value="relativeVelocity?.length()"
                     :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>

@@ -57,6 +57,13 @@
         }
         return out
     })
+
+    /** Clear the currently drawn line */
+    function clear(): void {
+        points.value = []
+    }
+
+    defineExpose({ clear })
 </script>
 
 <template>
