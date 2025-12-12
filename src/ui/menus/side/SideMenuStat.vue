@@ -73,6 +73,8 @@
             flex-grow: 1;
             flex-shrink: 1;
             overflow: hidden;
+            text-align: left;
+            justify-content: flex-start;
             color: color-mix(in srgb, var(--side-menu-text-color, black),
                 transparent 60%);
 
@@ -115,8 +117,13 @@
     .container.large {
         flex-direction: column;
 
+        .name {
+            text-align: initial;
+        }
+
         .stat {
-            text-align: start;
+            text-align: initial;
+            justify-content: flex-start;
         }
 
         .stat, .name {
