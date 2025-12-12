@@ -1,8 +1,10 @@
 <script lang="ts" setup>
     import { downloadNodeAsString } from '@/util/downloadNodeAsString';
-import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/Vector2';
     import { useElementSize } from '@vueuse/core';
     import { computed, ref, useTemplateRef, watch } from 'vue';
+    import GraphContainer from './GraphContainer.vue';
+    import { mdiContentSaveOutline, mdiDeleteOutline } from '@mdi/js';
 
     const {
         point,
@@ -34,7 +36,7 @@ import Vector2 from '@/util/Vector2';
         drawCenterPoint?: boolean | string
     }>()
 
-    const LOG_STEP = 1.3
+    const LOG_STEP = 1.5
     const EXTRA_SPACE = 1.1
 
     const points = ref<Vector2[]>([])
@@ -100,8 +102,17 @@ import Vector2 from '@/util/Vector2';
 </script>
 
 <template>
-    <div :class="$style.container" ref="container">
-        <svg ref="svg" stroke="#333" stroke-width="1" fill="none">
+    <GraphContainer ref="container" :controls="[{
+        name: 'Clear',
+        iconPath: mdiDeleteOutline,
+        click: clear,
+    }, {
+        name: 'Save',
+        iconPath: mdiContentSaveOutline,
+        click: download,
+    }]">
+        <svg :class="$style.svg" ref="svg" stroke="#333" stroke-width="1"
+            fill="none" :width="pixelWidth" :height="pixelHeight">
             <path :d="path" />
             <circle
                 v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
@@ -118,25 +129,15 @@ import Vector2 from '@/util/Vector2';
                 :fill="drawCenterPoint === true ? 'green' : drawCenterPoint"
                 stroke="none" />
         </svg>
-    </div>
-    <button @click="download">Download</button>
+    </GraphContainer>
 </template>
 
 <style lang="scss" module>
-    .container {
+    .svg {
         width: 100%;
-        aspect-ratio: 5 / 3;
-        background-color: color-mix(in srgb, var(--side-menu-text-color),
-            transparent 80%);
-        border-radius: .2em;
-        display: flex;
-
-        & > svg {
-            width: 100%;
-            height: 100%;
-            stroke: var(--side-menu-text-color);
-            stroke-width: 1;
-            fill: none;
-        }
+        height: 100%;
+        stroke: var(--side-menu-text-color);
+        stroke-width: 1;
+        fill: none;
     }
 </style>
