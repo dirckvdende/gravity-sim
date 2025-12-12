@@ -15,6 +15,7 @@
     import type { StyledGravityObject } from '@/sim/object';
     import { useObjectStats } from '@/sim/useObjectStats';
     import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
+    import LineGraph2D from '../graphs/LineGraph2D.vue';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
@@ -117,6 +118,8 @@
                     :level=1>x</SideMenuStat>
                 <SideMenuStat :value="relativePosition?.y" :units="LENGTH_UNITS"
                     :level=1>y</SideMenuStat>
+
+                <LineGraph2D :point="relativePosition" />
 
                 <SideMenuStat :value="relativeVelocity?.length()"
                     :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>
