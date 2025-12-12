@@ -43,7 +43,8 @@
         minSize.value / Math.min(pixelWidth.value, pixelHeight.value))
 
     function toPixelCoords(coords: Vector2): Vector2 {
-        return new Vector2(pixelWidth.value / 2, pixelHeight.value / 2).add(coords.scale(1 / pixelSize.value))
+        return new Vector2(pixelWidth.value / 2, pixelHeight.value / 2).add(
+            coords.scale(1 / pixelSize.value))
     }
 
     const pixelPoints = computed(() => points.value.map(toPixelCoords))
@@ -74,7 +75,7 @@
                 v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
                 :cx="pixelPoints[pixelPoints.length - 1]?.x"
                 :cy="pixelPoints[pixelPoints.length - 1]?.y"
-                r="5"
+                r="4"
                 :fill="drawPoint === true ? 'red' : drawPoint"
                 stroke="none" />
         </svg>
@@ -85,13 +86,14 @@
     .container {
         width: 100%;
         aspect-ratio: 5 / 3;
-        background-color: green;
+        background-color: #eee;
+        border-radius: .2em;
         display: flex;
 
         & > svg {
             width: 100%;
             height: 100%;
-            stroke: black;
+            stroke: var(--side-menu-text-color);
             stroke-width: 1;
             fill: none;
         }
