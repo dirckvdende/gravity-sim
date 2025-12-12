@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-    import Vector2 from '@/util/Vector2';
+    import { downloadNodeAsString } from '@/util/downloadNodeAsString';
+import Vector2 from '@/util/Vector2';
     import { useElementSize } from '@vueuse/core';
     import { computed, ref, useTemplateRef, watch } from 'vue';
 
@@ -28,7 +29,7 @@
         /**
          * Draw a circle at the zero vector. Can be a boolean for on-off switch,
          * or a string with the color of the point (default false, default color
-         * blue)
+         * green)
          */
         drawCenterPoint?: boolean | string
     }>()
@@ -85,11 +86,22 @@
     }
 
     defineExpose({ clear })
+    
+    // Ref to the SVG element
+    const svg = useTemplateRef("svg")
+
+    /** Download the plot as an SVG */
+    function download(): void {
+        const svgNode = svg.value
+        if (!svgNode)
+            return
+        downloadNodeAsString(svgNode, "image/svg+xml", "download.svg")
+    }
 </script>
 
 <template>
     <div :class="$style.container" ref="container">
-        <svg>
+        <svg ref="svg" stroke="#333" stroke-width="1" fill="none">
             <path :d="path" />
             <circle
                 v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
@@ -103,17 +115,19 @@
                 :cx="pixelWidth / 2"
                 :cy="pixelHeight / 2"
                 r="4"
-                :fill="drawCenterPoint === true ? 'blue' : drawCenterPoint"
+                :fill="drawCenterPoint === true ? 'green' : drawCenterPoint"
                 stroke="none" />
         </svg>
     </div>
+    <button @click="download">Download</button>
 </template>
 
 <style lang="scss" module>
     .container {
         width: 100%;
         aspect-ratio: 5 / 3;
-        background-color: #eee;
+        background-color: color-mix(in srgb, var(--side-menu-text-color),
+            transparent 80%);
         border-radius: .2em;
         display: flex;
 
