@@ -45,7 +45,7 @@
     }
 
     const {
-        name, mass, size, position, velocity, force,
+        name, mass, size, position, velocity, force, massProportion,
     } = useObjectStats(focusedObject, objects)
 
     const {
@@ -73,6 +73,7 @@
 
             <SideMenuStat :value="name">Name</SideMenuStat>
             <SideMenuStat :value="mass" :units="MASS_UNITS">Mass</SideMenuStat>
+            <SideMenuStat :value="massProportion">Mass / total</SideMenuStat>
             <SideMenuStat :value="size" :units="LENGTH_UNITS">Diameter
                 </SideMenuStat>
 

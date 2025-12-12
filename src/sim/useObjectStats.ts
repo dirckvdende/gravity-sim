@@ -19,6 +19,8 @@ export type ObjectStatsReturn = {
     velocity: ComputedRef<Vector2 | undefined>
     /** Force acting on the object */
     force: ComputedRef<Vector2 | undefined>
+    /** Proportion of the total mass this object takes up */
+    massProportion: ComputedRef<number | undefined>
 }
 
 /**
@@ -50,12 +52,21 @@ undefined>): ObjectStatsReturn {
         })
     }
 
+    const totalMass = definedComputed((_, objects) =>
+        objects.reduce((acc, cur) => acc + cur.mass, 0))
+
     const name = definedComputed(({ name }) => name)
     const mass = definedComputed(({ mass }) => mass)
+    const massProportion = definedComputed(() => {
+        if (mass.value == undefined || totalMass.value == undefined ||
+        totalMass.value == 0)
+            return undefined
+        return mass.value / totalMass.value
+    })
     const size = definedComputed(({ size }) => size)
     const position = definedComputed(({ position }) => position)
     const velocity = definedComputed(({ velocity }) => velocity)
     const force = definedComputed(forceOnObject)
 
-    return { name, mass, size, position, velocity, force }
+    return { name, mass, size, position, velocity, force, massProportion }
 }
