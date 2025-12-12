@@ -61,7 +61,7 @@
         :menu-title="name"
         @close="closeMenu">
 
-        <SideMenuCenterImage v-if="focusedObject" style="margin-top: .5em;"
+        <SideMenuCenterImage v-if="focusedObject" style="margin: 1em 0 1.5em 0"
             :src="focusedObject?.icon" />
 
         <SideMenuSection>
