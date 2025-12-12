@@ -94,7 +94,7 @@
         </SideMenuSection>
         <SideMenuSection>
 
-            <SideMenuInputContainer name="Compare">
+            <SideMenuInputContainer name="Compare" style="margin-bottom: 1em;">
                 <SideMenuOptionsInput
                     :options="compareOptions"
                     @update="updateCompareObject" />
