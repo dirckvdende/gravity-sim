@@ -3,14 +3,34 @@
     import { useElementSize } from '@vueuse/core';
     import { computed, ref, useTemplateRef, watch } from 'vue';
 
-    const { point, maxPoints = 10000, drawPoint = false } = defineProps<{
+    const {
+        point,
+        maxPoints = 10000,
+        drawPoint = false,
+        drawCenterPoint = false,
+    } = defineProps<{
         /**
          * Current point to draw a line to. Changing this value will draw the
          * graph
          */
         point?: Vector2 | null
+        /**
+         * Maximum number of points before starting to remove points from the
+         * start of the path (default 10,000)
+         */
         maxPoints?: number
+        /**
+         * Draw a circle at the position of the latest point. Can be a boolean
+         * for on-off switch, or a string with the color of the point (default
+         * false, default color red)
+         */
         drawPoint?: boolean | string
+        /**
+         * Draw a circle at the zero vector. Can be a boolean for on-off switch,
+         * or a string with the color of the point (default false, default color
+         * blue)
+         */
+        drawCenterPoint?: boolean | string
     }>()
 
     const LOG_STEP = 1.3
@@ -22,7 +42,7 @@
             points.value.push(point)
         if (points.value.length > maxPoints)
             points.value.splice(0, 1)
-    })
+    }, { immediate: true })
 
     const minSize = computed(() => {
         let max = 0
@@ -77,6 +97,13 @@
                 :cy="pixelPoints[pixelPoints.length - 1]?.y"
                 r="4"
                 :fill="drawPoint === true ? 'red' : drawPoint"
+                stroke="none" />
+            <circle
+                v-if="drawCenterPoint"
+                :cx="pixelWidth / 2"
+                :cy="pixelHeight / 2"
+                r="4"
+                :fill="drawCenterPoint === true ? 'blue' : drawCenterPoint"
                 stroke="none" />
         </svg>
     </div>
