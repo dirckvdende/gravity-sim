@@ -11,7 +11,7 @@
         large = false,
     } = defineProps<{
         /**
-         * The value of the stat to display. Displays a placeholder ("N/A") when
+         * The value of the stat to display. Displays a placeholder ("—") when
          * undefined. Displays nothing when null. Displays the literal string in
          * case of a string
          */
@@ -36,7 +36,7 @@
         if (value === null)
             return ""
         if (value === undefined)
-            return "N/A"
+            return "—"
         if (typeof value == "string")
             return value
         return unitToHTML(value, units, formatOptions)
