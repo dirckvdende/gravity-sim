@@ -20,6 +20,8 @@ export type GravityObject = {
 export type StyledGravityObject = GravityObject & {
     /** Name of the object */
     name: string
+    /** Object description */
+    description: string
     /** Size (diameter) of the object */
     size: number
     /** Object icon URL */
