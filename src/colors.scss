@@ -3,7 +3,7 @@ $menu-shadow: 0 .15em .6em -.35em var(--bottom-menu-shadow-color, black);
 
 body {
     color-scheme: light;
-    scrollbar-color: #333 transparent;
+    scrollbar-color: #0005 transparent;
 
     --background-color: white;
     --grid-color: #eee;
@@ -21,16 +21,16 @@ body {
     --side-menu-background-color: white;
     --side-menu-head-color: #333;
     --side-menu-head-text-color: white;
-    --side-menu-text-color: black;
+    --side-menu-text-color: #222;
 
-    --side-menu-input-border-color: #bbb;
+    --side-menu-input-border-color: #aaa;
     --side-menu-input-border-color-focus: #555;
     --side-menu-option-background-color: #eee;
     --side-menu-option-hover-color: #ccc;
 
     --side-menu-icon-color: #666;
     --side-menu-icon-color-mix: #000;
-    --side-menu-line-color: #ddd;
+    --side-menu-line-color: #aaa;
     --side-menu-button-color: #eee;
 
     --pin-background-color: #ccc;
@@ -45,7 +45,7 @@ body {
 
 body.dark-mode {
     color-scheme: dark;
-    scrollbar-color: #eee transparent;
+    scrollbar-color: #fff5 transparent;
 
     --background-color: #061225;
     --grid-color: #0f2240;
@@ -62,14 +62,14 @@ body.dark-mode {
     --side-menu-head-text-color: #333;
     --side-menu-text-color: #ddd;
 
-    --side-menu-input-border-color: #375c97;
-    --side-menu-input-border-color-focus: #5d7cac;
+    --side-menu-input-border-color: #4e6892;
+    --side-menu-input-border-color-focus: #88a0c4;
     --side-menu-option-background-color: #121e34;
     --side-menu-option-hover-color: #2e4b7e;
 
     --side-menu-icon-color: #aaa;
     --side-menu-icon-color-mix: #000;
-    --side-menu-line-color: #152541;
+    --side-menu-line-color: #4e6892;
     --side-menu-button-color: #12213a;
 
     --pin-background-color: #313f56;

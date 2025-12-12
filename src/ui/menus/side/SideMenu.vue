@@ -3,6 +3,7 @@
     import SVGIcon from '@/ui/SVGIcon.vue';
     import { onClickOutside } from '@vueuse/core';
     import { useTemplateRef } from 'vue';
+    import { useScrollbarWidth } from '@/util/useScrollbarWidth';
 
     const { visible = false, menuTitle = "" } = defineProps<{
         /** Whether the side menu is currently visible */
@@ -34,6 +35,8 @@
     // to close
     const container = useTemplateRef("container")
     onClickOutside(container, close, { ignore: [".ignore-side-menu-close"] })
+
+    const scrollbarWidth = useScrollbarWidth(useTemplateRef("menu"))
 </script>
 
 <template>
@@ -46,7 +49,9 @@
                 <SVGIcon :path="mdiClose" :class="$style.icon" />
             </button>
         </div>
-        <div :class="$style.menu">
+        <div :class="$style.menu" :style="{
+            paddingRight: `calc(1.2em - ${scrollbarWidth}px)`
+        }" ref="menu">
             <slot />
         </div>
     </div>
@@ -61,7 +66,7 @@
         top: 0em;
         right: 0em;
         bottom: 2.5em;
-        width: 16em;
+        width: 17em;
         max-width: 100%;
         background-color: var(--side-menu-background-color);
         box-sizing: border-box;
@@ -121,11 +126,11 @@
     }
 
     .menu {
-        display: flex;
-        flex-direction: column;
         width: 100%;
-        padding: .6em 0;
-        overflow-y: auto;
+        padding: .6em 1.2em;
+        box-sizing: border-box;
+        overflow-y: scroll;
         flex-shrink: 1;
+        scrollbar-width: thin;
     }
 </style>

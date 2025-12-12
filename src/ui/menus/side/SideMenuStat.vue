@@ -8,9 +8,10 @@
         units = [{ suffix: "", scale: 1 }],
         formatOptions,
         level = 0,
+        large = false,
     } = defineProps<{
         /**
-         * The value of the stat to display. Displays a placeholder ("N/A") when
+         * The value of the stat to display. Displays a placeholder ("—") when
          * undefined. Displays nothing when null. Displays the literal string in
          * case of a string
          */
@@ -23,13 +24,19 @@
          * Depth of the stat, which can be used to create sub-stats (default 0)
          */
         level?: number
+        /**
+         * Whether the stat and its name should be displayed on separate lines.
+         * This also allows both the stat and its name to be displayed as
+         * multi-line. Shouldn't be used alongside level prop
+         */
+        large?: boolean
     }>()
 
     const displayValue = computed(() => {
         if (value === null)
             return ""
         if (value === undefined)
-            return "N/A"
+            return "—"
         if (typeof value == "string")
             return value
         return unitToHTML(value, units, formatOptions)
@@ -40,11 +47,12 @@
     <div :class="[
         $style.container,
         { [$style.deep]: level > 0 },
-    ]">
-        <div :class="$style.name"><div v-if="level > 0" :style="{
-            display: 'inline-block',
-            width: `${level}em`,
-        }" /><span><slot /></span></div>
+        { [$style.large]: large },
+    ]" :style="{
+        '--level': level,
+    }">
+        <div :class="$style.name"><div :class="$style['level-padding']" />
+            <span><slot /></span></div>
         <div :class="$style.stat"><span v-html="displayValue" /></div>
     </div>
 </template>
@@ -55,11 +63,11 @@
         flex-direction: row;
         width: 100%;
         box-sizing: border-box;
-        padding: 0 1.2em;
-        margin-top: .4em;
+        margin: .4em 0;
         justify-content: space-between;
         font-size: .8em;
         color: var(--side-menu-text-color, black);
+        --level: 0;
 
         .name {
             flex-grow: 1;
@@ -67,6 +75,17 @@
             overflow: hidden;
             color: color-mix(in srgb, var(--side-menu-text-color, black),
                 transparent 60%);
+
+            .level-padding {
+                display: none;
+            }
+
+            @container not style(--level: 0) {
+                .level-padding {
+                    display: inline-block;
+                    width: calc(var(--level, 0) * 1.75em);
+                }
+            }
         }
 
         .stat {
@@ -90,6 +109,19 @@
     }
 
     .container.deep {
-        margin-top: -.1em;;
+        margin-top: -.4em;
+    }
+
+    .container.large {
+        flex-direction: column;
+
+        .stat {
+            text-align: start;
+        }
+
+        .stat, .name {
+            width: 100%;
+            white-space: initial;
+        }
     }
 </style>

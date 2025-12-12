@@ -60,10 +60,11 @@
         :visible="visible"
         :menu-title="name"
         @close="closeMenu">
-        <SideMenuSection>
 
-            <SideMenuCenterImage v-if="focusedObject" style="margin-top: 0;"
-                :src="focusedObject?.icon" />
+        <SideMenuCenterImage v-if="focusedObject" style="margin: 1em 0 1.5em 0"
+            :src="focusedObject?.icon" />
+
+        <SideMenuSection>
 
             <SideMenuStat :value="name">Name</SideMenuStat>
             <SideMenuStat :value="mass" :units="MASS_UNITS">Mass</SideMenuStat>
@@ -93,7 +94,7 @@
         </SideMenuSection>
         <SideMenuSection>
 
-            <SideMenuInputContainer name="Compare">
+            <SideMenuInputContainer name="Compare" style="margin-bottom: 1em;">
                 <SideMenuOptionsInput
                     :options="compareOptions"
                     @update="updateCompareObject" />
