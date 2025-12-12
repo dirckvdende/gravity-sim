@@ -64,6 +64,11 @@
         <SideMenuCenterImage v-if="focusedObject" style="margin: 1em 0 1.5em 0"
             :src="focusedObject?.icon" />
 
+        <SideMenuSection v-if="focusedObject?.description">
+            <SideMenuStat :value="focusedObject.description" large>Description
+                </SideMenuStat>
+        </SideMenuSection>
+
         <SideMenuSection>
 
             <SideMenuStat :value="name">Name</SideMenuStat>
