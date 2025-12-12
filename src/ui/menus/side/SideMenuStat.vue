@@ -8,6 +8,7 @@
         units = [{ suffix: "", scale: 1 }],
         formatOptions,
         level = 0,
+        large = false,
     } = defineProps<{
         /**
          * The value of the stat to display. Displays a placeholder ("N/A") when
@@ -23,6 +24,12 @@
          * Depth of the stat, which can be used to create sub-stats (default 0)
          */
         level?: number
+        /**
+         * Whether the stat and its name should be displayed on separate lines.
+         * This also allows both the stat and its name to be displayed as
+         * multi-line. Shouldn't be used alongside level prop
+         */
+        large?: boolean
     }>()
 
     const displayValue = computed(() => {
@@ -40,6 +47,7 @@
     <div :class="[
         $style.container,
         { [$style.deep]: level > 0 },
+        { [$style.large]: large },
     ]" :style="{
         '--level': level,
     }">
@@ -102,5 +110,18 @@
 
     .container.deep {
         margin-top: -.4em;
+    }
+
+    .container.large {
+        flex-direction: column;
+
+        .stat {
+            text-align: start;
+        }
+
+        .stat, .name {
+            width: 100%;
+            white-space: initial;
+        }
     }
 </style>
