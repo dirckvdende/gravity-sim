@@ -119,7 +119,7 @@
                 <SideMenuStat :value="relativePosition?.y" :units="LENGTH_UNITS"
                     :level=1>y</SideMenuStat>
 
-                <LineGraph2D :point="relativePosition" />
+                <LineGraph2D :point="relativePosition" draw-point />
 
                 <SideMenuStat :value="relativeVelocity?.length()"
                     :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>

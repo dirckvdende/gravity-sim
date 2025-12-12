@@ -3,14 +3,18 @@
     import { useElementSize } from '@vueuse/core';
     import { computed, ref, useTemplateRef, watch } from 'vue';
 
-    const { point, maxPoints = 10000 } = defineProps<{
+    const { point, maxPoints = 10000, drawPoint = false } = defineProps<{
         /**
          * Current point to draw a line to. Changing this value will draw the
          * graph
          */
         point?: Vector2 | null
         maxPoints?: number
+        drawPoint?: boolean | string
     }>()
+
+    const LOG_STEP = 1.3
+    const EXTRA_SPACE = 1.1
 
     const points = ref<Vector2[]>([])
     watch(() => point, () => {
@@ -26,9 +30,10 @@
             let maxCoord = Math.max(Math.abs(point.x), Math.abs(point.y))
             if (maxCoord == 0)
                 continue
-            max = Math.max(max, Math.ceil(Math.log2(maxCoord)))
+            max = Math.max(max, Math.ceil(Math.log(maxCoord * EXTRA_SPACE)
+                / Math.log(LOG_STEP)))
         }
-        return Math.pow(2, max + 1)
+        return Math.pow(LOG_STEP, max) * 2
     })
     const {
         width: pixelWidth,
@@ -41,12 +46,10 @@
         return new Vector2(pixelWidth.value / 2, pixelHeight.value / 2).add(coords.scale(1 / pixelSize.value))
     }
 
+    const pixelPoints = computed(() => points.value.map(toPixelCoords))
     const path = computed(() => {
-        console.log("minSize", minSize.value)
-        console.log("pixelSize", pixelSize.value)
         let out = ""
-        for (const [index, point] of points.value.entries()) {
-            const { x, y } = toPixelCoords(point)
+        for (const [index, { x, y }] of pixelPoints.value.entries()) {
             if (index == 0)
                 out += `M ${x} ${y}`
             else
@@ -59,7 +62,14 @@
 <template>
     <div :class="$style.container" ref="container">
         <svg>
-            <path :d="path" stroke="black" stroke-width="3" fill="none" />
+            <path :d="path" />
+            <circle
+                v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
+                :cx="pixelPoints[pixelPoints.length - 1]?.x"
+                :cy="pixelPoints[pixelPoints.length - 1]?.y"
+                r="5"
+                :fill="drawPoint === true ? 'red' : drawPoint"
+                stroke="none" />
         </svg>
     </div>
 </template>
@@ -74,6 +84,9 @@
         & > svg {
             width: 100%;
             height: 100%;
+            stroke: black;
+            stroke-width: 1;
+            fill: none;
         }
     }
 </style>
