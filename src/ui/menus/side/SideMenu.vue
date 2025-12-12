@@ -61,7 +61,7 @@
         top: 0em;
         right: 0em;
         bottom: 2.5em;
-        width: 16em;
+        width: 17em;
         max-width: 100%;
         background-color: var(--side-menu-background-color);
         box-sizing: border-box;
@@ -124,8 +124,11 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        padding: .6em 0;
+        padding: .6em .8em;
+        box-sizing: border-box;
         overflow-y: auto;
         flex-shrink: 1;
+        scrollbar-width: thin;
+        scrollbar-gutter: stable both-edges;
     }
 </style>

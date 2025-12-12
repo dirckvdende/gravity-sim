@@ -18,7 +18,6 @@
         flex-direction: row;
         width: 100%;
         box-sizing: border-box;
-        padding: 0 1.2em;
         margin-top: .4em;
         justify-content: space-between;
         font-size: .8em;
