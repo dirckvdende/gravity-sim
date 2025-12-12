@@ -36,7 +36,7 @@
         drawCenterPoint?: boolean | string
     }>()
 
-    const LOG_STEP = 1.5
+    const LOG_STEP = 1.3
     const EXTRA_SPACE = 1.1
 
     const points = ref<Vector2[]>([])
