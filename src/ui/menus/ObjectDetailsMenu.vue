@@ -16,6 +16,7 @@
     import { useObjectStats } from '@/sim/useObjectStats';
     import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
     import LineGraph2D from '../graphs/LineGraph2D.vue';
+    import { mdiChartLine } from '@mdi/js';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
@@ -58,6 +59,11 @@
     const relPosGraph = useTemplateRef("relative-position-graph")
     watch([compareObject, focusedObject], () => relPosGraph.value?.clear(), {
         deep: false })
+
+    const relPosGraphVisible = ref(false)
+    function toggleRelPosGraph(): void {
+        relPosGraphVisible.value = !relPosGraphVisible.value
+    }
 </script>
 
 <template>
@@ -117,14 +123,20 @@
                 <SideMenuStat :value="massRatio">Relative mass</SideMenuStat>
                 <SideMenuStat :value="sizeRatio">Relative size</SideMenuStat>
 
-                <SideMenuStat :value="null">Relative position</SideMenuStat>
+                <SideMenuStat :value="null" :buttons="[{
+                    name: 'Show graph',
+                    active: relPosGraphVisible,
+                    iconPath: mdiChartLine,
+                    click: toggleRelPosGraph,
+                }]">Relative position</SideMenuStat>
                 <SideMenuStat :value="relativePosition?.x" :units="LENGTH_UNITS"
                     :level=1>x</SideMenuStat>
                 <SideMenuStat :value="relativePosition?.y" :units="LENGTH_UNITS"
                     :level=1>y</SideMenuStat>
 
                 <LineGraph2D :point="relativePosition" draw-point
-                    draw-center-point ref="relative-position-graph" />
+                    draw-center-point ref="relative-position-graph"
+                    v-if="relPosGraphVisible" />
 
                 <SideMenuStat :value="relativeVelocity?.length()"
                     :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>
