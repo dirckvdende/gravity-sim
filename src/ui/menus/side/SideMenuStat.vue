@@ -2,6 +2,8 @@
     import { unitToHTML, type FormatOptions, type UnitsList } from
     '@/util/units';
     import { computed } from 'vue';
+    import type { SideMenuStatButtonDef } from './SideMenuStatButton.vue';
+    import SideMenuStatButton from './SideMenuStatButton.vue';
 
     const {
         value,
@@ -9,6 +11,7 @@
         formatOptions,
         level = 0,
         large = false,
+        buttons = [],
     } = defineProps<{
         /**
          * The value of the stat to display. Displays a placeholder ("—") when
@@ -30,6 +33,8 @@
          * multi-line. Shouldn't be used alongside level prop
          */
         large?: boolean
+        /** Buttons to display next to the stat name (default none) */
+        buttons?: SideMenuStatButtonDef[]
     }>()
 
     const displayValue = computed(() => {
@@ -51,9 +56,15 @@
     ]" :style="{
         '--level': level,
     }">
-        <div :class="$style.name"><div :class="$style['level-padding']" />
-            <span><slot /></span></div>
-        <div :class="$style.stat"><span v-html="displayValue" /></div>
+        <div :class="$style.name">
+            <div :class="$style['level-padding']" />
+            <span><slot /></span>
+            <SideMenuStatButton v-for="button in buttons"
+                :button-def="button" />
+        </div>
+        <div :class="$style.stat">
+            <span v-html="displayValue" />
+        </div>
     </div>
 </template>
 
