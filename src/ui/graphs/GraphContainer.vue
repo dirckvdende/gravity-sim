@@ -34,7 +34,9 @@
         display: flex;
     }
 
-    .wrapper:not(:hover) .controls {
-        display: none;
+    @media (pointer: fine) {
+        .wrapper:not(:hover) .controls {
+            display: none;
+        }
     }
 </style>
