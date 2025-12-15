@@ -7,8 +7,10 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed } from 'vue';
-    import { loadFromString, uploadFile } from '@/util/piniaStoreToFile';
+    import { loadFromString } from '@/util/piniaStoreToFile';
     import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
+    import { loadFromFile } from '@/filesystem/save.mjs';
+    import { setState } from '@/filesystem/state.mjs';
 
     type Scenario = {
         name: string,
@@ -48,12 +50,11 @@
         <SideMenuSection>
             <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
-                @click="() => {
-                    uploadFile('state', '.grav', () => {
-                        clearOrbits()
-                        closeMenu()
-                    })
-                }">Load from file</SideMenuButton>
+                @click="() => loadFromFile().then((state) => {
+                    setState(state)
+                    clearOrbits()
+                    closeMenu()
+                })">Load from file</SideMenuButton>
         </SideMenuSection>
         <SideMenuSection>
             <SideMenuText>Presets:</SideMenuText>

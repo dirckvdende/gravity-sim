@@ -1,6 +1,7 @@
 
 import { useGravitySimStore } from "@/stores/useGravitySimStore"
 import type { StateFile } from "./statefile.mts"
+import { storeToRefs } from "pinia"
 
 /**
  * Get the current state as a state file object. The entire state is deep copied
@@ -8,12 +9,17 @@ import type { StateFile } from "./statefile.mts"
  * @return The state file object
  */
 export function getState(): StateFile {
-    const { objects } = useGravitySimStore()
+    const { objects } = storeToRefs(useGravitySimStore())
     return {
         icon: "./icons/jupiter.svg",
         name: "Test",
-        objects: objects.map((object) => ({ ...object })),
+        objects: objects.value.map((object) => ({ ...object })),
     }
+}
+
+export function setState(state: StateFile): void {
+    const { objects } = storeToRefs(useGravitySimStore())
+    objects.value = state.objects
 }
 
 /**
