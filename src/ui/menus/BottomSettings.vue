@@ -17,6 +17,8 @@
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import Vector2 from '@/util/Vector2';
     import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
+    import { getState } from '@/filesystem/state.mjs';
+    import { saveToFile } from '@/filesystem/save.mjs';
 
     const {
         showBarycenter,
@@ -110,7 +112,7 @@
     }
 
     function saveFile() {
-        downloadFile("state", "gravity-sim.grav")
+        saveToFile(getState())
     }
 
     const { activeMenu } = storeToRefs(useMenuStore())
