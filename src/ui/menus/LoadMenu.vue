@@ -6,40 +6,41 @@
     import { mdiFolderOpenOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
-    import { computed } from 'vue';
-    import { loadFromString, uploadFile } from '@/util/piniaStoreToFile';
-    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
+    import { computed, ref } from 'vue';
+    import { loadFromFile, loadFromURL } from '@/filesystem/save.mjs';
+    import { setState } from '@/filesystem/state.mjs';
+    import { scenariosList } from '@/filesystem/scenarioslist.mjs';
+    import type { StateFile } from '@/filesystem/statefile.mjs';
 
-    type Scenario = {
-        name: string,
-        file: string,
-        icon: string,
-    }
-
-    const scenarios: Scenario[] = [{
-        name: "Pluto system",
-        file: "./scenarios/pluto.grav",
-        icon: "./icons/pluto.svg",
-    }, {
-        name: "Earth and moon",
-        file: "./scenarios/earth-moon.grav",
-        icon: "./icons/earth.svg",
-    }]
+    // List of predefined scenarios, loaded asynchronously
+    const scenarios = ref<StateFile[]>([])
+    loadScenarios()
 
     const { activeMenu } = storeToRefs(useMenuStore())
     const visible = computed(() => activeMenu.value == "load")
-    const { clearOrbits } = useOrbitHistoryStore()
 
+    /**
+     * Close the load menu
+     */
     function closeMenu(): void {
         activeMenu.value = "none"
     }
 
-    function loadScenario({ file }: Scenario): void {
-        fetch(file).then((response) =>
-            response.text().then((text) => {
-                loadFromString("state", text)
-                clearOrbits()
-            }))
+    /**
+     * Load all predefined scenarios to the scenarios ref asynchronously.
+     * Scenarios ref is sorted alphabetically after every insert
+     */
+    function loadScenarios(): void {
+        for (const url of scenariosList()) {
+            loadFromURL(url).then((state) => {
+                scenarios.value.push(state)
+                scenarios.value.sort((stateA, stateB) => {
+                    const nameA = stateA.name.toUpperCase()
+                    const nameB = stateB.name.toUpperCase()
+                    return nameA < nameB ? -1 : nameA > nameB ? 1 : 0
+                })
+            })
+        }
     }
 </script>
 
@@ -48,22 +49,15 @@
         <SideMenuSection>
             <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
-                @click="() => {
-                    uploadFile('state', '.grav', () => {
-                        clearOrbits()
-                        closeMenu()
-                    })
-                }">Load from file</SideMenuButton>
+                @click="() => loadFromFile().then((state) => setState(state))">
+                Load from file</SideMenuButton>
         </SideMenuSection>
         <SideMenuSection>
             <SideMenuText>Presets:</SideMenuText>
             <SideMenuButton
-                v-for="scenario in scenarios"
-                :icon="scenario.icon"
-                @click="() => {
-                    loadScenario(scenario)
-                    closeMenu()
-                }">{{ scenario.name }}</SideMenuButton>
+                v-for="state in scenarios"
+                :icon="state.icon"
+                @click="() => setState(state)">{{ state.name }}</SideMenuButton>
         </SideMenuSection>
     </SideMenu>
 </template>

@@ -10,8 +10,4 @@ export const useGravityMapStore = defineStore("gravity-map", () => ({
     zoomLevel: ref(0),
 }), {
     persist: { serializer },
-    saveToFiles: {
-        files: ["state"],
-        serializer,
-    }
 })

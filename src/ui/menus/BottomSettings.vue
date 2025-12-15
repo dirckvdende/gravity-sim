@@ -9,7 +9,6 @@
     import BottomMenuSection from './bottom/BottomMenuSection.vue';
     import BottomMenuText from './bottom/BottomMenuText.vue';
     import { storeToRefs } from 'pinia';
-    import { downloadFile } from '@/util/piniaStoreToFile';
     import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
@@ -17,6 +16,8 @@
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import Vector2 from '@/util/Vector2';
     import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
+    import { getState } from '@/filesystem/state.mjs';
+    import { saveToFile } from '@/filesystem/save.mjs';
 
     const {
         showBarycenter,
@@ -110,7 +111,7 @@
     }
 
     function saveFile() {
-        downloadFile("state", "gravity-sim.grav")
+        saveToFile(getState())
     }
 
     const { activeMenu } = storeToRefs(useMenuStore())
