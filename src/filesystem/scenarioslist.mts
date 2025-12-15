@@ -7,6 +7,6 @@ export function scenariosList(): string[] {
     const scenarios = import.meta.glob("@/../public/scenarios/*.grav")
     const files: string[] = []
     for (const key in scenarios)
-        files.push(`.${key}`)
+        files.push(`.${key.substring(7)}`)
     return files
 }
