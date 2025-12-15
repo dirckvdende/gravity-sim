@@ -3,6 +3,10 @@ import { useGravitySimStore } from "@/stores/useGravitySimStore"
 import type { StateFile } from "./statefile.mts"
 import { storeToRefs } from "pinia"
 import { usePropertiesStore } from "@/stores/usePropertiesStore"
+import { useGravityMapStore } from "@/stores/useGravityMapStore"
+import { useOrbitHistoryStore } from "@/stores/useOrbitHistoryStore"
+import { useMenuStore } from "@/stores/useMenuStore"
+import { useSettingsStore } from "@/stores/useSettingsStore"
 
 /**
  * Get the current state as a state file object. The entire state is deep copied
@@ -10,25 +14,47 @@ import { usePropertiesStore } from "@/stores/usePropertiesStore"
  * @return The state file object
  */
 export function getState(): StateFile {
-    const { objects } = storeToRefs(useGravitySimStore())
-    const { icon, name } = storeToRefs(usePropertiesStore())
+    const { objects, timestamp } = useGravitySimStore()
+    const { icon, name } = usePropertiesStore()
+    const { position, zoomLevel } = useGravityMapStore()
+    const { speed } = useSettingsStore()
     return {
-        icon: icon.value,
-        name: name.value,
-        objects: objects.value.map((object) => ({ ...object })),
+        icon, name, position, zoomLevel, timestamp, speed,
+        objects: objects.map((object) => ({ ...object })),
     }
-}
+} 
 
 /**
  * Set the current state from a state file object
- * @param state The state file object to set the state from
+ * @param state The state file object to set the state from. May be partial to
+ * support older file versions
  */
-export function setState(state: StateFile): void {
-    const { objects } = storeToRefs(useGravitySimStore())
+export function setState(state: Partial<StateFile>): void {
+    const { objects, timestamp } = storeToRefs(useGravitySimStore())
     const { icon, name } = storeToRefs(usePropertiesStore())
-    objects.value = state.objects
-    icon.value = state.icon
-    name.value = state.name
+    const { position, zoomLevel } = storeToRefs(useGravityMapStore())
+    const { speed } = storeToRefs(useSettingsStore())
+    objects.value = state.objects ?? objects.value
+    icon.value = state.icon ?? icon.value
+    name.value = state.name ?? name.value
+    position.value = state.position ?? position.value
+    zoomLevel.value = state.zoomLevel ?? zoomLevel.value
+    timestamp.value = state.timestamp ?? new Date(Date.now())
+    speed.value = state.speed ?? speed.value
+    cleanupForStateLoad()
+}
+
+/**
+ * Clean up anything from previously loaded state, such as displayed orbits and
+ * opened menus. Also pauses the sim
+ */
+function cleanupForStateLoad(): void {
+    const { clearOrbits } = useOrbitHistoryStore()
+    const { activeMenu } = storeToRefs(useMenuStore())
+    clearOrbits()
+    activeMenu.value = "none"
+    const { paused } = storeToRefs(useSettingsStore())
+    paused.value = true
 }
 
 /**

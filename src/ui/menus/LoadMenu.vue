@@ -7,7 +7,6 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, ref } from 'vue';
-    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
     import { loadFromFile, loadFromURL } from '@/filesystem/save.mjs';
     import { setState } from '@/filesystem/state.mjs';
     import { scenariosList } from '@/filesystem/scenarioslist.mjs';
@@ -19,7 +18,6 @@
 
     const { activeMenu } = storeToRefs(useMenuStore())
     const visible = computed(() => activeMenu.value == "load")
-    const { clearOrbits } = useOrbitHistoryStore()
 
     /**
      * Close the load menu
@@ -51,22 +49,15 @@
         <SideMenuSection>
             <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
-                @click="() => loadFromFile().then((state) => {
-                    setState(state)
-                    clearOrbits()
-                    closeMenu()
-                })">Load from file</SideMenuButton>
+                @click="() => loadFromFile().then((state) => setState(state))">
+                Load from file</SideMenuButton>
         </SideMenuSection>
         <SideMenuSection>
             <SideMenuText>Presets:</SideMenuText>
             <SideMenuButton
                 v-for="state in scenarios"
                 :icon="state.icon"
-                @click="() => {
-                    setState(state)
-                    clearOrbits()
-                    closeMenu()
-                }">{{ state.name }}</SideMenuButton>
+                @click="() => setState(state)">{{ state.name }}</SideMenuButton>
         </SideMenuSection>
     </SideMenu>
 </template>
