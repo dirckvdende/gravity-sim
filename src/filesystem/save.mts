@@ -28,6 +28,20 @@ export async function loadFromFile(): Promise<StateFile> {
 }
 
 /**
+ * Load a state from a URL pointing to a JSON file
+ * @param url The URL to load the state from
+ * @returns A promise with the loaded state file object. The file object will
+ * have blob URLs for all resources
+ */
+export async function loadFromURL(url: string): Promise<StateFile> {
+    const response = await fetch(url)
+    const content = await response.text()
+    const state = deserializeState(content)
+    await stateToBlobURLs(state)
+    return state
+}
+
+/**
  * Download a string as a file
  * @param content The contents of the file to download
  * @param mimeType The MIME type of the file (default "text/plain")
