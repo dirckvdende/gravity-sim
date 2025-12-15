@@ -4,9 +4,10 @@
  * @returns The file list as strings
  */
 export function scenariosList(): string[] {
-    const scenarios = import.meta.glob("@/../public/scenarios/*.grav")
+    // @ts-ignore
+    const scenarios = SCENARIOS as string[]
     const files: string[] = []
-    for (const key in scenarios)
-        files.push(`.${key.substring(7)}`)
+    for (const key of scenarios)
+        files.push(`./scenarios/${key}`)
     return files
 }

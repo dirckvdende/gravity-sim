@@ -3,6 +3,11 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from "vite-plugin-vue-devtools"
+import { readdirSync } from 'node:fs'
+import path from 'node:path'
+
+// List of predefined gravity sim scenarios
+const scenarios = readdirSync(path.join(__dirname, "public", "scenarios"))
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,4 +21,8 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         },
     },
+    define: {
+        /** List of predefined gravity sim scenarios */
+        SCENARIOS: JSON.stringify(scenarios)
+    }
 })
