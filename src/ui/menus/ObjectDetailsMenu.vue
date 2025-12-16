@@ -120,11 +120,11 @@
             </SideMenuInputContainer>
 
             <template v-if="compareObject && focusedObject">
-                <ObjectStat :value="distance" :units="LENGTH_UNITS" has-graph
-                    ref="distance-ref">Distance</ObjectStat>
                 <ObjectStat :value="massRatio">Relative mass</ObjectStat>
                 <ObjectStat :value="sizeRatio">Relative size</ObjectStat>
 
+                <ObjectStat :value="distance" :units="LENGTH_UNITS" has-graph
+                    ref="distance-ref">Distance</ObjectStat>
                 <ObjectVectorStat :value="relativePosition"
                     ref="relative-position-ref" :units="LENGTH_UNITS" has-graph>
                     Relative position</ObjectVectorStat>
