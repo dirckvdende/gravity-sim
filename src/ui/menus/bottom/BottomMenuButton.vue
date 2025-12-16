@@ -91,8 +91,10 @@
                     var(--bottom-menu-icon-color-mix, black) 20%);
             }
 
-            .text {
-                display: block;
+            @media (pointer: fine) {
+                .text {
+                    display: block;
+                }
             }
         }
     }
