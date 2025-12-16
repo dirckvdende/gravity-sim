@@ -44,7 +44,7 @@
             name: "Show length graph",
             active: showGraph1D.value,
             iconPath: mdiChartLine,
-            action: () =>
+            click: () =>
                 graphToggle.value = graphToggle.value == "1D" ? "none" : "1D",
         } : undefined)
     const button2D = computed<SideMenuStatButtonDef | undefined>(() =>
