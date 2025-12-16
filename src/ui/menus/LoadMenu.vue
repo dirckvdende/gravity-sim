@@ -2,7 +2,6 @@
     import SideMenu from './side/SideMenu.vue';
     import SideMenuSection from './side/SideMenuSection.vue';
     import SideMenuButton from './side/SideMenuButton.vue';
-    import SideMenuText from './side/SideMenuText.vue';
     import { mdiContentSaveOutline, mdiFolderOpenOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
