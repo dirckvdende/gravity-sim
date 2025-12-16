@@ -2,13 +2,12 @@
     import SideMenu from './side/SideMenu.vue';
     import SideMenuSection from './side/SideMenuSection.vue';
     import SideMenuButton from './side/SideMenuButton.vue';
-    import SideMenuText from './side/SideMenuText.vue';
-    import { mdiFolderOpenOutline } from '@mdi/js';
+    import { mdiContentSaveOutline, mdiFolderOpenOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, ref } from 'vue';
-    import { loadFromFile, loadFromURL } from '@/filesystem/save.mjs';
-    import { setState } from '@/filesystem/state.mjs';
+    import { loadFromFile, loadFromURL, saveToFile } from '@/filesystem/save.mjs';
+    import { getState, setState } from '@/filesystem/state.mjs';
     import { scenariosList } from '@/filesystem/scenarioslist.mjs';
     import type { StateFile } from '@/filesystem/statefile.mjs';
 
@@ -46,14 +45,17 @@
 
 <template>
     <SideMenu :visible="visible" menu-title="Load scenario" @close="closeMenu">
-        <SideMenuSection>
+        <SideMenuSection style="padding-top: .5em;">
             <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="() => loadFromFile().then((state) => setState(state))">
                 Load from file</SideMenuButton>
+            <SideMenuButton
+                :path-icon="mdiContentSaveOutline"
+                @click="() => saveToFile(getState())">
+                Save to file</SideMenuButton>
         </SideMenuSection>
         <SideMenuSection>
-            <SideMenuText>Presets:</SideMenuText>
             <SideMenuButton
                 v-for="state in scenarios"
                 :icon="state.icon"

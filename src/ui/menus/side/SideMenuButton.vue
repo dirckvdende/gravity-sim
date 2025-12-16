@@ -30,14 +30,16 @@
 </template>
 
 <style lang="scss" module>
+    $icon-size: 1.3em;
+
     .button {
-        width: calc(100% - 2em);
+        width: 100%;
         font-size: 1em;
         display: flex;
-        height: 3.4em;
+        height: 2.2em;
         align-items: center;
         box-sizing: border-box;
-        margin: .2em 1em;
+        margin: .2em 0;
         border: none;
         background-color: var(--side-menu-button-color);
         border-radius: .5em;
@@ -50,14 +52,14 @@
         }
 
         .path-icon {
-            height: 2em;
-            width: 2em;
+            height: $icon-size;
+            width: $icon-size;
             fill: var(--side-menu-icon-color);
         }
 
         .icon {
-            height: 2em;
-            width: 2em;
+            height: $icon-size;
+            width: $icon-size;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -73,7 +75,7 @@
 
         .text {
             margin-left: 1em;
-            font-size: 1em;
+            font-size: .8em;
         }
     }
 </style>
