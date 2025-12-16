@@ -17,9 +17,12 @@
     import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
     import LineGraph2D from '../graphs/LineGraph2D.vue';
     import { mdiChartLine } from '@mdi/js';
+    import LineGraph from '../graphs/LineGraph.vue';
+    import { useSettingsStore } from '@/stores/useSettingsStore';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
+    const { paused } = storeToRefs(useSettingsStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
 
@@ -57,12 +60,20 @@
     } = useObjectCompareStats(focusedObject, compareObject, objects)
 
     const relPosGraph = useTemplateRef("relative-position-graph")
-    watch([compareObject, focusedObject], () => relPosGraph.value?.clear(), {
-        deep: false })
+    const distanceGraph = useTemplateRef("distance-graph")
+    watch([compareObject, focusedObject], () => {
+        relPosGraph.value?.clear()
+        distanceGraph.value?.clear()
+    }, { deep: false })
 
     const relPosGraphVisible = ref(false)
     function toggleRelPosGraph(): void {
         relPosGraphVisible.value = !relPosGraphVisible.value
+    }
+
+    const distanceGraphVisible = ref(false)
+    function toggleDistanceGraph(): void {
+        distanceGraphVisible.value = !distanceGraphVisible.value
     }
 </script>
 
@@ -118,8 +129,17 @@
             </SideMenuInputContainer>
 
             <template v-if="compareObject && focusedObject">
-                <SideMenuStat :value="distance" :units="LENGTH_UNITS">Distance
-                    </SideMenuStat>
+                <SideMenuStat :value="distance" :buttons="[{
+                    name: 'Show graph',
+                    active: distanceGraphVisible,
+                    iconPath: mdiChartLine,
+                    click: toggleDistanceGraph,
+                }]" :units="LENGTH_UNITS">Distance</SideMenuStat>
+
+                <LineGraph :value="paused ? null : distance"
+                    draw-center-point ref="distance-graph"
+                    v-if="distanceGraphVisible" />
+
                 <SideMenuStat :value="massRatio">Relative mass</SideMenuStat>
                 <SideMenuStat :value="sizeRatio">Relative size</SideMenuStat>
 
