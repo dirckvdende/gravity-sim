@@ -15,14 +15,11 @@
     import type { StyledGravityObject } from '@/sim/object';
     import { useObjectStats } from '@/sim/useObjectStats';
     import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
-    import LineGraph2D from '../graphs/LineGraph2D.vue';
-    import { mdiChartLine } from '@mdi/js';
-    import LineGraph from '../graphs/LineGraph.vue';
-    import { useSettingsStore } from '@/stores/useSettingsStore';
+    import ObjectStat from './objectdetails/ObjectStat.vue';
+    import ObjectVectorStat from './objectdetails/ObjectVectorStat.vue';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
-    const { paused } = storeToRefs(useSettingsStore())
     const visible = computed(() =>
         activeMenu.value == "object-details" && focusedObject.value != null)
 
@@ -59,22 +56,12 @@
         orbitalPeriod,
     } = useObjectCompareStats(focusedObject, compareObject, objects)
 
-    const relPosGraph = useTemplateRef("relative-position-graph")
-    const distanceGraph = useTemplateRef("distance-graph")
+    const distanceComp = useTemplateRef("distance")
+    const relativePositionComp = useTemplateRef("relative-position")
     watch([compareObject, focusedObject], () => {
-        relPosGraph.value?.clear()
-        distanceGraph.value?.clear()
+        distanceComp.value?.clearGraph()
+        relativePositionComp.value?.clearGraph()
     }, { deep: false })
-
-    const relPosGraphVisible = ref(false)
-    function toggleRelPosGraph(): void {
-        relPosGraphVisible.value = !relPosGraphVisible.value
-    }
-
-    const distanceGraphVisible = ref(false)
-    function toggleDistanceGraph(): void {
-        distanceGraphVisible.value = !distanceGraphVisible.value
-    }
 </script>
 
 <template>
@@ -129,33 +116,14 @@
             </SideMenuInputContainer>
 
             <template v-if="compareObject && focusedObject">
-                <SideMenuStat :value="distance" :buttons="[{
-                    name: 'Show graph',
-                    active: distanceGraphVisible,
-                    iconPath: mdiChartLine,
-                    click: toggleDistanceGraph,
-                }]" :units="LENGTH_UNITS">Distance</SideMenuStat>
+                <ObjectStat :value="distance" :units="LENGTH_UNITS" has-graph
+                    ref="distance">Distance</ObjectStat>
+                <ObjectStat :value="massRatio">Relative mass</ObjectStat>
+                <ObjectStat :value="sizeRatio">Relative size</ObjectStat>
 
-                <LineGraph :value="paused ? null : distance"
-                    ref="distance-graph" v-if="distanceGraphVisible" />
-
-                <SideMenuStat :value="massRatio">Relative mass</SideMenuStat>
-                <SideMenuStat :value="sizeRatio">Relative size</SideMenuStat>
-
-                <SideMenuStat :value="null" :buttons="[{
-                    name: 'Show graph',
-                    active: relPosGraphVisible,
-                    iconPath: mdiChartLine,
-                    click: toggleRelPosGraph,
-                }]">Relative position</SideMenuStat>
-                <SideMenuStat :value="relativePosition?.x" :units="LENGTH_UNITS"
-                    :level=1>x</SideMenuStat>
-                <SideMenuStat :value="relativePosition?.y" :units="LENGTH_UNITS"
-                    :level=1>y</SideMenuStat>
-
-                <LineGraph2D :point="relativePosition" draw-point
-                    draw-center-point ref="relative-position-graph"
-                    v-if="relPosGraphVisible" />
+                <ObjectVectorStat :value="relativePosition"
+                    ref="relative-position" :units="LENGTH_UNITS" has-graph>
+                    Relative position</ObjectVectorStat>
 
                 <SideMenuStat :value="relativeVelocity?.length()"
                     :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>
