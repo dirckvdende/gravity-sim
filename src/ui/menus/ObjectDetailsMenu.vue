@@ -56,11 +56,27 @@
         orbitalPeriod,
     } = useObjectCompareStats(focusedObject, compareObject, objects)
 
-    const distanceComp = useTemplateRef("distance")
-    const relativePositionComp = useTemplateRef("relative-position")
+    const graphComponents = [
+        useTemplateRef("position-ref"),
+        useTemplateRef("velocity-ref"),
+        useTemplateRef("force-ref"),
+    ]
+    watch(focusedObject, () => {
+        for (const component of graphComponents)
+            component.value?.clearGraph()
+    }, { deep: false })
+    const compareGraphComponents = [
+        useTemplateRef("distance-ref"),
+        useTemplateRef("relative-position-ref"),
+        useTemplateRef("relative-velocity-ref"),
+        useTemplateRef("escape-velocity-ref"),
+        useTemplateRef("eccentricity-ref"),
+        useTemplateRef("semi-major-axis-ref"),
+        useTemplateRef("orbital-period-ref"),
+    ]
     watch([compareObject, focusedObject], () => {
-        distanceComp.value?.clearGraph()
-        relativePositionComp.value?.clearGraph()
+        for (const component of compareGraphComponents)
+            component.value?.clearGraph()
     }, { deep: false })
 </script>
 
@@ -80,31 +96,19 @@
 
         <SideMenuSection divider>
 
-            <SideMenuStat :value="name">Name</SideMenuStat>
-            <SideMenuStat :value="mass" :units="MASS_UNITS">Mass</SideMenuStat>
-            <SideMenuStat :value="massProportion">Mass / total</SideMenuStat>
-            <SideMenuStat :value="size" :units="LENGTH_UNITS">Diameter
-                </SideMenuStat>
+            <ObjectStat :value="name">Name</ObjectStat>
+            <ObjectStat :value="mass" :units="MASS_UNITS">Mass</ObjectStat>
+            <ObjectStat :value="massProportion">Mass / total</ObjectStat>
+            <ObjectStat :value="size" :units="LENGTH_UNITS">
+                Diameter</ObjectStat>
 
-            <SideMenuStat :value="null">Position</SideMenuStat>
-            <SideMenuStat :value="position?.x" :units="LENGTH_UNITS"
-                :level=1>x</SideMenuStat>
-            <SideMenuStat :value="position?.y" :units="LENGTH_UNITS"
-                :level=1>y</SideMenuStat>
-
-            <SideMenuStat :value="velocity?.length()"
-                :units="VELOCITY_UNITS">Velocity</SideMenuStat>
-            <SideMenuStat :value="velocity?.x" :units="VELOCITY_UNITS"
-                :level=1>x</SideMenuStat>
-            <SideMenuStat :value="velocity?.y" :units="VELOCITY_UNITS"
-                :level=1>y</SideMenuStat>
-
-            <SideMenuStat :value="force?.length()"
-                :units="FORCE_UNITS">Acting force</SideMenuStat>
-            <SideMenuStat :value="force?.x"
-                :units="FORCE_UNITS" :level=1>x</SideMenuStat>
-            <SideMenuStat :value="force?.y"
-                :units="FORCE_UNITS" :level=1>y</SideMenuStat>
+            <ObjectVectorStat :value="position" :units="LENGTH_UNITS" has-graph
+                ref="position-ref">Position</ObjectVectorStat>
+            <ObjectVectorStat :value="velocity" :units="VELOCITY_UNITS"
+                show-length has-graph ref="velocity-ref">
+                Velocity</ObjectVectorStat>
+            <ObjectVectorStat :value="force" :units="FORCE_UNITS" show-length
+                has-graph ref="force-ref">Acting force</ObjectVectorStat>
 
         </SideMenuSection>
         <SideMenuSection divider>
@@ -117,33 +121,31 @@
 
             <template v-if="compareObject && focusedObject">
                 <ObjectStat :value="distance" :units="LENGTH_UNITS" has-graph
-                    ref="distance">Distance</ObjectStat>
+                    ref="distance-ref">Distance</ObjectStat>
                 <ObjectStat :value="massRatio">Relative mass</ObjectStat>
                 <ObjectStat :value="sizeRatio">Relative size</ObjectStat>
 
                 <ObjectVectorStat :value="relativePosition"
-                    ref="relative-position" :units="LENGTH_UNITS" has-graph>
+                    ref="relative-position-ref" :units="LENGTH_UNITS" has-graph>
                     Relative position</ObjectVectorStat>
+                <ObjectVectorStat :value="relativeVelocity"
+                    ref="relative-velocity-ref" :units="VELOCITY_UNITS"
+                    show-length has-graph>Relative velocity</ObjectVectorStat>
 
-                <SideMenuStat :value="relativeVelocity?.length()"
-                    :units="VELOCITY_UNITS">Relative velocity</SideMenuStat>
-                <SideMenuStat :value="relativeVelocity?.x"
-                    :units="VELOCITY_UNITS" :level=1>x</SideMenuStat>
-                <SideMenuStat :value="relativeVelocity?.y"
-                    :units="VELOCITY_UNITS" :level=1>y</SideMenuStat>
-
-                <SideMenuStat :value="escapeVelocity" :units="VELOCITY_UNITS">
-                    Rel. escape velocity</SideMenuStat>
-                <SideMenuStat :value="gravBound === undefined ? undefined 
+                <ObjectStat :value="escapeVelocity" ref="escape-velocity-ref"
+                    :units="VELOCITY_UNITS" has-graph>
+                    Rel. escape velocity</ObjectStat>
+                <ObjectStat :value="gravBound === undefined ? undefined 
                     : gravBound ? 'yes' : 'no'" :units="VELOCITY_UNITS">
-                    Grav. bound</SideMenuStat>
+                    Grav. bound</ObjectStat>
 
-                <SideMenuStat :value="eccentricityVector?.length()">
-                    Orbital eccentricity</SideMenuStat>
-                <SideMenuStat :value="semiMajorAxis" :units="LENGTH_UNITS">
-                    Semi-major axis</SideMenuStat>
-                <SideMenuStat :value="orbitalPeriod" :units="TIME_UNITS">
-                    Orbital period</SideMenuStat>
+                <ObjectStat :value="eccentricityVector?.length()"
+                    ref="eccentricity-ref" has-graph>Orbital eccentricity
+                    </ObjectStat>
+                <ObjectStat :value="semiMajorAxis" ref="semi-major-axis-ref"
+                    :units="LENGTH_UNITS" has-graph>Semi-major axis</ObjectStat>
+                <ObjectStat :value="orbitalPeriod" ref="orbital-period-ref"
+                    :units="TIME_UNITS" has-graph>Orbital period</ObjectStat>
             </template>
 
         </SideMenuSection>
