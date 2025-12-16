@@ -57,7 +57,6 @@
                 Save to file</SideMenuButton>
         </SideMenuSection>
         <SideMenuSection>
-            <SideMenuText>Presets:</SideMenuText>
             <SideMenuButton
                 v-for="state in scenarios"
                 :icon="state.icon"
