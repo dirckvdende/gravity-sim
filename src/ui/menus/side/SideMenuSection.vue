@@ -15,14 +15,11 @@
     @use "./style.scss";
     .section {
         width: 100%;
-        padding: .8em 0;
+        padding: 0 0 .8em 0;
     }
     
     .section.divider {
         border-top: .1em solid var(--side-menu-line-color);
-    }
-
-    .section + .section:not(.divider) {
-        padding-top: 0;
+        padding-top: .8em;
     }
 </style>
