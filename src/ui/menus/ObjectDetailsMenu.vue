@@ -137,8 +137,7 @@
                 }]" :units="LENGTH_UNITS">Distance</SideMenuStat>
 
                 <LineGraph :value="paused ? null : distance"
-                    draw-center-point ref="distance-graph"
-                    v-if="distanceGraphVisible" />
+                    ref="distance-graph" v-if="distanceGraphVisible" />
 
                 <SideMenuStat :value="massRatio">Relative mass</SideMenuStat>
                 <SideMenuStat :value="sizeRatio">Relative size</SideMenuStat>
