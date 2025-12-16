@@ -67,11 +67,11 @@
     } = useElementSize(useTemplateRef("container"))
     const pixelSize = computed(() =>
         minSize.value / Math.min(pixelWidth.value, pixelHeight.value)
-        / (hasNegative.value ? 2 : 1))
+        * (hasNegative.value ? 2 : 1))
 
     function toPixelCoords([timestamp, value]: [number, number]): Vector2 {
-        const y = pixelHeight.value - value / pixelSize.value -
-            (hasNegative.value ? pixelHeight.value : 0)
+        const y = pixelHeight.value - (value / pixelSize.value +
+            (hasNegative.value ? pixelHeight.value / 2 : 0))
         if (firstTimestamp.value == latestTimestamp.value)
             return new Vector2(0, y)
         const x = timestamp == firstTimestamp.value ? 0 : (timestamp -
