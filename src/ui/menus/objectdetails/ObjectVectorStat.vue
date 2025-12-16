@@ -2,7 +2,7 @@
     import { type UnitsList } from '@/util/units';
     import { computed, ref, useTemplateRef } from 'vue';
     import type { SideMenuStatButtonDef } from '../side/SideMenuStatButton.vue';
-    import { mdiChartLine } from '@mdi/js';
+    import { mdiChartLine, mdiChartMultiline } from '@mdi/js';
     import SideMenuStat from '../side/SideMenuStat.vue';
     import { storeToRefs } from 'pinia';
     import { useSettingsStore } from '@/stores/useSettingsStore';
@@ -51,7 +51,7 @@
         hasGraph ? {
             name: "Show graph",
             active: showGraph2D.value,
-            iconPath: mdiChartLine,
+            iconPath: mdiChartMultiline,
             click: () =>
                 graphToggle.value = graphToggle.value == "2D" ? "none" : "2D",
         } : undefined)
