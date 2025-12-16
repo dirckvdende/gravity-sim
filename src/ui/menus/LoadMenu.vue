@@ -45,7 +45,7 @@
 
 <template>
     <SideMenu :visible="visible" menu-title="Load scenario" @close="closeMenu">
-        <SideMenuSection>
+        <SideMenuSection style="padding-top: .5em;">
             <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="() => loadFromFile().then((state) => setState(state))">
