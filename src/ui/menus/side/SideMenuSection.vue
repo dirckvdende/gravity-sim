@@ -21,4 +21,8 @@
     .section.divider {
         border-top: .1em solid var(--side-menu-line-color);
     }
+
+    .section + .section:not(.divider) {
+        padding-top: 0;
+    }
 </style>
