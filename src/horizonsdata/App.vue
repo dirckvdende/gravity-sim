@@ -1,5 +1,9 @@
 <script lang="ts" setup>
     import FileListing from './FileListing.vue';
+    import { ref } from 'vue';
+    import type { ObjectFile } from './object';
+
+    const objects = ref<ObjectFile[]>([])
 </script>
 
 <template>
@@ -15,7 +19,10 @@
                 use the same coordinate center and time specification for all
                 files. Leave the table settings on "defaults".
             </p>
-            <FileListing filename="test.txt" name="test" />
+            <FileListing
+                v-for="objectFile in objects"
+                :filename="objectFile.filename"
+                :name="objectFile.name" />
         </div>
     </div>
 </template>
