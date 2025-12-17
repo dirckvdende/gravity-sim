@@ -2,6 +2,7 @@
     import FileListing from './FileListing.vue';
     import { ref } from 'vue';
     import type { ObjectFile } from './object';
+    import UploadField from './UploadField.vue';
 
     const objects = ref<ObjectFile[]>([])
 </script>
@@ -23,6 +24,7 @@
                 v-for="objectFile in objects"
                 :filename="objectFile.filename"
                 :name="objectFile.name" />
+            <UploadField />
         </div>
     </div>
 </template>
