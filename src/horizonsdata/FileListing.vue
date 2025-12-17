@@ -41,6 +41,7 @@
         display: flex;
         align-items: center;
         height: 3em;
+        margin-bottom: .5em;
 
         .icon {
             height: 100%;
