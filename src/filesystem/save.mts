@@ -22,7 +22,7 @@ export async function saveToFile(state: StateFile): Promise<void> {
  * have blob URLs for all resources
  */
 export async function loadFromFile(): Promise<StateFile> {
-    const content = await uploadString(".grav")
+    const { content } = await uploadString(".grav")
     const state = deserializeState(content)
     await stateToBlobURLs(state)
     return state

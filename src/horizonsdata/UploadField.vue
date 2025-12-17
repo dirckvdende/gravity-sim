@@ -5,15 +5,16 @@ import { uploadString } from '@/util/uploadString';
 
     const emit = defineEmits<{
         /**
-         * Emitted when a file is uploaded, with as parameter the content of the
-         * file as a string
+         * Emitted when a file is uploaded, with as parameters the content of
+         * the file as a string and the filename
          */
-        (e: "upload", content: string): void
+        (e: "upload", content: string, filename: string): void
     }>()
 
     /** Prompt the user to upload a file */
     function uploadPrompt(): void {
-        uploadString(".txt").then((value) => emit("upload", value))
+        uploadString(".txt").then(({ content, filename }) =>
+            emit("upload", content, filename))
     }
 </script>
 
