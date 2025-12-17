@@ -1,5 +1,6 @@
 
 import Vector3 from "@/util/Vector3"
+import { physicalProperties, physicalPropertyValues } from "./physicalproperties"
 
 /** Object representation of horizons exported file */
 export type ObjectFile = {
@@ -24,8 +25,8 @@ export type ObjectFile = {
  * @returns The deserialized object file
  */
 export function deserializeObjectFile(text: string): ObjectFile {
-    console.log(text)
-    console.log(physicalProperties(text))
+    const properties = physicalPropertyValues(physicalProperties(text))
+    console.log(properties)
     // TODO: Implement
     return {
         name: "test",
@@ -35,8 +36,4 @@ export function deserializeObjectFile(text: string): ObjectFile {
         mass: 100,
         size: 100,
     }
-}
-
-function physicalProperties(text: string): Map<string, string> {
-    return new Map()
 }
