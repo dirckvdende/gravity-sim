@@ -3,6 +3,7 @@
     import { ref } from 'vue';
     import { deserializeObjectFile, type ObjectFile } from './object';
     import UploadField from './UploadField.vue';
+    import { LENGTH_UNITS, MASS_UNITS, unitToHTML } from '@/util/units';
 
     // List of objects that have been uploaded
     const objects = ref<ObjectFile[]>([])
@@ -45,7 +46,11 @@
                 v-for="objectFile in objects"
                 :filename="objectFile.filename"
                 :name="objectFile.name"
-                @delete="() => removeObject(objectFile)" />
+                @delete="() => removeObject(objectFile)"
+                :stats="[
+                    `mass: ${unitToHTML(objectFile.mass, MASS_UNITS)}`,
+                    `size: ${unitToHTML(objectFile.size, LENGTH_UNITS)}`,
+                ]" />
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />
         </div>
