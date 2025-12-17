@@ -7,14 +7,23 @@
     // List of objects that have been uploaded
     const objects = ref<ObjectFile[]>([])
 
-    /** Remove the given object file from the list */
+    /**
+     * Remove the given object file from the list
+     * @param objectFile The object file to remove
+     */
     function removeObject(objectFile: ObjectFile): void {
         objects.value = objects.value.filter((value) => value != objectFile)
     }
 
-    /** Add an object from Horizons data text file */
-    function addObject(text: string): void {
-        const objectFile = deserializeObjectFile(text)
+    /**
+     * Add an object from Horizons data text file
+     * @param text The contents of the file
+     * @param filename The filename
+     */
+    function addObject(text: string, filename: string): void {
+        const splitPath = filename.split(/\/|\\/gi)
+        const objectFile = deserializeObjectFile(text,
+            splitPath[splitPath.length - 1])
         objects.value.push(objectFile)
     }
 </script>
@@ -37,7 +46,8 @@
                 :filename="objectFile.filename"
                 :name="objectFile.name"
                 @delete="() => removeObject(objectFile)" />
-            <UploadField @upload="(text) => addObject(text)" />
+            <UploadField @upload="(text, filename) =>
+                addObject(text, filename)" />
         </div>
     </div>
 </template>
