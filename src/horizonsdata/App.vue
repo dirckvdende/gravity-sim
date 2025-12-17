@@ -1,10 +1,22 @@
 <script lang="ts" setup>
     import FileListing from './FileListing.vue';
     import { ref } from 'vue';
-    import type { ObjectFile } from './object';
+    import { deserializeObjectFile, type ObjectFile } from './object';
     import UploadField from './UploadField.vue';
 
+    // List of objects that have been uploaded
     const objects = ref<ObjectFile[]>([])
+
+    /** Remove the given object file from the list */
+    function removeObject(objectFile: ObjectFile): void {
+        objects.value = objects.value.filter((value) => value != objectFile)
+    }
+
+    /** Add an object from Horizons data text file */
+    function addObject(text: string): void {
+        const objectFile = deserializeObjectFile(text)
+        objects.value.push(objectFile)
+    }
 </script>
 
 <template>
@@ -23,8 +35,9 @@
             <FileListing
                 v-for="objectFile in objects"
                 :filename="objectFile.filename"
-                :name="objectFile.name" />
-            <UploadField />
+                :name="objectFile.name"
+                @delete="() => removeObject(objectFile)" />
+            <UploadField @upload="(text) => addObject(text)" />
         </div>
     </div>
 </template>

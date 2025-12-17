@@ -24,7 +24,8 @@ export type ObjectFile = {
  * @returns The deserialized object file
  */
 export function deserializeObjectFile(text: string): ObjectFile {
-    // console.log(physicalProperties(text))
+    console.log(text)
+    console.log(physicalProperties(text))
     // TODO: Implement
     return {
         name: "test",
@@ -36,6 +37,6 @@ export function deserializeObjectFile(text: string): ObjectFile {
     }
 }
 
-// function physicalProperties(text: string): Map<string, string> {
-
-// }
+function physicalProperties(text: string): Map<string, string> {
+    return new Map()
+}
