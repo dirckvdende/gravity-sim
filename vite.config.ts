@@ -4,10 +4,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from "vite-plugin-vue-devtools"
 import { readdirSync } from 'node:fs'
-import path from 'node:path'
+import { resolve, join } from 'node:path'
 
 // List of predefined gravity sim scenarios
-const scenarios = readdirSync(path.join(__dirname, "public", "scenarios"))
+const scenarios = readdirSync(join(__dirname, "public", "scenarios"))
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -24,5 +24,13 @@ export default defineConfig({
     define: {
         /** List of predefined gravity sim scenarios */
         SCENARIOS: JSON.stringify(scenarios)
+    },
+    build: {
+        rollupOptions: {
+            input: {
+                main: resolve(__dirname, "index.html"),
+                horizonsdata: resolve(__dirname, "horizonsdata.html"),
+            }
+        }
     }
 })
