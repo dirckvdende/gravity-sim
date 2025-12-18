@@ -1,4 +1,6 @@
 
+import { findNumber, findExponent } from "./scanstring"
+
 /**
  * Get the physical properties listed in a Horizons text file
  * @param text Horizons text file
@@ -42,39 +44,6 @@ export function physicalPropertyValues(properties: Map<string, string>): {
             size ??= trueValue * 1000
     }
     return { mass, size }
-}
-
-/**
- * Check if there is an exponent of the form "10^{exp}" in a string
- * @param text The text to search through
- * @returns The exponent as a number, and zero if there is no exponent
- */
-function findExponent(text: string): number {
-    const index = text.indexOf("10^")
-    if (index == -1)
-        return 0
-    return findNumber(text.substring(index + 3))
-}
-
-/**
- * Scan the start of a string for a number and return it. Only the first number
- * is returned
- * @param text The text to scan
- * @returns The first number found, or zero if there is no number
- */
-function findNumber(text: string): number {
-    let started = false
-    let content = ""
-    for (const char of text) {
-        if ("0123456789.".indexOf(char) != -1 || (!started && char == "-")) {
-            started = true
-            content += char
-        } else if (started) {
-            break
-        }
-    }
-    const num = Number(content)
-    return Number.isNaN(num) ? 0 : num
 }
 
 /**

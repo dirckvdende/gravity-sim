@@ -3,7 +3,7 @@
     import { ref } from 'vue';
     import { deserializeObjectFile, type ObjectFile } from './object';
     import UploadField from './UploadField.vue';
-    import { LENGTH_UNITS, MASS_UNITS, unitToHTML } from '@/util/units';
+    import { LENGTH_UNITS, MASS_UNITS, unitToHTML, VELOCITY_UNITS } from '@/util/units';
 
     // List of objects that have been uploaded
     const objects = ref<ObjectFile[]>([])
@@ -50,6 +50,12 @@
                 :stats="[
                     `mass: ${unitToHTML(objectFile.mass, MASS_UNITS)}`,
                     `size: ${unitToHTML(objectFile.size, LENGTH_UNITS)}`,
+                    `x: ${unitToHTML(objectFile.position.x, LENGTH_UNITS)}`,
+                    `y: ${unitToHTML(objectFile.position.y, LENGTH_UNITS)}`,
+                    `z: ${unitToHTML(objectFile.position.z, LENGTH_UNITS)}`,
+                    `vx: ${unitToHTML(objectFile.velocity.x, VELOCITY_UNITS)}`,
+                    `vy: ${unitToHTML(objectFile.velocity.y, VELOCITY_UNITS)}`,
+                    `vz: ${unitToHTML(objectFile.velocity.z, VELOCITY_UNITS)}`,
                 ]" />
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />

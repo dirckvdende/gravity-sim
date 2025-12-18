@@ -1,6 +1,7 @@
 
 import Vector3 from "@/util/Vector3"
 import { physicalProperties, physicalPropertyValues } from "./physicalproperties"
+import { findNumber } from "./scanstring"
 
 /** Object representation of horizons exported file */
 export type ObjectFile = {
@@ -16,6 +17,8 @@ export type ObjectFile = {
     mass: number
     /** Size (diameter) of the object in meters */
     size: number
+    /** Time at which object position and velocity are measured */
+    time: Date
 }
 
 /**
@@ -29,15 +32,12 @@ export type ObjectFile = {
 export function deserializeObjectFile(text: string, filename: string =
 "unknown.txt"): ObjectFile {
     const properties = physicalPropertyValues(physicalProperties(text))
-    console.log(properties)
-    // TODO: Implement
     return {
         name: objectName(text),
         filename,
-        position: Vector3.Zero,
-        velocity: Vector3.Zero,
         mass: properties.mass ?? 0,
         size: properties.size ?? 0,
+        ...objectStateVector(text),
     }
 }
 
@@ -46,4 +46,49 @@ function objectName(text: string): string {
         if (line.startsWith("Target body name:"))
             return line.substring(17).split(/\(|\{/gi)[0]!
     return "Imported body"
+}
+
+function objectStateVector(text: string): {
+    time: Date
+    position: Vector3
+    velocity: Vector3
+} {
+    let linesSinceSOE = -1
+    let time = new Date()
+    let position = Vector3.Zero
+    let velocity = Vector3.Zero
+    for (const line of text.split("\n")) {
+        if (line.startsWith("$$SOE"))
+            linesSinceSOE = 0
+        if (linesSinceSOE == 1)
+            time = new Date(tdbToDate(findNumber(line.trim())))
+        if (linesSinceSOE > 1) {
+            const trimmed = line.trim()
+            if (trimmed.startsWith("X =")) {
+                const x = findNumber(trimmed.substring(3))
+                const yStart = trimmed.indexOf("Y =") + 3
+                const y = findNumber(trimmed.substring(yStart))
+                const zStart = trimmed.indexOf("Z =") + 3
+                const z = findNumber(trimmed.substring(zStart))
+                position = new Vector3(x, y, z)
+            }
+            if (trimmed.startsWith("VX=")) {
+                const vx = findNumber(trimmed.substring(4))
+                const vyStart = trimmed.indexOf("VY=") + 4
+                const vy = findNumber(trimmed.substring(vyStart))
+                const vzStart = trimmed.indexOf("VZ=") + 4
+                const vz = findNumber(trimmed.substring(vzStart))
+                velocity = new Vector3(vx, vy, vz)
+            }
+        }
+        if (linesSinceSOE >= 3)
+            break
+        if (linesSinceSOE >= 0)
+            linesSinceSOE++
+    }
+    return { time, position, velocity }
+}
+
+function tdbToDate(value: number): Date {
+    return new Date(value * 24 * 60 * 60 * 1000 - 210_866_760_000_000)
 }
