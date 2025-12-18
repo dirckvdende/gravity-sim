@@ -45,6 +45,12 @@ export function deserializeObjectFile(text: string, filename: string =
     }
 }
 
+/**
+ * Find the object name from the Horizons file
+ * @param text The Horizons file text
+ * @returns The name of the object. If nothing could be found "Imported body" is
+ * returned
+ */
 function objectName(text: string): string {
     for (const line of text.split("\n"))
         if (line.startsWith("Target body name:"))
@@ -52,6 +58,13 @@ function objectName(text: string): string {
     return "Imported body"
 }
 
+/**
+ * Find the state vector (time, 3D positionm and 3D velocity) from the Horizons
+ * file
+ * @param text The Horizons file text
+ * @returns An object with the found time, position, and velocity. Defaults are
+ * the current time, zero position, and zero velocity
+ */
 function objectStateVector(text: string): {
     time: Date
     position: Vector3
@@ -93,6 +106,11 @@ function objectStateVector(text: string): {
     return { time, position, velocity }
 }
 
+/**
+ * Convert a TDB datetime as used in the Horizons output to a JS Date object
+ * @param value The datetime (in days since TDB epoch)
+ * @returns The converted Date object
+ */
 function tdbToDate(value: number): Date {
     return new Date(value * 24 * 60 * 60 * 1000 - 210_866_760_000_000)
 }
