@@ -78,6 +78,12 @@
                 use the same coordinate center and time specification for all
                 files. Leave the table settings on "defaults".
             </p>
+            <p>
+                The tool flattens flattens the imported 3D coordinates to a 2D
+                plane. As such some accuracy is lost when not all points are on
+                the same plane. Make sure to upload at least three
+                <i>different</i> files for this to work properly.
+            </p>
             <FileListing
                 v-for="objectFile in objects"
                 :filename="objectFile.filename"
@@ -97,7 +103,8 @@
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />
             <div :class="$style['bottom-buttons']">
-                <button :class="$style['calculate-button']" @click="generate">
+                <button v-if="objects.length >= 3"
+                    :class="$style['calculate-button']" @click="generate">
                     {{ isLoading ? "..." : "Generate" }}</button>
                 <button v-if="stateDownload" :class="$style['download-button']"
                     @click="download">Download</button>
