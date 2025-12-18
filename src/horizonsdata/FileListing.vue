@@ -34,7 +34,7 @@
             </div>
             <div v-if="stats.length > 0" :class="$style.stats">
                 <template v-for="stat, index in stats">
-                    <div :class="$style.bullet" v-if="index > 0" />
+                    <span :class="$style.bullet" v-if="index > 0">•</span>
                     <span :class="$style.stat" v-html="stat"></span>
                 </template>
             </div>
@@ -100,11 +100,8 @@
                 font-size: .6em;
 
                 .bullet {
-                    width: .35em;
-                    height: .35em;
-                    background-color: #aaa;
-                    border-radius: 50%;
-                    margin: .45em .5em;
+                    color: #aaa;
+                    margin: 0 .5em;
                 }
 
                 .stat {
