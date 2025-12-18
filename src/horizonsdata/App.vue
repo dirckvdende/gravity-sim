@@ -1,12 +1,26 @@
 <script lang="ts" setup>
     import FileListing from './FileListing.vue';
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
     import { deserializeObjectFile, type ObjectFile } from './object';
     import UploadField from './UploadField.vue';
-    import { LENGTH_UNITS, MASS_UNITS, unitToHTML, VELOCITY_UNITS } from '@/util/units';
+    import { LENGTH_UNITS, MASS_UNITS, unitToHTML, VELOCITY_UNITS } from
+    '@/util/units';
+    import type { StateFile } from '@/filesystem/statefile.mjs';
+    import { convertToStateFile } from './convert';
+    import { saveToFile } from '@/filesystem/save.mjs';
 
     // List of objects that have been uploaded
     const objects = ref<ObjectFile[]>([])
+    // State file to download. Should be null if it hasn't been generated for
+    // current settings
+    const stateDownload = ref<StateFile | null>(null)
+    const isLoading = ref(false)
+
+    watch(objects.value, () => {
+        stateDownload.value = null
+        for (const object of objects.value)
+            object.generatorData = undefined
+    }, { deep: false })
 
     /**
      * Remove the given object file from the list
@@ -26,6 +40,28 @@
         const objectFile = deserializeObjectFile(text,
             splitPath[splitPath.length - 1])
         objects.value.push(objectFile)
+    }
+
+    /**
+     * Generate state file from the list of objects and put it in the
+     * stateDownload ref
+     */
+    function generate(): void {
+        isLoading.value = true;
+        (async () => {
+            stateDownload.value = convertToStateFile(objects.value)
+            isLoading.value = false
+        })()
+    }
+
+    /**
+     * Download the currently stored state file. If this is not available do
+     * nothing
+     */
+    function download(): void {
+        if (!stateDownload.value)
+            return
+        saveToFile(stateDownload.value)
     }
 </script>
 
@@ -60,6 +96,12 @@
                 ]" />
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />
+            <div :class="$style['bottom-buttons']">
+                <button :class="$style['calculate-button']" @click="generate">
+                    {{ isLoading ? "..." : "Generate" }}</button>
+                <button v-if="stateDownload" :class="$style['download-button']"
+                    @click="download">Download</button>
+            </div>
         </div>
     </div>
 </template>
@@ -105,6 +147,35 @@
 
         &:visited {
             color: var(--accent-color-blue);
+        }
+    }
+
+    .bottom-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 1.2em;
+
+        & > button {
+            margin: 0 .5em;
+            border-radius: .2em;
+            border: none;
+            font-size: 1em;
+            padding: .3em .8em;
+            color: white;
+            cursor: pointer;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+
+        .calculate-button {
+            background-color: var(--accent-color-blue);
+        }
+
+        .download-button {
+            background-color: var(--accent-color-orange);
         }
     }
 </style>

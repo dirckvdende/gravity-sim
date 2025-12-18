@@ -19,6 +19,10 @@ export type ObjectFile = {
     size: number
     /** Time at which object position and velocity are measured */
     time: Date
+    /** Extra info added when the generator is run */
+    generatorData?: {
+        error: number
+    }
 }
 
 /**
