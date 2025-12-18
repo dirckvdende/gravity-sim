@@ -56,6 +56,7 @@
                     `vx: ${unitToHTML(objectFile.velocity.x, VELOCITY_UNITS)}`,
                     `vy: ${unitToHTML(objectFile.velocity.y, VELOCITY_UNITS)}`,
                     `vz: ${unitToHTML(objectFile.velocity.z, VELOCITY_UNITS)}`,
+                    `time: ${objectFile.time.toUTCString()}`,
                 ]" />
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />
