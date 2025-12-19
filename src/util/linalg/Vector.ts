@@ -32,8 +32,12 @@ export default class Vector {
 
     /** Length/norm of the vector */
     get length(): number {
-        return Math.sqrt(this.entries.reduce((prev, cur) =>
-            prev + cur * cur, 0))
+        return Math.sqrt(this.length2)
+    }
+
+    /** Squared length/norm of the vector */
+    get length2(): number {
+        return this.entries.reduce((prev, cur) => prev + cur * cur, 0)
     }
 
     /**

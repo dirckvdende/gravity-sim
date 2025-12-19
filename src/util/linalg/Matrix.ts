@@ -79,6 +79,37 @@ export default class Matrix {
     }
 
     /**
+     * Get a value from the matrix
+     * @param i The row index
+     * @param j The column index
+     * @returns The entry at the given position
+     * @throws An error if indices are out of range
+     */
+    get(i: number, j: number): number {
+        const value = this.entries[i]?.[j]
+        if (value == undefined)
+            throw new Error(`Position ${i},${j} is out of range for matrix ` +
+            `with shape ${this.shape}`)
+        return value
+    }
+
+    /**
+     * Set a value of an entry in the matrix
+     * @param i The row of the entry
+     * @param j The column of the entry
+     * @param value The value to set the entry to
+     * @returns The newly set value
+     * @throws An error if indices are out of range
+     */
+    set(i: number, j: number, value: number): number {
+        const prevValue = this.entries[i]?.[j]
+        if (prevValue == undefined)
+            throw new Error(`Position ${i},${j} is out of range for matrix ` +
+            `with shape ${this.shape}`)
+        return this.entries[i]![j] = value
+    }
+
+    /**
      * Multiply this matrix with another matrix on the right
      * @param matrix The other matrix to multiply (on the right)
      * @returns The result of the multiplication. If this matrix has shape
@@ -177,6 +208,25 @@ export default class Matrix {
     }
 
     /**
+     * Create a copy of this matrix
+     * @returns The copy
+     */
+    copy(): Matrix {
+        return new Matrix(...this)
+    }
+
+    /**
+     * Apply a map to all values in this matrix and return the result
+     * @param f The function to apply, with the value, row index, and column
+     * index as parameters
+     * @returns The matrix that is the result applying the given map
+     */
+    map(f: (value: number, i: number, j: number) => number): Matrix {
+        return new Matrix(...this.entries.map((row, i) =>
+            row.map((value, j) => f(value, i, j))))
+    }
+
+    /**
      * Create a matrix filled with zeros
      * @param shape The shape of the matrix
      * @returns The created zero matrix
@@ -190,6 +240,15 @@ export default class Matrix {
             rows.push(row)
         }
         return new Matrix(...rows)
+    }
+
+    /**
+     * Create an identity matrix of a given size
+     * @param size The size of the matrix (both height and width)
+     * @returns The identity matrix
+     */
+    static identity(size: number): Matrix {
+        return Matrix.zero(size, size).map((_value, i, j) => i == j ? 1 : 0)
     }
     
 }
