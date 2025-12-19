@@ -33,7 +33,9 @@ export function physicalPropertyValues(properties: Map<string, string>): {
     let size: number | undefined = undefined
     for (const [key, value] of properties.entries()) {
         const exp = findExponent(key) + findExponent(value)
-        const num = findNumber(value)
+        const valueWithoutExtras = value.trim().startsWith("~") ?
+            value.trim().substring(1) : value.trim()
+        const num = findNumber(valueWithoutExtras)
         const trueValue = num * Math.pow(10, exp)
         if (key.includes("mass"))
             mass ??= trueValue
@@ -57,7 +59,8 @@ function getDataLines(text: string): string[] {
     const dataLines: string[] = []
     for (const line of lines) {
         const startSpace = line.length - line.trimStart().length
-        if (line.includes("physical") && line.includes("data")) {
+        if (line.includes("physical") && (line.includes("data") ||
+        line.includes("properties"))) {
             inSection = true
             continue
         }

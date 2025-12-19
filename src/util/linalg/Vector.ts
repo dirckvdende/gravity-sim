@@ -178,7 +178,7 @@ export default class Vector {
             let cur = v
             for (const u of out)
                 cur = cur.subtract(v.project(u))
-            if (cur.length < 1e-9)
+            if (cur.length >= 1e-9)
                 out.push(cur)
         }
         return out.map((u) => u.normalize())

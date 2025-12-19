@@ -4,7 +4,8 @@ import type { ObjectFile } from "./object";
 import Vector2 from "@/util/linalg/Vector2";
 import type { StyledGravityObject } from "@/sim/object";
 import Vector3 from "@/util/linalg/Vector3";
-import { singularValueDecompose } from "./svd";
+import { svd } from "@/util/linalg/svd";
+import Matrix from "@/util/linalg/Matrix";
 import { projectToPlane } from "./flatten";
 
 export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
@@ -13,7 +14,7 @@ export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
     const flattened = flattenObjects(objects)
     for (const [index, object] of objects.entries())
         object.generatorData = {
-            error: flattened[index]?.error ?? 0,
+            error: Math.abs(flattened[index]?.error ?? 0),
         }
     return {
         icon: "./icons/moon.svg",
@@ -44,8 +45,17 @@ function flattenObjects(objects: ObjectFile[]): {
     for (const object of objects)
         positionMatrix.push([object.position.x, object.position.y,
         object.position.z])
-    const u = singularValueDecompose(positionMatrix)
-    const normalVector = new Vector3(u[0]![2]!, u[1]![2]!, u[2]![2]!)
+    const { u, s } = svd(new Matrix(...positionMatrix))
+    let lowest = Infinity, normalVector = Vector3.Zero
+    for (const [index, column] of Array.from(u.columns()).entries()) {
+        if (s.get(index) < lowest) {
+            lowest = s.get(index)
+            normalVector = new Vector3(column.get(0), column.get(1),
+                column.get(2))
+        }
+    }
+    console.log(normalVector)
+    console.log(u)
     const flattened = flattenToPlane(objects, normalVector)
     return flattened.map(({ object, error }, index) => ({
         error,

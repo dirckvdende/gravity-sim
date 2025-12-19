@@ -11,12 +11,12 @@ Vector3[] {
         new Vector(0, 1, 0),
         new Vector(0, 0, 1),
     )).transpose()
-    if (p.n != 3 || p.m != 3)
+    if (p.shape[0] != 3 || p.shape[1] != 3)
         throw new Error(`Something went wrong while determining ` +
-        `transformation matrix. Has size ${p.n} x ${p.m}`)
+        `transformation matrix. Has shape ${p.shape}`)
     const pInverse = p.inverse()
     return points.map((point) => {
         const target = pInverse.multiply(new Vector(point.x, point.y, point.z))
-        return new Vector3(target.entry(1), target.entry(2), target.entry(0))
+        return new Vector3(target.get(1), target.get(2), target.get(0))
     })
 }
