@@ -87,7 +87,7 @@ function objectStateVector(text: string): {
                 const y = findNumber(trimmed.substring(yStart))
                 const zStart = trimmed.indexOf("Z =") + 3
                 const z = findNumber(trimmed.substring(zStart))
-                position = new Vector3(x, y, z)
+                position = new Vector3(x * 1000, y * 1000, z * 1000)
             }
             if (trimmed.startsWith("VX=")) {
                 const vx = findNumber(trimmed.substring(4))
@@ -95,7 +95,7 @@ function objectStateVector(text: string): {
                 const vy = findNumber(trimmed.substring(vyStart))
                 const vzStart = trimmed.indexOf("VZ=") + 4
                 const vz = findNumber(trimmed.substring(vzStart))
-                velocity = new Vector3(vx, vy, vz)
+                velocity = new Vector3(vx * 1000, vy * 1000, vz * 1000)
             }
         }
         if (linesSinceSOE >= 3)
