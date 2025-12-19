@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject, useTemplateRef } from 'vue';
     import { defaultState, mapStateKey } from '../state';
     import { useElementSize } from '@vueuse/core';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, inject } from 'vue';
     import { defaultState, mapStateKey } from '../state';
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import GridRendererAtScale from './GridRendererAtScale.vue';
 
     const {

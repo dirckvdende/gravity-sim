@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, provide, ref, useTemplateRef, watch } from 'vue';
     import { extendMapState, mapStateKey } from './state';
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import { useElementSize } from '@vueuse/core';
 
     const target = useTemplateRef("target")

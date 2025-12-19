@@ -4,7 +4,7 @@
     import { mdiDeleteOutline, mdiContentSaveOutline } from '@mdi/js';
     import { ref, useTemplateRef, computed } from 'vue';
     import { useElementSize } from '@vueuse/core';
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import { downloadNodeAsString } from '@/util/downloadNodeAsString';
 
     const {

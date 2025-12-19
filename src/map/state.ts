@@ -1,5 +1,5 @@
 
-import Vector2 from "@/util/Vector2";
+import Vector2 from "@/util/linalg/Vector2";
 import { computed, type ComputedRef, type InjectionKey, type Ref, ref } from
 "vue";
 

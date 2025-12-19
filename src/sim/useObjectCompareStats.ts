@@ -2,7 +2,7 @@
 import type { MaybeRefOrGetter } from "vue";
 import type { StyledGravityObject } from "./object";
 import { computed, toValue, type ComputedRef } from "vue";
-import Vector2 from "@/util/Vector2";
+import Vector2 from "@/util/linalg/Vector2";
 import { DISTANCE_SMOOTHING, GRAV_CONSTANT } from "./constants";
 
 /** Return value of the object compare stats composable */

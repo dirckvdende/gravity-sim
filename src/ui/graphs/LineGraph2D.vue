@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { downloadNodeAsString } from '@/util/downloadNodeAsString';
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import { useElementSize } from '@vueuse/core';
     import { computed, ref, useTemplateRef, watch } from 'vue';
     import GraphContainer from './GraphContainer.vue';

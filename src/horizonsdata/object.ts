@@ -1,5 +1,5 @@
 
-import Vector3 from "@/util/Vector3"
+import Vector3 from "@/util/linalg/Vector3"
 import { physicalProperties, physicalPropertyValues } from "./physicalproperties"
 import { findNumber } from "./scanstring"
 

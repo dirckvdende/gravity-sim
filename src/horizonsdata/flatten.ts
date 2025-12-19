@@ -1,5 +1,5 @@
 
-import Vector3 from "@/util/Vector3";
+import Vector3 from "@/util/linalg/Vector3";
 import { Matrix, Vector } from "./Matrix";
 
 export function projectToPlane(points: Vector3[], normalVector: Vector3):

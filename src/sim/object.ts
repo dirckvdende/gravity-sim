@@ -1,5 +1,5 @@
 
-import Vector2 from "@/util/Vector2"
+import Vector2 from "@/util/linalg/Vector2"
 
 /** An object in the gravity sim, without visual info */
 export type GravityObject = {

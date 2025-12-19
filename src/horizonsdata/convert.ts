@@ -1,9 +1,9 @@
 
 import type { StateFile } from "@/filesystem/statefile.mjs";
 import type { ObjectFile } from "./object";
-import Vector2 from "@/util/Vector2";
+import Vector2 from "@/util/linalg/Vector2";
 import type { StyledGravityObject } from "@/sim/object";
-import Vector3 from "@/util/Vector3";
+import Vector3 from "@/util/linalg/Vector3";
 import { singularValueDecompose } from "./svd";
 import { projectToPlane } from "./flatten";
 
