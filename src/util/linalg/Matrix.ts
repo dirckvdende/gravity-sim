@@ -175,5 +175,21 @@ export default class Matrix {
         }
         return new Matrix(...a)
     }
+
+    /**
+     * Create a matrix filled with zeros
+     * @param shape The shape of the matrix
+     * @returns The created zero matrix
+     */
+    static zero(...shape: [number, number]): Matrix {
+        const rows: number[][] = []
+        for (let i = 0; i < shape[0]; i++) {
+            const row: number[] = []
+            for (let j = 0; j < shape[1]; j++)
+                row.push(0)
+            rows.push(row)
+        }
+        return new Matrix(...rows)
+    }
     
 }
