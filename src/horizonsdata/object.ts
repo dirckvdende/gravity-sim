@@ -90,10 +90,10 @@ function objectStateVector(text: string): {
                 position = new Vector3(x * 1000, y * 1000, z * 1000)
             }
             if (trimmed.startsWith("VX=")) {
-                const vx = findNumber(trimmed.substring(4))
-                const vyStart = trimmed.indexOf("VY=") + 4
+                const vx = findNumber(trimmed.substring(3))
+                const vyStart = trimmed.indexOf("VY=") + 3
                 const vy = findNumber(trimmed.substring(vyStart))
-                const vzStart = trimmed.indexOf("VZ=") + 4
+                const vzStart = trimmed.indexOf("VZ=") + 3
                 const vz = findNumber(trimmed.substring(vzStart))
                 velocity = new Vector3(vx * 1000, vy * 1000, vz * 1000)
             }
