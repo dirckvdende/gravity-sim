@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import SVGIcon from '@/ui/SVGIcon.vue';
-import { uploadString } from '@/util/uploadString';
     import { mdiUpload } from '@mdi/js';
+    import { useDropZone, useFileDialog } from '@vueuse/core';
+    import { useTemplateRef } from 'vue';
 
     const emit = defineEmits<{
         /**
@@ -11,32 +12,54 @@ import { uploadString } from '@/util/uploadString';
         (e: "upload", content: string, filename: string): void
     }>()
 
-    /** Prompt the user to upload a file */
-    function uploadPrompt(): void {
-        uploadString(".txt").then(({ content, filename }) =>
-            emit("upload", content, filename))
+    function uploadFiles(files: File[] | FileList | null): void {
+        if (files == null)
+            return
+        for (const file of files)
+            file.text().then((content) => emit("upload", content, file.name))
     }
+
+    const {
+        open: openFileDialog,
+        onChange: onFileDialogChange,
+    } = useFileDialog({
+        multiple: true,
+        accept: "text/plain",
+        reset: true,
+    })
+    onFileDialogChange(uploadFiles)
+
+    const { isOverDropZone } = useDropZone(useTemplateRef("uploadField"), {
+        dataTypes: ["text/plain"],
+        multiple: true,
+        preventDefaultForUnhandled: true,
+        onDrop: uploadFiles,
+    })
 </script>
 
 <template>
-    <button :class="$style.container" @click="uploadPrompt">
-        <div :class="$style.icon">
-            <SVGIcon :path="mdiUpload" :class="$style.svg" />
-        </div>
-    </button>
+    <div ref="uploadField">
+        <button :class="[$style.container, {
+            [$style.hovered]: isOverDropZone,
+        }]" @click="() => openFileDialog()">
+            <div :class="$style.icon">
+                <SVGIcon :path="mdiUpload" :class="$style.svg" />
+            </div>
+        </button>
+    </div>
 </template>
 
 <style lang="scss" module>
     .container {
         width: 100%;
         box-sizing: border-box;
-        padding: .5em 1.5em;
+        padding: 1.5em 1.5em;
         border: .15em dashed #ccc;
         border-radius: .5em;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 4em;
+        height: 6em;
         background-color: transparent;
         cursor: pointer;
 
@@ -51,7 +74,7 @@ import { uploadString } from '@/util/uploadString';
             }
         }
 
-        &:hover {
+        &:hover, &.hovered {
             border-color: #888;
 
             .svg {
