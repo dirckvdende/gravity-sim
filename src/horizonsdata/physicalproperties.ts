@@ -16,6 +16,7 @@ export function physicalProperties(text: string): Map<string, string> {
             line.substring(0, splitIndex),
             line.substring(splitIndex),
         )
+    console.log(textEntries)
     return getEntries(textEntries)
 }
 
@@ -103,18 +104,18 @@ function getSplitIndex(dataLines: string[]): number {
  * @returns List of numbers: the candidate split indices
  */
 function candidateSplitIndices(dataLine: string): number[] {
-    const startSpace = dataLine.length - dataLine.trimStart().length
-    const endSpace = dataLine.trimEnd().length
+    const firstEquals = dataLine.indexOf("=")
+    const lastEquals = dataLine.lastIndexOf("=")
     const candidates: number[] = []
     for (const [index, char] of dataLine.split("").entries()) {
         const prev = dataLine[index - 1]
         const next = dataLine[index + 1]
         // Make sure that:
         // - Character is a space
-        // - Space is not at the start
-        // - Space is not at the end
+        // - Space is not before first "="
+        // - Space is not after last "="
         // - Space is not immediately preceded or succeded by "="
-        if (char == " " && index >= startSpace && index < endSpace
+        if (char == " " && index >= firstEquals && index < lastEquals
         && prev != "=" && next != "=")
             candidates.push(index)
     }
