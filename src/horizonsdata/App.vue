@@ -99,7 +99,8 @@
                     `vy: ${unitToHTML(objectFile.velocity.y, VELOCITY_UNITS)}`,
                     `vz: ${unitToHTML(objectFile.velocity.z, VELOCITY_UNITS)}`,
                     `time: ${objectFile.time.toUTCString()}`,
-                    `error: ${objectFile.generatorData?.error}`,
+                    `error: ${objectFile.generatorData == undefined ? '-' :
+                    unitToHTML(objectFile.generatorData.error, LENGTH_UNITS)}`,
                 ]" />
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />

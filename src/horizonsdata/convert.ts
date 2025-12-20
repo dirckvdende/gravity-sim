@@ -45,7 +45,7 @@ function flattenObjects(objects: ObjectFile[]): {
     for (const object of objects)
         positionMatrix.push([object.position.x, object.position.y,
         object.position.z])
-    const { u, s } = svd(new Matrix(...positionMatrix))
+    const { u, s } = svd(new Matrix(...positionMatrix).transpose())
     let lowest = Infinity, normalVector = Vector3.Zero
     for (const [index, column] of Array.from(u.columns()).entries()) {
         if (s.get(index) < lowest) {
