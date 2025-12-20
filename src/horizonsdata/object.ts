@@ -39,7 +39,7 @@ export function deserializeObjectFile(text: string, filename: string =
     return {
         name: objectName(text),
         filename,
-        mass: properties.mass ?? 0,
+        mass: properties.mass ?? 1,
         size: properties.size ?? 0,
         ...objectStateVector(text),
     }
