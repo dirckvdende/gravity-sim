@@ -54,7 +54,7 @@ export function deserializeObjectFile(text: string, filename: string =
 function objectName(text: string): string {
     for (const line of text.split("\n"))
         if (line.startsWith("Target body name:"))
-            return line.substring(17).split(/\(|\{/gi)[0]!
+            return line.substring(17).split(/\(|\{/gi)[0]!.trim()
     return "Imported body"
 }
 
