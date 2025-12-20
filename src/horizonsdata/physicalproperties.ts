@@ -64,7 +64,7 @@ function getDataLines(text: string): string[] {
             inSection = true
             continue
         }
-        if (startSpace > 2 || line.trim() == "") {
+        if (startSpace != 2 || line.trim() == "") {
             inSection = false
             continue
         }
@@ -88,6 +88,8 @@ function getSplitIndex(dataLines: string[]): number {
     for (let i = 0; i < dataLines[0].length; i++)
         indices.push(i)
     for (const line of dataLines) {
+        if (line.indexOf("=") == line.lastIndexOf("="))
+            continue
         const candidates = candidateSplitIndices(line)
         indices = indices.filter((value) => candidates.indexOf(value) != -1)
     }
