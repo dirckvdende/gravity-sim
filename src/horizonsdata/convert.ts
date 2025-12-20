@@ -8,11 +8,15 @@ import { svd } from "@/util/linalg/svd";
 import Matrix from "@/util/linalg/Matrix";
 import { projectToPlane } from "./flatten";
 import Vector from "@/util/linalg/Vector";
+import { iconList } from "@/filesystem/iconlist";
 
 export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
     if (objects.length < 1)
         return null
-    const flattened = flattenObjects(objects)
+    const flattened = flattenObjects(objects).map(({ error, object }) => ({
+        error,
+        object: setObjectIcon(object),
+    }))
     for (const [index, object] of objects.entries())
         object.generatorData = {
             error: Math.abs(flattened[index]?.error ?? 0),
@@ -27,6 +31,17 @@ export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
         timestamp: new Date(Date.now()),
         speed: 1,
     }
+}
+
+function setObjectIcon(object: StyledGravityObject): StyledGravityObject {
+    let icon = "./icons/moon.svg"
+    for (const iconFile of iconList()) {
+        const split = iconFile.split("/")
+        const iconName = split[split.length - 1]!.split(".")[0]!
+        if (object.name.toUpperCase().includes(iconName.toUpperCase()))
+            icon = iconFile
+    }
+    return { ...object, icon }
 }
 
 function zoomLevelCover(points: Vector2[]): number {
