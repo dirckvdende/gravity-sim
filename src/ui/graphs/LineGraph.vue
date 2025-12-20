@@ -40,7 +40,6 @@
         while (values.value.length > 0 && timestamp - firstTimestamp.value >
         maxTime * 1000)
             values.value.splice(0, 1)
-        console.log()
         values.value.push([timestamp, value])
     })
 
