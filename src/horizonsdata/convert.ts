@@ -7,9 +7,10 @@ import Vector3 from "@/util/linalg/Vector3";
 import { svd } from "@/util/linalg/svd";
 import Matrix from "@/util/linalg/Matrix";
 import { projectToPlane } from "./flatten";
+import Vector from "@/util/linalg/Vector";
 
 export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
-    if (objects.length < 3)
+    if (objects.length < 1)
         return null
     const flattened = flattenObjects(objects)
     for (const [index, object] of objects.entries())
@@ -45,18 +46,21 @@ function flattenObjects(objects: ObjectFile[]): {
     for (const object of objects)
         positionMatrix.push([object.position.x, object.position.y,
         object.position.z])
-    const { u, s } = svd(new Matrix(...positionMatrix).transpose())
-    let lowest = Infinity, normalVector = Vector3.Zero
-    for (const [index, column] of Array.from(u.columns()).entries()) {
-        if (s.get(index) < lowest) {
-            lowest = s.get(index)
-            normalVector = new Vector3(column.get(0), column.get(1),
-                column.get(2))
-        }
-    }
-    console.log(normalVector)
-    console.log(u)
-    const flattened = flattenToPlane(objects, normalVector)
+    const matrix = new Matrix(...positionMatrix).transpose()
+    const { u } = svd(matrix)
+    const onb = Vector.orthonormalBasis(
+        u.column(0),
+        u.column(1),
+        new Vector(1, 0, 0),
+        new Vector(0, 1, 0),
+        new Vector(0, 0, 1),
+    )
+    const normalVector = onb[2]!
+    const flattened = flattenToPlane(objects, new Vector3(
+        normalVector.get(0),
+        normalVector.get(1),
+        normalVector.get(2),
+    ))
     return flattened.map(({ object, error }, index) => ({
         error,
         object: {

@@ -168,7 +168,7 @@ export default class Matrix {
                 a[i]!.push(i == j ? 1 : 0)
         const b = new Matrix(...a).gauss()
         for (let i = 0; i < this.shape[0]; i++)
-            b.entries[i]! = b.entries[i]!.splice(0, this.shape[1])
+            b.entries[i]!.splice(0, this.shape[1])
         return b
     }
 

@@ -105,7 +105,7 @@
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />
             <div :class="$style['bottom-buttons']">
-                <button v-if="objects.length >= 3"
+                <button v-if="objects.length >= 1"
                     :class="$style['calculate-button']" @click="generate">
                     {{ isLoading ? "..." : "Generate" }}</button>
                 <button v-if="stateDownload" :class="$style['download-button']"
