@@ -16,7 +16,6 @@ export function physicalProperties(text: string): Map<string, string> {
             line.substring(0, splitIndex),
             line.substring(splitIndex),
         )
-    console.log(textEntries)
     return getEntries(textEntries)
 }
 
