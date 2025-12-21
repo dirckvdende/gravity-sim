@@ -10,6 +10,12 @@ import { projectToPlane } from "@/util/linalg/projectToPlane";
 import Vector from "@/util/linalg/Vector";
 import { iconList } from "@/filesystem/iconlist";
 
+/**
+ * Convert a list of object files to a combined state file, by flattening coords
+ * and converting to the proper data format
+ * @param objects Object files to convert
+ * @returns The converted state file, or null if this failed
+ */
 export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
     if (objects.length < 1)
         return null
@@ -37,6 +43,12 @@ export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
     }
 }
 
+/**
+ * Find an icon to give to a gravity object based on its name. Icons are listed
+ * in "/public/icons" and if no applicable icon can be found "moon.svg" is used
+ * @param object The gravity object to set the icon of
+ * @returns A copy of the gravity object with the icon replaced
+ */
 function setObjectIcon(object: StyledGravityObject): StyledGravityObject {
     let icon = "./icons/moon.svg"
     for (const iconFile of iconList()) {
@@ -48,6 +60,12 @@ function setObjectIcon(object: StyledGravityObject): StyledGravityObject {
     return { ...object, icon }
 }
 
+/**
+ * Find a zoom level that displays all of the given points (centered at the
+ * origin) within a radius of 400 pixels
+ * @param points The points to display
+ * @returns The appropriate zoom level
+ */
 function zoomLevelCover(points: Vector2[]): number {
     const PIXEL_RADIUS = 400
     const lengths = points.map((point) => point.length())
@@ -56,6 +74,12 @@ function zoomLevelCover(points: Vector2[]): number {
     return -Math.log(pixelSize)
 }
 
+/**
+ * Convert object files to gravity objects by flattening their coordinates to a
+ * plane
+ * @param objects The obejcts to flatten to styled gravity objects
+ * @returns An array with the resulting objects and errors induced by flattening
+ */
 function flattenObjects(objects: ObjectFile[]): {
     object: StyledGravityObject
     error: number
@@ -95,6 +119,12 @@ function flattenObjects(objects: ObjectFile[]): {
     }))
 }
 
+/**
+ * Subtract the centroid position from a list of object files such that the
+ * output list of files will have its centroid at the origin
+ * @param objects The list of file objects to center
+ * @returns A copy of the list with shifted positions
+ */
 function subtractCentoid(objects: ObjectFile[]): ObjectFile[] {
     const centroid = objects.reduce((prev, cur) =>
         prev.add(cur.position), Vector3.Zero
@@ -105,6 +135,16 @@ function subtractCentoid(objects: ObjectFile[]): ObjectFile[] {
     }))
 }
 
+/**
+ * Transform the coordinates of a list of objects (x, y, z) => (x', y', z'),
+ * such that x' and y' will be the coordinates on the plane given by the input
+ * normal vector, and z' is the distance of the initial coordinates to this
+ * plane
+ * @param objects List of object files to flatten
+ * @param normalVector The normal vector of the plane
+ * @returns An array with the resulting objects and errors (which are the
+ * resulting z-coords)
+ */
 function flattenToPlane(objects: ObjectFile[], normalVector: Vector3): {
     object: ObjectFile
     error: number

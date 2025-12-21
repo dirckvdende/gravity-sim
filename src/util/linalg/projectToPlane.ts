@@ -3,6 +3,15 @@ import Vector3 from "./Vector3";
 import Matrix from "./Matrix";
 import Vector from "./Vector";
 
+/**
+ * Project a list 3D points to a 2D plane given by a normal vector, and apply a
+ * coordinate transform (x, y, z) => (x', y', z') such that x' and y' are the
+ * coordinates of the point on the plane, and z' is the normal vector coordinate
+ * @param points The points to project to the plane
+ * @param normalVector The normal vector of the plane. This is the vector that
+ * is "removed" from the input points
+ * @returns The projected points (x', y', z') as described
+ */
 export function projectToPlane(points: Vector3[], normalVector: Vector3):
 Vector3[] {
     const p = new Matrix(...Vector.orthonormalBasis(
