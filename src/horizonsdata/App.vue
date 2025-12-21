@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-    import FileListing from './FileListing.vue';
     import { ref, watch } from 'vue';
     import { deserializeObjectFile, type ObjectFile } from './object';
     import UploadField from './UploadField.vue';
-    import { LENGTH_UNITS, MASS_UNITS, unitToHTML, VELOCITY_UNITS } from
-    '@/util/units';
     import type { StateFile } from '@/filesystem/statefile.mjs';
     import { convertToStateFile } from './convert';
     import { saveToFile } from '@/filesystem/save.mjs';
+    import ObjectFileListing from './ObjectFileListing.vue';
 
     // List of objects that have been uploaded
     const objects = ref<ObjectFile[]>([])
@@ -84,24 +82,10 @@
                 the same plane. Make sure to upload at least three
                 <i>different</i> files for this to work properly.
             </p>
-            <FileListing
+            <ObjectFileListing
                 v-for="objectFile in objects"
-                :filename="objectFile.filename"
-                :name="objectFile.name"
-                @delete="() => removeObject(objectFile)"
-                :stats="[
-                    `mass: ${unitToHTML(objectFile.mass, MASS_UNITS)}`,
-                    `size: ${unitToHTML(objectFile.size, LENGTH_UNITS)}`,
-                    `x: ${unitToHTML(objectFile.position.x, LENGTH_UNITS)}`,
-                    `y: ${unitToHTML(objectFile.position.y, LENGTH_UNITS)}`,
-                    `z: ${unitToHTML(objectFile.position.z, LENGTH_UNITS)}`,
-                    `vx: ${unitToHTML(objectFile.velocity.x, VELOCITY_UNITS)}`,
-                    `vy: ${unitToHTML(objectFile.velocity.y, VELOCITY_UNITS)}`,
-                    `vz: ${unitToHTML(objectFile.velocity.z, VELOCITY_UNITS)}`,
-                    `time: ${objectFile.time.toUTCString()}`,
-                    `error: ${objectFile.generatorData == undefined ? '-' :
-                    unitToHTML(objectFile.generatorData.error, LENGTH_UNITS)}`,
-                ]" />
+                :object-file="objectFile"
+                @delete="() => removeObject(objectFile)" />
             <UploadField @upload="(text, filename) =>
                 addObject(text, filename)" />
             <div :class="$style['bottom-buttons']">
