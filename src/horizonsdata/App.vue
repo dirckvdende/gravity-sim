@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     import { ref, watch } from 'vue';
-    import { deserializeObjectFile, type ObjectFile } from './object';
+    import { deserializeObjectFile } from './deserialize';
+    import type { ObjectFile } from './object';
     import UploadField from './UploadField.vue';
     import type { StateFile } from '@/filesystem/statefile.mjs';
     import { convertToStateFile } from './convert';
