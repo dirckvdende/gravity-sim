@@ -17,9 +17,13 @@ export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
         error,
         object: setObjectIcon(object),
     }))
+    const totalError = flattened.reduce((prev, { error }) =>
+        prev + Math.abs(error), 0)
     for (const [index, object] of objects.entries())
         object.generatorData = {
-            error: Math.abs(flattened[index]?.error ?? 0),
+            error: totalError == 0 || flattened[index]?.error == undefined
+                ? 0
+                : Math.abs(flattened[index].error / totalError),
         }
     return {
         icon: "./icons/moon.svg",

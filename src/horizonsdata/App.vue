@@ -14,7 +14,7 @@
     const stateDownload = ref<StateFile | null>(null)
     const isLoading = ref(false)
 
-    watch(objects, () => {
+    watch([objects, objects.value], () => {
         stateDownload.value = null
         for (const object of objects.value)
             object.generatorData = undefined

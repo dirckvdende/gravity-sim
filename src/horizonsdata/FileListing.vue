@@ -2,16 +2,11 @@
     import SVGIcon from '@/ui/SVGIcon.vue';
     import { mdiFile, mdiDeleteOutline } from '@mdi/js';
 
-    const { name, filename, stats = [] } = defineProps<{
+    const { name, filename } = defineProps<{
         /** Readable name of the item (default same as literal filename) */
         name?: string
         /** Literal filename */
         filename: string
-        /**
-         * Stats shown below the name and filename (default no stats). Inserted
-         * as HTML (not escaped)!
-         */
-        stats?: string[]
     }>()
 
     const emit = defineEmits<{
@@ -32,11 +27,12 @@
                     ({{ filename }})
                 </span>
             </div>
-            <div v-if="stats.length > 0" :class="$style.stats">
-                <template v-for="stat, index in stats">
-                    <span :class="$style.bullet" v-if="index > 0">•</span>
-                    <span :class="$style.stat" v-html="stat"></span>
-                </template>
+            <div v-if="$slots.subtext" :class="$style.subtext">
+                <slot name="subtext" />
+            </div>
+            <div v-if="$slots['subtext-warn']" :class="[$style.subtext,
+            $style['subtext-warn']]">
+                <slot name="subtext-warn" />
             </div>
         </div>
         <button :class="$style.delete" @click="emit('delete')">
@@ -91,22 +87,18 @@
                 }
             }
 
-            .stats {
+            .subtext {
                 display: flex;
                 align-items: flex-end;
                 width: 100%;
                 flex-shrink: 1;
                 flex-wrap: wrap;
                 font-size: .6em;
+                color: #aaa;
+            }
 
-                .bullet {
-                    color: #aaa;
-                    margin: 0 .5em;
-                }
-
-                .stat {
-                    color: #aaa;
-                }
+            .subtext.subtext-warn {
+                color: #da920c;
             }
         }
 
