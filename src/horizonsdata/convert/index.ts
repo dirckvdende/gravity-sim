@@ -8,7 +8,8 @@ import { svd } from "@/util/linalg/svd";
 import Matrix from "@/util/linalg/Matrix";
 import { projectToPlane } from "@/util/linalg/projectToPlane";
 import Vector from "@/util/linalg/Vector";
-import { iconList } from "@/filesystem/iconlist";
+import { setObjectIcon } from "./setObjectIcon";
+import { zoomLevelCover } from "./zoomLevelCover";
 
 /**
  * Convert a list of object files to a combined state file, by flattening coords
@@ -41,37 +42,6 @@ export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
         timestamp: new Date(Date.now()),
         speed: 1,
     }
-}
-
-/**
- * Find an icon to give to a gravity object based on its name. Icons are listed
- * in "/public/icons" and if no applicable icon can be found "moon.svg" is used
- * @param object The gravity object to set the icon of
- * @returns A copy of the gravity object with the icon replaced
- */
-function setObjectIcon(object: StyledGravityObject): StyledGravityObject {
-    let icon = "./icons/moon.svg"
-    for (const iconFile of iconList()) {
-        const split = iconFile.split("/")
-        const iconName = split[split.length - 1]!.split(".")[0]!
-        if (object.name.toUpperCase().includes(iconName.toUpperCase()))
-            icon = iconFile
-    }
-    return { ...object, icon }
-}
-
-/**
- * Find a zoom level that displays all of the given points (centered at the
- * origin) within a radius of 400 pixels
- * @param points The points to display
- * @returns The appropriate zoom level
- */
-function zoomLevelCover(points: Vector2[]): number {
-    const PIXEL_RADIUS = 400
-    const lengths = points.map((point) => point.length())
-    const maxLength = Math.max(1, ...lengths)
-    const pixelSize = maxLength / PIXEL_RADIUS
-    return -Math.log(pixelSize)
 }
 
 /**
