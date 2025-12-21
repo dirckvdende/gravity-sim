@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import type { ObjectFile } from './object';
+    import type { ObjectFile } from '../object';
     import { unitToHTML, MASS_UNITS, LENGTH_UNITS, VELOCITY_UNITS } from
     '@/util/units';
     import FileListing from './FileListing.vue';

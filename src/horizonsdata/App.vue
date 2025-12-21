@@ -1,44 +1,22 @@
 <script lang="ts" setup>
-    import { ref, watch } from 'vue';
-    import { deserializeObjectFile } from './deserialize';
-    import type { ObjectFile } from './object';
-    import UploadField from './UploadField.vue';
+    import { ref, useTemplateRef } from 'vue';
     import type { StateFile } from '@/filesystem/statefile.mjs';
     import { convertToStateFile } from './convert';
     import { saveToFile } from '@/filesystem/save.mjs';
-    import ObjectFileListing from './ObjectFileListing.vue';
+    import FileList from './filelist/FileList.vue';
 
     // List of objects that have been uploaded
-    const objects = ref<ObjectFile[]>([])
+    const fileList = useTemplateRef("file-list")
     // State file to download. Should be null if it hasn't been generated for
     // current settings
     const stateDownload = ref<StateFile | null>(null)
     const isLoading = ref(false)
 
-    watch([objects, objects.value], () => {
+    /** Reset current state file download and generator data */
+    function resetGeneratorData(): void {
         stateDownload.value = null
-        for (const object of objects.value)
-            object.generatorData = undefined
-    }, { deep: false })
-
-    /**
-     * Remove the given object file from the list
-     * @param objectFile The object file to remove
-     */
-    function removeObject(objectFile: ObjectFile): void {
-        objects.value = objects.value.filter((value) => value != objectFile)
-    }
-
-    /**
-     * Add an object from Horizons data text file
-     * @param text The contents of the file
-     * @param filename The filename
-     */
-    function addObject(text: string, filename: string): void {
-        const splitPath = filename.split(/\/|\\/gi)
-        const objectFile = deserializeObjectFile(text,
-            splitPath[splitPath.length - 1])
-        objects.value.push(objectFile)
+        fileList.value?.files?.forEach((objectFile) =>
+            objectFile.generatorData = undefined)
     }
 
     /**
@@ -48,7 +26,8 @@
     function generate(): void {
         isLoading.value = true;
         (async () => {
-            stateDownload.value = convertToStateFile(objects.value)
+            if (fileList.value?.files)
+                stateDownload.value = convertToStateFile(fileList.value.files)
             isLoading.value = false
         })()
     }
@@ -83,14 +62,9 @@
                 plane. Make sure to upload at least three <i>different</i> files
                 for this to work properly.
             </p>
-            <ObjectFileListing
-                v-for="objectFile in objects"
-                :object-file="objectFile"
-                @delete="() => removeObject(objectFile)" />
-            <UploadField @upload="(text, filename) =>
-                addObject(text, filename)" />
+            <FileList ref="file-list" @update="resetGeneratorData" />
             <div :class="$style['bottom-buttons']">
-                <button v-if="objects.length >= 1"
+                <button v-if="(fileList?.files?.length ?? 0) >= 1"
                     :class="$style['calculate-button']" @click="generate">
                     {{ isLoading ? "..." : "Generate" }}</button>
                 <button v-if="stateDownload" :class="$style['download-button']"
