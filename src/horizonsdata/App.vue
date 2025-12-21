@@ -78,10 +78,10 @@
                 files. Leave the table settings on "defaults".
             </p>
             <p>
-                The tool flattens flattens the imported 3D coordinates to a 2D
-                plane. As such some accuracy is lost when not all points are on
-                the same plane. Make sure to upload at least three
-                <i>different</i> files for this to work properly.
+                The tool flattens the imported 3D coordinates to a 2D plane. As
+                such some accuracy is lost when not all points are on the same
+                plane. Make sure to upload at least three <i>different</i> files
+                for this to work properly.
             </p>
             <ObjectFileListing
                 v-for="objectFile in objects"
