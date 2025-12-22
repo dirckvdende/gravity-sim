@@ -97,7 +97,7 @@ function planeFit(files: ObjectFile[]): Vector3 {
  */
 function matrixFromColumns(columns: Vector3[]): Matrix {
     return new Matrix(...columns.map((column) =>
-        new Vector(column.x, column.y, column.z)))
+        new Vector(column.x, column.y, column.z))).transpose()
 }
 
 /**
