@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { storeToRefs } from 'pinia';
     import GravityMap from './gravitymap/GravityMap.vue';
-    import Vector2 from './util/Vector2';
+    import Vector2 from './util/linalg/Vector2';
     import { useGravitySimStore } from './stores/useGravitySimStore';
     import UI from './ui/UI.vue';
     import { useGravityMapStore } from './stores/useGravityMapStore';

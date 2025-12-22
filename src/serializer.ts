@@ -1,5 +1,5 @@
 
-import Vector2 from "@/util/Vector2";
+import Vector2 from "@/util/linalg/Vector2";
 import type { StateTree } from "pinia";
 import type { Serializer } from "pinia-plugin-persistedstate";
 

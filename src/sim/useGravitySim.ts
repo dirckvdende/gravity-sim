@@ -4,7 +4,7 @@ type Ref } from "vue";
 import type { GravityObject } from "./object";
 import { objectsToState, slopeFunction, stateToObjects } from "./odeConvert";
 import { RKFSolver } from "./rkf45";
-import Vector2 from "@/util/Vector2";
+import Vector2 from "@/util/linalg/Vector2";
 
 /** Options to pass to the gravity sim */
 export type GravitySimOptions = {

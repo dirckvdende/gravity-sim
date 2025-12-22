@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import type Vector2 from '@/util/Vector2';
+    import type Vector2 from '@/util/linalg/Vector2';
 
     const { src, position, size = 70 } = defineProps<{
         /**

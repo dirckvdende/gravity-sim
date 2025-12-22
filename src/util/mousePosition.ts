@@ -1,5 +1,5 @@
 
-import Vector2 from "./Vector2"
+import Vector2 from "./linalg/Vector2"
 
 /**
  * Get the mouse position within a target element

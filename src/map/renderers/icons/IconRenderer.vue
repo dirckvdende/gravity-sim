@@ -31,7 +31,7 @@
 </script>
 
 <script lang="ts" setup>
-    import type Vector2 from '@/util/Vector2';
+    import type Vector2 from '@/util/linalg/Vector2';
     import Icon from './Icon.vue';
     import { computed, inject } from 'vue';
     import IconPin from './IconPin.vue';

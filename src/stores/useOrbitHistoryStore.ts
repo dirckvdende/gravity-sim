@@ -1,6 +1,6 @@
 
 import type { GravityObject } from "@/sim/object";
-import type Vector2 from "@/util/Vector2";
+import type Vector2 from "@/util/linalg/Vector2";
 import { defineStore, storeToRefs } from "pinia";
 import { ref, toValue, watch, type MaybeRefOrGetter, type Ref } from "vue";
 import { useGravitySimStore } from "./useGravitySimStore";

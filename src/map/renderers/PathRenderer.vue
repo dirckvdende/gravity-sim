@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject, onMounted, watch } from 'vue';
     import { defaultState, mapStateKey } from '../state';
 

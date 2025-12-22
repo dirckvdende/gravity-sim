@@ -1,5 +1,5 @@
 
-import type Vector2 from "@/util/Vector2";
+import type Vector2 from "@/util/linalg/Vector2";
 import type { StyledGravityObject } from "./object";
 import { toValue, computed, type ComputedRef, type MaybeRefOrGetter } from
 "vue";

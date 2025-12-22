@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { defaultState, mapStateKey } from '@/map/state';
-    import Vector2 from '@/util/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject } from 'vue';
 
     const { pixelSize } = inject(mapStateKey, defaultState())
