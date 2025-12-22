@@ -19,7 +19,7 @@ export function deserializeObjectFile(text: string, filename: string =
 "unknown.txt"): ObjectFile {
     const properties = physicalPropertyValues(physicalProperties(text))
     return {
-        name: objectName(text),
+        name: objectName(text) ?? filename.split(".")[0]!,
         filename,
         mass: properties.mass ?? 1,
         size: properties.size ?? 0,
@@ -30,14 +30,13 @@ export function deserializeObjectFile(text: string, filename: string =
 /**
  * Find the object name from the Horizons file
  * @param text The Horizons file text
- * @returns The name of the object. If nothing could be found "Imported body" is
- * returned
+ * @returns The name of the object, or undefined if nothing could be found
  */
-function objectName(text: string): string {
+function objectName(text: string): string | undefined {
     for (const line of text.split("\n"))
         if (line.startsWith("Target body name:"))
             return line.substring(17).split(/\(|\{/gi)[0]!.trim()
-    return "Imported body"
+    return undefined
 }
 
 /**
