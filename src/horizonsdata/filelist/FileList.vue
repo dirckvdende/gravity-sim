@@ -19,9 +19,9 @@
         (e: "update"): void
         /**
          * Emitted when an item is attempted to be added, but an error
-         * occurred. Called with the error message
+         * occurred. Called with the error message and filenmae
          */
-        (e: "error", message: string): void
+        (e: "error", message: string, filename: string): void
     }>()
 
     /**
@@ -46,7 +46,7 @@
             files.value.push(objectFile)
         } catch (error) {
             if (error instanceof DeserializationError)
-                emit("error", error.message)
+                emit("error", error.message, filename)
             return
         }
         emit("update")

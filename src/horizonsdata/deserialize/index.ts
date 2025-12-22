@@ -4,6 +4,7 @@ import { physicalProperties, physicalPropertyValues } from
 import { findNumber } from "./scanstring"
 import { type ObjectFile } from "../object"
 import Vector3 from "@/util/linalg/Vector3"
+import { DeserializationError } from "./error"
 
 /**
  * Deserialize an object file from text downloaded from the NASA Horizons system
@@ -12,6 +13,7 @@ import Vector3 from "@/util/linalg/Vector3"
  * @param filename The filename of the file that is being deserialized (default
  * "unknown.txt")
  * @returns The deserialized object file
+ * @throws DeserializationError when the file couldn't be deserialized
  */
 export function deserializeObjectFile(text: string, filename: string =
 "unknown.txt"): ObjectFile {
@@ -44,6 +46,7 @@ function objectName(text: string): string {
  * @param text The Horizons file text
  * @returns An object with the found time, position, and velocity. Defaults are
  * the current time, zero position, and zero velocity
+ * @throws DeserializationError when time, position, or velocity can't be found
  */
 function objectStateVector(text: string): {
     time: Date
@@ -51,9 +54,9 @@ function objectStateVector(text: string): {
     velocity: Vector3
 } {
     let linesSinceSOE = -1
-    let time = new Date()
-    let position = Vector3.Zero
-    let velocity = Vector3.Zero
+    let time: Date | null = null
+    let position: Vector3 | null = null
+    let velocity: Vector3 | null = null
     for (const line of text.split("\n")) {
         if (line.startsWith("$$SOE"))
             linesSinceSOE = 0
@@ -83,6 +86,12 @@ function objectStateVector(text: string): {
         if (linesSinceSOE >= 0)
             linesSinceSOE++
     }
+    if (time == null)
+        throw new DeserializationError("No timestamp found")
+    if (position == null)
+        throw new DeserializationError("No position vector found")
+    if (velocity == null)
+        throw new DeserializationError("No velocity vector found")
     return { time, position, velocity }
 }
 

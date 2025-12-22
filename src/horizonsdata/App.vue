@@ -22,9 +22,14 @@
             objectFile.generatorData = undefined)
     }
 
-    /** Set the current error message being displayed */
-    function setError(message: string | null): void {
-        errorMessage.value = message
+    /**
+     * Called when an error occurred while updating the file list
+     * @param message The error message to display
+     * @param filename The file that couldn't be added
+     */
+    function listError(message: string, filename: string): void {
+        errorMessage.value = `Error while loading file "${filename}": `
+            + message
     }
 
     /** Called when the file list is updated */
@@ -84,7 +89,7 @@
                 plane. Make sure to upload at least three <i>different</i> files
                 for this to work properly.
             </p>
-            <FileList ref="file-list" @update="listUpdate" @error="setError" />
+            <FileList ref="file-list" @update="listUpdate" @error="listError" />
             <ErrorMessage :message="errorMessage" />
             <div :class="$style['bottom-buttons']">
                 <button v-if="(fileList?.files?.length ?? 0) >= 1"
