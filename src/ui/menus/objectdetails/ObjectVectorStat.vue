@@ -85,7 +85,7 @@
     <SideMenuStat :value="value?.y" :units="units" :level="1">y</SideMenuStat>
     <LineGraph :value="paused ? null : value?.length()"
         ref="graph-1d" v-if="showGraph1D" />
-    <LineGraph2D :point="paused ? null : value" draw-point draw-center-point
+    <LineGraph2D :point="paused ? null : value" draw-point show-axes
         ref="graph-2d" v-if="showGraph2D" />
 </template>
 

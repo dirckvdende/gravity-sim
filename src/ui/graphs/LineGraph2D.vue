@@ -10,7 +10,7 @@
         point,
         maxPoints = 10000,
         drawPoint = false,
-        drawCenterPoint = false,
+        showAxes = false,
     } = defineProps<{
         /**
          * Current point to draw a line to. Changing this value will draw the
@@ -28,12 +28,8 @@
          * false, default color red)
          */
         drawPoint?: boolean | string
-        /**
-         * Draw a circle at the zero vector. Can be a boolean for on-off switch,
-         * or a string with the color of the point (default false, default color
-         * green)
-         */
-        drawCenterPoint?: boolean | string
+        /** Show x and y-axes in the graph (default false) */
+        showAxes?: boolean
     }>()
 
     const LOG_STEP = 1.3
@@ -121,13 +117,20 @@
                 r="4"
                 :fill="drawPoint === true ? 'red' : drawPoint"
                 stroke="none" />
-            <circle
-                v-if="drawCenterPoint"
-                :cx="pixelWidth / 2"
-                :cy="pixelHeight / 2"
-                r="4"
-                :fill="drawCenterPoint === true ? 'green' : drawCenterPoint"
-                stroke="none" />
+            <line
+                :x1="0"
+                :y1="pixelHeight / 2"
+                :x2="pixelWidth"
+                :y2="pixelHeight / 2"
+                :class="$style['axis-line']"
+                v-if="showAxes" />
+            <line
+                :x1="pixelWidth / 2"
+                :y1="0"
+                :x2="pixelWidth / 2"
+                :y2="pixelHeight"
+                :class="$style['axis-line']"
+                v-if="showAxes" />
         </svg>
     </GraphContainer>
 </template>
@@ -139,5 +142,10 @@
         stroke: var(--side-menu-text-color);
         stroke-width: 1;
         fill: none;
+
+        .axis-line {
+            stroke: color-mix(in srgb, var(--side-menu-text-color),
+                transparent 50%);
+        }
     }
 </style>
