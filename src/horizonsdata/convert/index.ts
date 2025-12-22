@@ -141,7 +141,8 @@ function toGravityObjects(files: ObjectFile[]): {
         prev + Math.abs(cur.velocity.z), 0)
     return files.map((file, index) => ({
         generatorData: {
-            error: Math.abs(file.position.z) / totalPosError,
+            error: (Math.abs(file.position.z) + Math.abs(file.velocity.z)) /
+                (totalPosError + totalVelError),
         },
         object: {
             name: file.name,
