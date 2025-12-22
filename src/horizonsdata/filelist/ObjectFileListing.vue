@@ -40,13 +40,23 @@
             </template>
         </template>
         <template #subtext-warn v-if="objectFile.generatorData">
-            <span>error:&nbsp;</span>
-            <span v-html="unitToHTML(
-                objectFile.generatorData.error * 100,
+            position error:&nbsp;<span v-html="unitToHTML(
+                objectFile.generatorData.positionError * 100,
+                LENGTH_UNITS,
+                { significance: 1 },
+            )" />&nbsp;(<span v-html="unitToHTML(
+                objectFile.generatorData.positionErrorRelative * 100,
                 [{ suffix: '%', scale: 1 }],
                 { significance: 1 },
-            )" />
-            <span>&nbsp;(part of total)</span>
+            )" />), velocity error:&nbsp;<span v-html="unitToHTML(
+                objectFile.generatorData.velocityError * 100,
+                VELOCITY_UNITS,
+                { significance: 1 },
+            )" />&nbsp;(<span v-html="unitToHTML(
+                objectFile.generatorData.velocityErrorRelative * 100,
+                [{ suffix: '%', scale: 1 }],
+                { significance: 1 },
+            )" />)
         </template>
     </FileListing>
 </template>

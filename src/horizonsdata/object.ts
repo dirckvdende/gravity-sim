@@ -19,6 +19,9 @@ export type ObjectFile = {
     time: Date
     /** Extra info added when the generator is run */
     generatorData?: {
-        error: number
+        positionError: number
+        positionErrorRelative: number
+        velocityError: number
+        velocityErrorRelative: number
     }
 }

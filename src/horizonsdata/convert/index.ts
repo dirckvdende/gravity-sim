@@ -139,20 +139,28 @@ function toGravityObjects(files: ObjectFile[]): {
         prev + Math.abs(cur.position.z), 0)
     const totalVelError = files.reduce((prev, cur) =>
         prev + Math.abs(cur.velocity.z), 0)
-    return files.map((file, index) => ({
-        generatorData: {
-            error: (Math.abs(file.position.z) + Math.abs(file.velocity.z)) /
-                (totalPosError + totalVelError),
-        },
-        object: {
-            name: file.name,
-            description: "",
-            size: file.size,
-            icon: objectIconFromName(file.name),
-            id: index,
-            position: new Vector2(file.position.x, file.position.y),
-            velocity: new Vector2(file.velocity.x, file.velocity.y),
-            mass: file.mass,
+    return files.map((file, index) => {
+        const positionError = Math.abs(file.position.z)
+        const velocityError = Math.abs(file.velocity.z)
+        return {
+            generatorData: {
+                positionError,
+                velocityError,
+                positionErrorRelative: totalPosError == 0 ? 0 :
+                    positionError / totalPosError,
+                velocityErrorRelative: totalVelError == 0 ? 0 :
+                    velocityError / totalVelError,
+            },
+            object: {
+                name: file.name,
+                description: "",
+                size: file.size,
+                icon: objectIconFromName(file.name),
+                id: index,
+                position: new Vector2(file.position.x, file.position.y),
+                velocity: new Vector2(file.velocity.x, file.velocity.y),
+                mass: file.mass,
+            }
         }
-    }))
+    })
 }
