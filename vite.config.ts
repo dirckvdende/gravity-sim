@@ -33,7 +33,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "index.html"),
-                horizonsdata: resolve(__dirname, "horizonsdata.html"),
+                horizonsdata: resolve(__dirname, "horizons-data-import.html"),
             }
         }
     }
