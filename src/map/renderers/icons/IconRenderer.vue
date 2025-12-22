@@ -88,7 +88,10 @@
                 :position="icon.position"
                 @click="(event) => icon.click?.(event)"
                 :hover-effect="icon.click !== undefined"
-                :style="{ zIndex: icon.zIndex }" />
+                :style="{
+                    zIndex: icon.zIndex,
+                    pointerEvents: icon.click ? undefined : 'none',
+                }" />
             <Icon
                 v-else
                 :src="icon.src"
@@ -96,7 +99,10 @@
                 :size="icon.size"
                 @click="(event) => icon.click?.(event)"
                 :hover-effect="icon.click !== undefined"
-                :style="{ zIndex: icon.zIndex }" />
+                :style="{
+                    zIndex: icon.zIndex,
+                    pointerEvents: icon.click ? undefined : 'none',
+                }" />
         </template>
     </div>
 </template>
