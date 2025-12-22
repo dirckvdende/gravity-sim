@@ -8,85 +8,36 @@ import { svd } from "@/util/linalg/svd";
 import Matrix from "@/util/linalg/Matrix";
 import { projectToPlane } from "@/util/linalg/projectToPlane";
 import Vector from "@/util/linalg/Vector";
-import { setObjectIcon } from "./setObjectIcon";
+import { objectIconFromName } from "./objectIcon";
 import { zoomLevelCover } from "./zoomLevelCover";
+import { ConversionError } from "./error";
 
 /**
  * Convert a list of object files to a combined state file, by flattening coords
  * and converting to the proper data format
- * @param objects Object files to convert
- * @returns The converted state file, or null if this failed
+ * @param files Object files to convert. The generatorData fields of these
+ * objects are modified to reflect generator info
+ * @returns The converted state file
+ * @throws ConversionError if conversion is not possible
  */
-export function convertToStateFile(objects: ObjectFile[]): StateFile | null {
-    if (objects.length < 1)
-        return null
-    const flattened = flattenObjects(objects).map(({ error, object }) => ({
-        error,
-        object: setObjectIcon(object),
-    }))
-    const totalError = flattened.reduce((prev, { error }) =>
-        prev + Math.abs(error), 0)
-    for (const [index, object] of objects.entries())
-        object.generatorData = {
-            error: totalError == 0 || flattened[index]?.error == undefined
-                ? 0
-                : Math.abs(flattened[index].error / totalError),
-        }
+export function convertToStateFile(files: ObjectFile[]): StateFile {
+    if (files.length < 1)
+        throw new ConversionError("Cannot convert empty list of files")
+    const shifted = subtractCentoid(files)
+    const normalVector = planeFit(shifted)
+    const mappedToPlane = mapToPlane(shifted, normalVector)
+    const objects = toGravityObjects(mappedToPlane)
+    for (const [index, { generatorData }] of objects.entries())
+        files[index]!.generatorData = generatorData
     return {
         icon: "./icons/moon.svg",
         name: "Horizons data import",
-        objects: flattened.map((value) => value.object),
+        objects: objects.map(({ object }) => object),
         position: Vector2.Zero,
-        zoomLevel: zoomLevelCover(flattened.map((value) =>
-            value.object.position)),
+        zoomLevel: zoomLevelCover(objects.map(({ object }) => object.position)),
         timestamp: new Date(Date.now()),
         speed: 1,
     }
-}
-
-/**
- * Convert object files to gravity objects by flattening their coordinates to a
- * plane
- * @param objects The obejcts to flatten to styled gravity objects
- * @returns An array with the resulting objects and errors induced by flattening
- */
-function flattenObjects(objects: ObjectFile[]): {
-    object: StyledGravityObject
-    error: number
-}[] {
-    objects = subtractCentoid(objects)
-    const positionMatrix: number[][] = []
-    for (const object of objects)
-        positionMatrix.push([object.position.x, object.position.y,
-        object.position.z])
-    const matrix = new Matrix(...positionMatrix).transpose()
-    const { u } = svd(matrix)
-    const onb = Vector.orthonormalBasis(
-        u.column(0),
-        u.column(1),
-        new Vector(1, 0, 0),
-        new Vector(0, 1, 0),
-        new Vector(0, 0, 1),
-    )
-    const normalVector = onb[2]!
-    const flattened = flattenToPlane(objects, new Vector3(
-        normalVector.get(0),
-        normalVector.get(1),
-        normalVector.get(2),
-    ))
-    return flattened.map(({ object, error }, index) => ({
-        error,
-        object: {
-            name: object.name,
-            description: "",
-            size: object.size,
-            icon: "./icons/moon.svg",
-            id: index,
-            position: new Vector2(object.position.x, object.position.y),
-            velocity: new Vector2(object.velocity.x, object.velocity.y),
-            mass: object.mass,
-        },
-    }))
 }
 
 /**
@@ -95,43 +46,112 @@ function flattenObjects(objects: ObjectFile[]): {
  * @param objects The list of file objects to center
  * @returns A copy of the list with shifted positions
  */
-function subtractCentoid(objects: ObjectFile[]): ObjectFile[] {
-    const centroid = objects.reduce((prev, cur) =>
-        prev.add(cur.position), Vector3.Zero
-    ).scale(1 / objects.length)
-    return objects.map((object) => ({
-        ...object,
-        position: object.position.subtract(centroid),
+function subtractCentoid(files: ObjectFile[]): ObjectFile[] {
+    if (files.length == 0)
+        return []
+    const points = files.map((file) => file.position)
+    if (points.length < 3)
+        for (const file of files)
+            points.push(file.position.add(file.velocity))
+    const centroid = points.reduce((prev, cur) => prev.add(cur),
+        Vector3.Zero).scale(1 / points.length)
+    return files.map((file) => ({
+        ...file,
+        position: file.position.subtract(centroid),
     }))
 }
 
 /**
- * Transform the coordinates of a list of objects (x, y, z) => (x', y', z'),
- * such that x' and y' will be the coordinates on the plane given by the input
- * normal vector, and z' is the distance of the initial coordinates to this
- * plane
- * @param objects List of object files to flatten
- * @param normalVector The normal vector of the plane
- * @returns An array with the resulting objects and errors (which are the
- * resulting z-coords)
+ * Fit a plane to the positions of objects. If there is only one object, its
+ * velocity is also taken into account
+ * @param files Object files to fit the plane for
+ * @returns The normal vector of the fitted plane
  */
-function flattenToPlane(objects: ObjectFile[], normalVector: Vector3): {
-    object: ObjectFile
-    error: number
-}[] {
+function planeFit(files: ObjectFile[]): Vector3 {
+    if (files.length == 0)
+        throw new ConversionError("Cannot fit plane to zero objects")
+    const points = files.map((file) => file.position)
+    if (points.length < 2)
+        points.push(files[0]!.velocity)
+    const matrix = matrixFromColumns(points)
+    // This matrix will have shape 3 x n with n >= 2
+    const { u } = svd(matrix)
+    const onb = Vector.orthonormalBasis(
+        u.column(0),
+        u.column(1),
+        new Vector(1, 0, 0),
+        new Vector(0, 1, 0),
+        new Vector(0, 0, 1),
+    )
+    if (onb[2] == undefined)
+        throw new ConversionError("Unexpected error while determining best "
+            + "plane fit")
+    return new Vector3(onb[2].get(0), onb[2].get(1), onb[2].get(2))
+    
+}
+
+/**
+ * Create a 3 x n matrix where its columns are given by a list of vectors
+ * @param columns The columns of the matrix
+ * @returns The generated matrix
+ */
+function matrixFromColumns(columns: Vector3[]): Matrix {
+    return new Matrix(...columns.map((column) =>
+        new Vector(column.x, column.y, column.z)))
+}
+
+/**
+ * Map the velocities and positions of a list of objects to a plane
+ * @param files The object files ot map to the plane
+ * @param normalVector The normal vector of the plane, this is what is
+ * "subtracted away"
+ * @returns The list of object files with the mapped positions and velocities
+ */
+function mapToPlane(files: ObjectFile[], normalVector: Vector3): ObjectFile[] {
     const points: Vector3[] = []
-    for (const object of objects) {
-        points.push(object.position)
-        points.push(object.velocity)
+    for (const file of files) {
+        points.push(file.position)
+        points.push(file.velocity)
     }
     const projectedPoints = projectToPlane(points, normalVector)
-    return objects.map((object, index) => {
+    return files.map((file, index) => {
         const position = projectedPoints[index * 2]!
         const velocity = projectedPoints[index * 2 + 1]!
-        const error = position.z + velocity.z
-        return {
-            object: { ...object, position, velocity },
-            error,
-        }
+        return { ...file, position, velocity }
     })
+}
+
+/**
+ * Convert object files to gravity objects. The object files should have already
+ * been mapped to a plane, such that their z-coords are removed and reported as
+ * error metrics
+ * @param files List of object files to convert. The generatorData properties of
+ * these files are updated in-place
+ * @returns The generated gravity objects, with generatorData results to be
+ * given to the initial object files
+ */
+function toGravityObjects(files: ObjectFile[]): {
+    object: StyledGravityObject,
+    generatorData: ObjectFile["generatorData"],
+}[] {
+    // TODO: Use these
+    const totalPosError = files.reduce((prev, cur) =>
+        prev + Math.abs(cur.position.z), 0)
+    const totalVelError = files.reduce((prev, cur) =>
+        prev + Math.abs(cur.velocity.z), 0)
+    return files.map((file, index) => ({
+        generatorData: {
+            error: Math.abs(file.position.z) / totalPosError,
+        },
+        object: {
+            name: file.name,
+            description: "",
+            size: file.size,
+            icon: objectIconFromName(file.name),
+            id: index,
+            position: new Vector2(file.position.x, file.position.y),
+            velocity: new Vector2(file.velocity.x, file.velocity.y),
+            mass: file.mass,
+        }
+    }))
 }
