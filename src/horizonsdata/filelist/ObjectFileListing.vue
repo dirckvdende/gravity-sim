@@ -41,7 +41,7 @@
         </template>
         <template #subtext-warn v-if="objectFile.generatorData">
             position error:&nbsp;<span v-html="unitToHTML(
-                objectFile.generatorData.positionError * 100,
+                objectFile.generatorData.positionError,
                 LENGTH_UNITS,
                 { significance: 1 },
             )" />&nbsp;(<span v-html="unitToHTML(
@@ -49,7 +49,7 @@
                 [{ suffix: '%', scale: 1 }],
                 { significance: 1 },
             )" />), velocity error:&nbsp;<span v-html="unitToHTML(
-                objectFile.generatorData.velocityError * 100,
+                objectFile.generatorData.velocityError,
                 VELOCITY_UNITS,
                 { significance: 1 },
             )" />&nbsp;(<span v-html="unitToHTML(
