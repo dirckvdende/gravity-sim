@@ -122,7 +122,6 @@
     }]">
         <svg :class="$style.svg" ref="svg" stroke="#333" stroke-width="1"
             fill="none" :width="pixelWidth" :height="pixelHeight">
-            <path :d="path" :class="$style.path" />
             <line
                 :x1="0"
                 :y1="pixelHeight / 2"
@@ -130,6 +129,7 @@
                 :y2="pixelHeight / 2"
                 :class="$style['zero-line']"
                 v-if="hasNegative" />
+            <path :d="path" :class="$style.path" />
         </svg>
     </GraphContainer>
 </template>
