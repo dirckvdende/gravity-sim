@@ -115,7 +115,8 @@
                 :cx="pixelPoints[pixelPoints.length - 1]?.x"
                 :cy="pixelPoints[pixelPoints.length - 1]?.y"
                 r="4"
-                :fill="drawPoint === true ? 'red' : drawPoint"
+                :fill="drawPoint === true ? 'var(--accent-color-orange, orange)'
+                    : drawPoint"
                 stroke="none" />
             <line
                 :x1="0"
