@@ -11,6 +11,7 @@ import Vector from "@/util/linalg/Vector";
 import { objectIconFromName } from "./objectIcon";
 import { zoomLevelCover } from "./zoomLevelCover";
 import { ConversionError } from "./error";
+import { getTimestamp } from "./timestamp";
 
 /**
  * Convert a list of object files to a combined state file, by flattening coords
@@ -23,6 +24,7 @@ import { ConversionError } from "./error";
 export function convertToStateFile(files: ObjectFile[]): StateFile {
     if (files.length < 1)
         throw new ConversionError("Cannot convert empty list of files")
+    const timestamp = getTimestamp(files)
     const shifted = subtractCentoid(files)
     const normalVector = planeFit(shifted)
     const mappedToPlane = mapToPlane(shifted, normalVector)
@@ -35,7 +37,7 @@ export function convertToStateFile(files: ObjectFile[]): StateFile {
         objects: objects.map(({ object }) => object),
         position: Vector2.Zero,
         zoomLevel: zoomLevelCover(objects.map(({ object }) => object.position)),
-        timestamp: new Date(Date.now()),
+        timestamp,
         speed: 1,
     }
 }
