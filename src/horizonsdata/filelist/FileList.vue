@@ -4,6 +4,7 @@
     import ObjectFileListing from './ObjectFileListing.vue';
     import { deserializeObjectFile } from '../deserialize';
     import UploadField from './UploadField.vue';
+    import { DeserializationError } from '../deserialize/error';
 
     // List of uploaded files
     const files = ref<ObjectFile[]>([])
@@ -16,6 +17,11 @@
     const emit = defineEmits<{
         /** Emitted when an item is added or removed */
         (e: "update"): void
+        /**
+         * Emitted when an item is attempted to be added, but an error
+         * occurred. Called with the error message
+         */
+        (e: "error", message: string): void
     }>()
 
     /**
@@ -34,9 +40,15 @@
      */
     function add(text: string, filename: string): void {
         const splitPath = filename.split(/\/|\\/gi)
-        const objectFile = deserializeObjectFile(text,
-            splitPath[splitPath.length - 1])
-        files.value.push(objectFile)
+        try {
+            const objectFile = deserializeObjectFile(text,
+                splitPath[splitPath.length - 1])
+            files.value.push(objectFile)
+        } catch (error) {
+            if (error instanceof DeserializationError)
+                emit("error", error.message)
+            return
+        }
         emit("update")
     }
 </script>

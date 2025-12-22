@@ -22,6 +22,17 @@
             objectFile.generatorData = undefined)
     }
 
+    /** Set the current error message being displayed */
+    function setError(message: string | null): void {
+        errorMessage.value = message
+    }
+
+    /** Called when the file list is updated */
+    function listUpdate(): void {
+        resetGeneratorData()
+        errorMessage.value = null
+    }
+
     /**
      * Generate state file from the list of objects and put it in the
      * stateDownload ref
@@ -73,7 +84,7 @@
                 plane. Make sure to upload at least three <i>different</i> files
                 for this to work properly.
             </p>
-            <FileList ref="file-list" @update="resetGeneratorData" />
+            <FileList ref="file-list" @update="listUpdate" @error="setError" />
             <ErrorMessage :message="errorMessage" />
             <div :class="$style['bottom-buttons']">
                 <button v-if="(fileList?.files?.length ?? 0) >= 1"
