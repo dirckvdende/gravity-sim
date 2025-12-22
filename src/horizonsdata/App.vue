@@ -4,6 +4,8 @@
     import { convertToStateFile } from './convert';
     import { saveToFile } from '@/filesystem/save.mjs';
     import FileList from './filelist/FileList.vue';
+    import ErrorMessage from './ErrorMessage.vue';
+    import { ConversionError } from './convert/error';
 
     // List of objects that have been uploaded
     const fileList = useTemplateRef("file-list")
@@ -11,6 +13,7 @@
     // current settings
     const stateDownload = ref<StateFile | null>(null)
     const isLoading = ref(false)
+    const errorMessage = ref<string | null>(null)
 
     /** Reset current state file download and generator data */
     function resetGeneratorData(): void {
@@ -26,8 +29,16 @@
     function generate(): void {
         isLoading.value = true;
         (async () => {
-            if (fileList.value?.files)
-                stateDownload.value = convertToStateFile(fileList.value.files)
+            errorMessage.value = null
+            if (fileList.value?.files) {
+                try {
+                    stateDownload.value = convertToStateFile(
+                        fileList.value.files)
+                } catch (error) {
+                    if (error instanceof ConversionError)
+                        errorMessage.value = error.message
+                }
+            }
             isLoading.value = false
         })()
     }
@@ -63,6 +74,7 @@
                 for this to work properly.
             </p>
             <FileList ref="file-list" @update="resetGeneratorData" />
+            <ErrorMessage :message="errorMessage" />
             <div :class="$style['bottom-buttons']">
                 <button v-if="(fileList?.files?.length ?? 0) >= 1"
                     :class="$style['calculate-button']" @click="generate">
