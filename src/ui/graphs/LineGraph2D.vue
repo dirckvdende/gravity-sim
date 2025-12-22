@@ -109,15 +109,6 @@
     }]">
         <svg :class="$style.svg" ref="svg" stroke="#333" stroke-width="1"
             fill="none" :width="pixelWidth" :height="pixelHeight">
-            <path :d="path" />
-            <circle
-                v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
-                :cx="pixelPoints[pixelPoints.length - 1]?.x"
-                :cy="pixelPoints[pixelPoints.length - 1]?.y"
-                r="4"
-                :fill="drawPoint === true ? 'var(--accent-color-orange, orange)'
-                    : drawPoint"
-                stroke="none" />
             <line
                 :x1="0"
                 :y1="pixelHeight / 2"
@@ -132,6 +123,15 @@
                 :y2="pixelHeight"
                 :class="$style['axis-line']"
                 v-if="showAxes" />
+            <path :d="path" />
+            <circle
+                v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
+                :cx="pixelPoints[pixelPoints.length - 1]?.x"
+                :cy="pixelPoints[pixelPoints.length - 1]?.y"
+                r="4"
+                :fill="drawPoint === true ? 'var(--accent-color-orange, orange)'
+                    : drawPoint"
+                stroke="none" />
         </svg>
     </GraphContainer>
 </template>
