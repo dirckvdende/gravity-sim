@@ -2,30 +2,60 @@
     import SideMenu from './side/SideMenu.vue';
     import { mdiDeleteOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
-    import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { useMenuStore } from '@/stores/useMenuStore';
-    import { computed } from 'vue';
+    import { computed, type WritableComputedRef } from 'vue';
+    import SideMenuInputContainer from
+    './side/input/SideMenuInputContainer.vue';
+    import SideMenuTextInput from './side/input/SideMenuTextInput.vue';
+    import type { StyledGravityObject } from '@/sim/object';
+import SideMenuSection from './side/SideMenuSection.vue';
 
-    const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-edit" && focusedObject.value != null)
 
+    /** Close this menu */
     function closeMenu(): void {
         activeMenu.value = "none"
     }
+
+    /**
+     * Get a writable computed ref that references a key in the currently
+     * focused object. If there is no focused object, a default value is used
+     * @param key The key in the focused object to create a ref for
+     * @param defaultValue Default value to get when focused object is null
+     * @returns The ref
+     */
+    function focusedObjectRef<K extends keyof StyledGravityObject, D>(key: K,
+    defaultValue: D): WritableComputedRef<D | StyledGravityObject[K],
+    StyledGravityObject[K]> {
+        return computed({
+            get: () => focusedObject.value?.[key] ?? defaultValue,
+            set: (value) => {
+                if (!focusedObject.value)
+                    return
+                focusedObject.value[key] = value
+            }
+        })
+    }
+
+    const name = focusedObjectRef("name", "")
 </script>
 
 <template>
     <SideMenu
         :visible="visible"
-        menu-title="Edit object"
+        :menu-title="`Edit: ${name}`"
         @close="closeMenu"
         :bottom-buttons="[{
             iconPath: mdiDeleteOutline,
             text: 'delete',
             click: () => console.log('delete'),
         }]">
-        Hello
+        <SideMenuSection>
+            <SideMenuInputContainer name="Name">
+                <SideMenuTextInput v-model="name" />
+            </SideMenuInputContainer>
+        </SideMenuSection>
     </SideMenu>
 </template>
