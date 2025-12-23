@@ -79,6 +79,13 @@
         for (const component of compareGraphComponents)
             component.value?.clearGraph()
     }, { deep: false })
+
+    /** Delete the currently focused object */
+    function deleteObject(): void {
+        objects.value = objects.value.filter((object) =>
+            object != focusedObject.value)
+        closeMenu()
+    }
 </script>
 
 <template>
@@ -93,7 +100,7 @@
         }, {
             iconPath: mdiDeleteOutline,
             text: 'delete',
-            click: () => console.log('delete'),
+            click: deleteObject,
         }]">
 
         <SideMenuCenterImage v-if="focusedObject" style="margin: 1em 0 1.5em 0"
