@@ -1,14 +1,19 @@
 <script lang="ts" setup>
-    const { name } = defineProps<{
+    const { name, suffix } = defineProps<{
         /** Name to display next to the input field */
-        name: string,
+        name: string
+        /** Suffix to display after the input field (default no suffix) */
+        suffix?: string
     }>()
 </script>
 
 <template>
     <div :class="$style.container">
         <div :class="$style.name"><span>{{ name }}</span></div>
-        <div :class="$style.field"><span><slot /></span></div>
+        <div :class="$style.field">
+            <span><slot /></span>
+            <span :class="$style.suffix">{{ suffix }}</span>
+        </div>
     </div>
 </template>
 
@@ -37,9 +42,10 @@
             text-align: right;
             justify-content: flex-end;
 
-            :global(.suffix) {
+            .suffix {
                 color: color-mix(in srgb, var(--side-menu-text-color, black),
                     transparent 60%);
+                margin-left: .5em;
             }
         }
 
