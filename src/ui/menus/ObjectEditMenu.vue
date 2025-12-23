@@ -9,6 +9,7 @@
     import SideMenuTextInput from './side/input/SideMenuTextInput.vue';
     import type { StyledGravityObject } from '@/sim/object';
     import SideMenuSection from './side/SideMenuSection.vue';
+    import SideMenuNumberInput from './side/input/SideMenuNumberInput.vue';
 
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
@@ -41,6 +42,7 @@
 
     const name = focusedObjectRef("name", "")
     const description = focusedObjectRef("description", "")
+    const mass = focusedObjectRef("mass", 0)
 </script>
 
 <template>
@@ -59,6 +61,9 @@
             </SideMenuInputContainer>
             <SideMenuInputContainer name="Description">
                 <SideMenuTextInput v-model="description" />
+            </SideMenuInputContainer>
+            <SideMenuInputContainer name="Mass">
+                <SideMenuNumberInput v-model="mass" />
             </SideMenuInputContainer>
         </SideMenuSection>
     </SideMenu>
