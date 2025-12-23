@@ -12,7 +12,7 @@
         <div :class="$style.name"><span>{{ name }}</span></div>
         <div :class="$style.field">
             <span><slot /></span>
-            <span :class="$style.suffix">{{ suffix }}</span>
+            <span :class="$style.suffix" v-if="suffix">{{ suffix }}</span>
         </div>
     </div>
 </template>
