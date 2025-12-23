@@ -62,7 +62,7 @@
             <SideMenuInputContainer name="Description">
                 <SideMenuTextInput v-model="description" />
             </SideMenuInputContainer>
-            <SideMenuInputContainer name="Mass">
+            <SideMenuInputContainer name="Mass" suffix="kg">
                 <SideMenuNumberInput v-model="mass" />
             </SideMenuInputContainer>
         </SideMenuSection>
