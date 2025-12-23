@@ -6,6 +6,7 @@
     import LoadMenu from './menus/LoadMenu.vue';
     import ObjectDetailsMenu from './menus/ObjectDetailsMenu.vue';
     import DemoOverlay from './DemoOverlay.vue';
+    import ObjectEditMenu from './menus/ObjectEditMenu.vue';
 </script>
 
 <template>
@@ -13,6 +14,7 @@
         <TimeDisplay />
         <LoadMenu />
         <ObjectDetailsMenu />
+        <ObjectEditMenu />
         <BottomSettings />
     </UIContainer>
     <DarkMode />

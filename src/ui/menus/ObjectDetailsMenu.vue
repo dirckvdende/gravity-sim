@@ -86,6 +86,12 @@
             object != focusedObject.value)
         closeMenu()
     }
+
+    /** Edit the currently focused object */
+    function editObject(): void {
+        // NOTE: focused object is already set correctly
+        activeMenu.value = "object-edit"
+    }
 </script>
 
 <template>
@@ -96,7 +102,7 @@
         :bottom-buttons="[{
             iconPath: mdiPencilOutline,
             text: 'edit',
-            click: () => console.log('edit'),
+            click: editObject,
         }, {
             iconPath: mdiDeleteOutline,
             text: 'delete',
