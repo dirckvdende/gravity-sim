@@ -28,6 +28,9 @@
 
     // SVG path definition
     const pathDef = computed(() => {
+        // Dummy to make sure toPixelCoords is called at least once, which makes
+        // this function get called when pixel values change
+        const _zeroPixel = toPixelCoords(Vector2.Zero)
         if (points[0] == undefined)
             return ""
         const result: string[] = []
