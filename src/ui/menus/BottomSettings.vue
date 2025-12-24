@@ -1,7 +1,7 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
-    mdiFullscreen, mdiFolderOpenOutline} from '@mdi/js';
+    mdiFullscreen, mdiFolderOpenOutline, mdiPlus} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../../util/keyEvent';
     import BottomMenu from './bottom/BottomMenu.vue';
@@ -18,6 +18,7 @@
     import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
     import { getState } from '@/filesystem/state.mjs';
     import { saveToFile } from '@/filesystem/save.mjs';
+    import type { StyledGravityObject } from '@/sim/object';
 
     const {
         showBarycenter,
@@ -26,7 +27,7 @@
         showGrid,
     } = storeToRefs(useSettingsStore())
     const { speed, paused } = storeToRefs(useSettingsStore())
-    const { slowed } = storeToRefs(useGravitySimStore())
+    const { slowed, objects } = storeToRefs(useGravitySimStore())
 
     type Mode = {
         name: string,
@@ -114,11 +115,37 @@
         saveToFile(getState())
     }
 
-    const { activeMenu } = storeToRefs(useMenuStore())
+    const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
 
     function loadFile() {
         activeMenu.value = "load"
     }
+
+    /**
+     * Add an object to the sim, with some default values. Open the edit menu
+     * for this object
+     */
+    function addObject(): void {
+        let id = 0
+        while (objects.value.find(({ id: otherId }) => id == otherId) !=
+        undefined)
+            id++
+        const object: StyledGravityObject = {
+            id,
+            position: Vector2.Zero,
+            velocity: Vector2.Zero,
+            mass: 1,
+            name: "New object",
+            description: "",
+            size: 1,
+            icon: "./icons/moon.svg",
+        }
+        objects.value.push(object)
+        focusedObject.value = object
+        activeMenu.value = "object-edit"
+    }
+
+    useKeyEvent("A", addObject, { caseInsensitive: true })
 </script>
 
 <template>
@@ -140,6 +167,11 @@
             <BottomMenuButton
                 :path-icon="mdiFastForward"
                 @click="speedUp">Faster (])</BottomMenuButton>
+        </BottomMenuSection>
+        <BottomMenuSection>
+            <BottomMenuButton
+                :path-icon="mdiPlus"
+                @click="addObject">Add object (A)</BottomMenuButton>
         </BottomMenuSection>
         <BottomMenuSection>
             <BottomMenuButton
