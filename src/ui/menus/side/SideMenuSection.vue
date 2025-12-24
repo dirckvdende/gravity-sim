@@ -16,6 +16,10 @@
     .section {
         width: 100%;
         padding: 0 0 .8em 0;
+
+        &:last-child {
+            padding-bottom: 0;
+        }
     }
     
     .section.divider {

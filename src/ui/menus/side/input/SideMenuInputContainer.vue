@@ -1,14 +1,29 @@
 <script lang="ts" setup>
-    const { name } = defineProps<{
+    const { name, suffix, level = 0 } = defineProps<{
         /** Name to display next to the input field */
-        name: string,
+        name: string
+        /** Suffix to display after the input field (default no suffix) */
+        suffix?: string
+        /**
+         * Depth of the input container, which indicates the amount of space to
+         * put before the name (default 0)
+         */
+        level?: number
     }>()
 </script>
 
 <template>
-    <div :class="$style.container">
-        <div :class="$style.name"><span>{{ name }}</span></div>
-        <div :class="$style.field"><span><slot /></span></div>
+    <div :class="$style.container" :style="{
+        '--level': level,
+    }">
+        <div :class="$style.name">
+            <div :class="$style['level-padding']" />
+            <span>{{ name }}</span>
+        </div>
+        <div :class="$style.field">
+            <span><slot /></span>
+            <span :class="$style.suffix" v-if="suffix">{{ suffix }}</span>
+        </div>
     </div>
 </template>
 
@@ -29,6 +44,17 @@
             overflow: hidden;
             color: color-mix(in srgb, var(--side-menu-text-color, black),
                 transparent 60%);
+
+            .level-padding {
+                display: none;
+            }
+
+            @container not style(--level: 0) {
+                .level-padding {
+                    display: inline-block;
+                    width: calc(var(--level, 0) * 1.75em);
+                }
+            }
         }
 
         .field {
@@ -37,9 +63,10 @@
             text-align: right;
             justify-content: flex-end;
 
-            :global(.suffix) {
+            .suffix {
                 color: color-mix(in srgb, var(--side-menu-text-color, black),
                     transparent 60%);
+                margin-left: .5em;
             }
         }
 
@@ -48,9 +75,5 @@
             align-items: center;
             min-height: 1.7em;
         }
-    }
-
-    .container.deep {
-        margin-top: -.1em;;
     }
 </style>

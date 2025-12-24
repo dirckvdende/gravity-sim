@@ -4,12 +4,19 @@
     import { onClickOutside } from '@vueuse/core';
     import { useTemplateRef } from 'vue';
     import { useScrollbarWidth } from '@/util/useScrollbarWidth';
+    import SideMenuBottomButtons, { type SideMenuBottomButton } from
+    "./SideMenuBottomButtons.vue"
 
-    const { visible = false, menuTitle = "" } = defineProps<{
+    const { visible = false, menuTitle = "", bottomButtons } = defineProps<{
         /** Whether the side menu is currently visible */
         visible?: boolean,
         /** Title displayed at the top of the menu */
         menuTitle?: string,
+        /**
+         * Buttons to display at the bottom of the side menu (default no
+         * buttons)
+         */
+        bottomButtons?: SideMenuBottomButton[],
     }>()
 
     const emit = defineEmits<{
@@ -54,6 +61,7 @@
         }" ref="menu">
             <slot />
         </div>
+        <SideMenuBottomButtons v-if="bottomButtons" :buttons="bottomButtons" />
     </div>
 </template>
 
@@ -112,6 +120,7 @@
                 box-sizing: border-box;
                 padding: .2em;
                 cursor: pointer;
+                flex-shrink: 0;
 
                 .icon {
                     fill: var(--side-menu-head-text-color);

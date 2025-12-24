@@ -17,6 +17,7 @@
     import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
     import ObjectStat from './objectdetails/ObjectStat.vue';
     import ObjectVectorStat from './objectdetails/ObjectVectorStat.vue';
+    import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
@@ -78,13 +79,35 @@
         for (const component of compareGraphComponents)
             component.value?.clearGraph()
     }, { deep: false })
+
+    /** Delete the currently focused object */
+    function deleteObject(): void {
+        objects.value = objects.value.filter((object) =>
+            object != focusedObject.value)
+        closeMenu()
+    }
+
+    /** Edit the currently focused object */
+    function editObject(): void {
+        // NOTE: focused object is already set correctly
+        activeMenu.value = "object-edit"
+    }
 </script>
 
 <template>
     <SideMenu
         :visible="visible"
         :menu-title="name"
-        @close="closeMenu">
+        @close="closeMenu"
+        :bottom-buttons="[{
+            iconPath: mdiPencilOutline,
+            text: 'edit',
+            click: editObject,
+        }, {
+            iconPath: mdiDeleteOutline,
+            text: 'delete',
+            click: deleteObject,
+        }]">
 
         <SideMenuCenterImage v-if="focusedObject" style="margin: 1em 0 1.5em 0"
             :src="focusedObject?.icon" />

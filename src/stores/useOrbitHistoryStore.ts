@@ -56,9 +56,9 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
         for (const { id } of value)
             if (!orbitIds.has(id))
                 orbits.value.push({
-            id,
-            points: [],
-        })
+                    id,
+                    points: [],
+                })
         const removeIds: number[] = []
         for (const orbit of orbits.value) {
             const object = valueMap.get(orbit.id)
@@ -73,7 +73,8 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
                     .subtract(orbit.points[orbit.points.length - 2]!)
                 const prevLine = orbit.points[orbit.points.length - 2]!
                     .subtract(orbit.points[orbit.points.length - 3]!)
-                const angle = curLine.angle(prevLine)
+                const angle = curLine.isZero() || prevLine.isZero() ? 0 :
+                    curLine.angle(prevLine)
                 if (Math.min(angle, 2 * Math.PI - angle) < toValue(
                 options?.minAngle ?? 0)) {
                     orbit.points.pop()
@@ -88,6 +89,8 @@ options?: OrbitHistoryOptions): OrbitHistoryReturn {
             if (orbit.points.length > (1 + nullBufferSize) * maxLength)
                 orbit.points = orbit.points.filter((value) => value != null)
         }
+        orbits.value = orbits.value.filter(({ id }) =>
+            removeIds.indexOf(id) == -1)
     }, { deep: true })
 
     /**
