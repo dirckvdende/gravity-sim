@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-    import { useEventListener } from '@vueuse/core';
-    import { onMounted, useTemplateRef, watch } from 'vue';
+    import { useTemplateRef, watch } from 'vue';
 
     const model = defineModel<number>({ default: 0 })
     const inputField = useTemplateRef("input")
@@ -17,7 +16,11 @@
     function updateInputValue(): void {
         if (!inputField.value || document.activeElement == inputField.value)
             return
-        inputField.value.value = String(model.value)
+        // Override default JS exponential display limits, since they're quite
+        // large. Also reduce decimal digits
+        inputField.value.value = Math.abs(model.value) > 1e6
+            ? model.value.toExponential(6)
+            : model.value.toFixed(6)
     }
 
     watch(model, updateInputValue)
