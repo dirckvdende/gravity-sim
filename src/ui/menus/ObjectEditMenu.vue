@@ -64,12 +64,12 @@
             x: computed({
                 get: () => vector.value.x,
                 set: (value) =>
-                    position.value = new Vector2(value, vector.value.y),
+                    vector.value = new Vector2(value, vector.value.y),
             }),
             y: computed({
                 get: () => vector.value.y,
                 set: (value) =>
-                    position.value = new Vector2(vector.value.x, value),
+                    vector.value = new Vector2(vector.value.x, value),
             }),
         }
     }
