@@ -3,7 +3,7 @@
     import { mdiDeleteOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
-    import { computed, type WritableComputedRef } from 'vue';
+    import { computed, type Ref, type WritableComputedRef } from 'vue';
     import SideMenuInputContainer from
     './side/input/SideMenuInputContainer.vue';
     import SideMenuTextInput from './side/input/SideMenuTextInput.vue';
@@ -41,18 +41,37 @@
         })
     }
 
+    /**
+     * Create separate refs for the coords of a vector, from a vector ref
+     * @param vector Vector ref to turn into refs
+     * @returns Separate refs for the x- and y-coord
+     */
+    function vectorRefs(vector: Ref<Vector2>): {
+        x: WritableComputedRef<number>
+        y: WritableComputedRef<number>
+    } {
+        return {
+            x: computed({
+                get: () => vector.value.x,
+                set: (value) =>
+                    position.value = new Vector2(value, vector.value.y),
+            }),
+            y: computed({
+                get: () => vector.value.y,
+                set: (value) =>
+                    position.value = new Vector2(vector.value.x, value),
+            }),
+        }
+    }
+
     const name = focusedObjectRef("name", "")
     const description = focusedObjectRef("description", "")
     const mass = focusedObjectRef("mass", 0)
     const position = focusedObjectRef("position", Vector2.Zero)
-    const posX = computed({
-        get: () => position.value.x,
-        set: (value) => position.value = new Vector2(value, position.value.y),
-    })
-    const posY = computed({
-        get: () => position.value.y,
-        set: (value) => position.value = new Vector2(position.value.x, value),
-    })
+    const { x: posX, y: posY } = vectorRefs(focusedObjectRef("position",
+        Vector2.Zero))
+    const { x: velX, y: velY } = vectorRefs(focusedObjectRef("velocity",
+        Vector2.Zero))
 </script>
 
 <template>
@@ -75,12 +94,21 @@
             <SideMenuInputContainer name="Mass" suffix="kg">
                 <SideMenuNumberInput v-model="mass" />
             </SideMenuInputContainer>
+
             <SideMenuInputContainer name="Position" />
             <SideMenuInputContainer name="x" suffix="m" :level=1>
                 <SideMenuNumberInput v-model="posX" />
             </SideMenuInputContainer>
             <SideMenuInputContainer name="y" suffix="m" :level=1>
                 <SideMenuNumberInput v-model="posY" />
+            </SideMenuInputContainer>
+
+            <SideMenuInputContainer name="Velocity" />
+            <SideMenuInputContainer name="x" suffix="m/s" :level=1>
+                <SideMenuNumberInput v-model="velX" />
+            </SideMenuInputContainer>
+            <SideMenuInputContainer name="y" suffix="m/s" :level=1>
+                <SideMenuNumberInput v-model="velY" />
             </SideMenuInputContainer>
         </SideMenuSection>
     </SideMenu>
