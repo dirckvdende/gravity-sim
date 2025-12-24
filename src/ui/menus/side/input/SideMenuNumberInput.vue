@@ -10,7 +10,7 @@
     }>()
 
     const model = defineModel<number>({ default: 0 })
-    const inputField = useTemplateRef("input")
+    const inputField = useTemplateRef("input-field")
 
     function input() {
         if (inputField.value == null)
@@ -41,7 +41,7 @@
         :class="$style.input"
         @input="input"
         @blur="updateInputValue"
-        ref="input" />
+        ref="input-field" />
 </template>
 
 <style lang="scss" module>
