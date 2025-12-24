@@ -76,6 +76,7 @@
     const name = focusedObjectRef("name", "")
     const description = focusedObjectRef("description", "")
     const mass = focusedObjectRef("mass", 1)
+    const size = focusedObjectRef("size", 0)
     const position = focusedObjectRef("position", Vector2.Zero)
     const { x: posX, y: posY } = vectorRefs(focusedObjectRef("position",
         Vector2.Zero))
@@ -102,6 +103,10 @@
             </SideMenuInputContainer>
             <SideMenuInputContainer name="Mass" suffix="kg">
                 <SideMenuNumberInput v-model="mass" :validator="(v) => v > 0" />
+            </SideMenuInputContainer>
+            <SideMenuInputContainer name="Diameter" suffix="m">
+                <SideMenuNumberInput v-model="size"
+                    :validator="(v) => v >= 0" />
             </SideMenuInputContainer>
 
             <SideMenuInputContainer name="Position" />
