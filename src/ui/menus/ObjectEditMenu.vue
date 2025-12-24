@@ -79,7 +79,6 @@
     const description = focusedObjectRef("description", "")
     const mass = focusedObjectRef("mass", 1)
     const size = focusedObjectRef("size", 0)
-    const position = focusedObjectRef("position", Vector2.Zero)
     const { x: posX, y: posY } = vectorRefs(focusedObjectRef("position",
         Vector2.Zero))
     const { x: velX, y: velY } = vectorRefs(focusedObjectRef("velocity",
