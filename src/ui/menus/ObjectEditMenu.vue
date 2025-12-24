@@ -10,6 +10,7 @@
     import type { StyledGravityObject } from '@/sim/object';
     import SideMenuSection from './side/SideMenuSection.vue';
     import SideMenuNumberInput from './side/input/SideMenuNumberInput.vue';
+    import Vector2 from '@/util/linalg/Vector2';
 
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
@@ -43,6 +44,15 @@
     const name = focusedObjectRef("name", "")
     const description = focusedObjectRef("description", "")
     const mass = focusedObjectRef("mass", 0)
+    const position = focusedObjectRef("position", Vector2.Zero)
+    const posX = computed({
+        get: () => position.value.x,
+        set: (value) => position.value = new Vector2(value, position.value.y),
+    })
+    const posY = computed({
+        get: () => position.value.y,
+        set: (value) => position.value = new Vector2(position.value.x, value),
+    })
 </script>
 
 <template>
@@ -64,6 +74,13 @@
             </SideMenuInputContainer>
             <SideMenuInputContainer name="Mass" suffix="kg">
                 <SideMenuNumberInput v-model="mass" />
+            </SideMenuInputContainer>
+            <SideMenuInputContainer name="Position" />
+            <SideMenuInputContainer name="x" suffix="m" :level=1>
+                <SideMenuNumberInput v-model="posX" />
+            </SideMenuInputContainer>
+            <SideMenuInputContainer name="y" suffix="m" :level=1>
+                <SideMenuNumberInput v-model="posY" />
             </SideMenuInputContainer>
         </SideMenuSection>
     </SideMenu>
