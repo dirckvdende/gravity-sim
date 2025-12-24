@@ -120,6 +120,7 @@
                 box-sizing: border-box;
                 padding: .2em;
                 cursor: pointer;
+                flex-shrink: 0;
 
                 .icon {
                     fill: var(--side-menu-head-text-color);
