@@ -12,7 +12,7 @@
     import SideMenuNumberInput from './side/input/SideMenuNumberInput.vue';
     import Vector2 from '@/util/linalg/Vector2';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
-import SideMenuImageInput from './side/input/SideMenuImageInput.vue';
+    import SideMenuImageInput from './side/input/SideMenuImageInput.vue';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
@@ -96,7 +96,9 @@ import SideMenuImageInput from './side/input/SideMenuImageInput.vue';
             text: 'delete',
             click: deleteObject,
         }]">
-        <SideMenuImageInput v-model="icon" />
+        <SideMenuSection>
+            <SideMenuImageInput v-model="icon" />
+        </SideMenuSection>
         <SideMenuSection>
             <SideMenuInputContainer name="Name">
                 <SideMenuTextInput v-model="name" />

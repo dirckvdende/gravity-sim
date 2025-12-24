@@ -55,12 +55,13 @@
         display: flex;
         width: 100%;
         box-sizing: border-box;
-        padding: 1em;
+        padding: 0 3em;
+        margin: .5em 0;
         justify-content: center;
 
         .frame {
             max-width: 100%;
-            width: 6em;
+            width: 7em;
             aspect-ratio: 1 / 1;
             padding: .5em;
             border-radius: .3em;
