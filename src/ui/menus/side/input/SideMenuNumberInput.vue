@@ -33,7 +33,7 @@
             : model.value.toFixed(6)
     }
 
-    watch(model, updateInputValue)
+    watch([model, inputField], updateInputValue)
 </script>
 
 <template>
