@@ -1,6 +1,14 @@
 <script lang="ts" setup>
     import { useTemplateRef, watch } from 'vue';
 
+    const { validator } = defineProps<{
+        /**
+         * An optional validator that gets called any time the user edits the
+         * value. If the value is not valid the actual model value isn't updated
+         */
+        validator?: (value: number) => boolean
+    }>()
+
     const model = defineModel<number>({ default: 0 })
     const inputField = useTemplateRef("input")
 
@@ -9,6 +17,8 @@
             return
         const result = Number(inputField.value.value)
         if (Number.isNaN(result))
+            return
+        if (!(validator?.(result) ?? true))
             return
         model.value = result
     }
