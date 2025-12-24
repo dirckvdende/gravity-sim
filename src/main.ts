@@ -7,5 +7,6 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersistedState)
 
 const app = createApp(App)
+app.config.performance = true
 app.use(pinia)
 app.mount('#app')
