@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
-    mdiFullscreen, mdiFolderOpenOutline, mdiPlus} from '@mdi/js';
+    mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline } from
+    '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../../util/keyEvent';
     import BottomMenu from './bottom/BottomMenu.vue';
@@ -146,6 +147,12 @@
     }
 
     useKeyEvent("A", addObject, { caseInsensitive: true })
+
+    /** Delete all objects in the sim */
+    function deleteObjects(): void {
+        focusedObject.value = null
+        objects.value = []
+    }
 </script>
 
 <template>
@@ -172,6 +179,9 @@
             <BottomMenuButton
                 :path-icon="mdiPlus"
                 @click="addObject">Add object (A)</BottomMenuButton>
+            <BottomMenuButton
+                :path-icon="mdiDeleteOutline"
+                @click="deleteObjects">Delete all objects</BottomMenuButton>
         </BottomMenuSection>
         <BottomMenuSection>
             <BottomMenuButton
