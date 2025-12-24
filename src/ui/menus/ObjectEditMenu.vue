@@ -11,7 +11,9 @@
     import SideMenuSection from './side/SideMenuSection.vue';
     import SideMenuNumberInput from './side/input/SideMenuNumberInput.vue';
     import Vector2 from '@/util/linalg/Vector2';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
 
+    const { objects } = storeToRefs(useGravitySimStore())
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
         activeMenu.value == "object-edit" && focusedObject.value != null)
@@ -19,6 +21,13 @@
     /** Close this menu */
     function closeMenu(): void {
         activeMenu.value = "none"
+    }
+
+    /** Delete the currently focused object */
+    function deleteObject(): void {
+        objects.value = objects.value.filter((object) =>
+            object != focusedObject.value)
+        closeMenu()
     }
 
     /**
@@ -82,7 +91,7 @@
         :bottom-buttons="[{
             iconPath: mdiDeleteOutline,
             text: 'delete',
-            click: () => console.log('delete'),
+            click: deleteObject,
         }]">
         <SideMenuSection>
             <SideMenuInputContainer name="Name">
