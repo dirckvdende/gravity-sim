@@ -2,6 +2,14 @@
     import { useDropZone, useFileDialog } from '@vueuse/core';
     import { useTemplateRef } from 'vue';
 
+    const { presets } = defineProps<{
+        /**
+         * Preset icons that can be selected from a list below the image
+         * (default no presets)
+         */
+        presets?: string[]
+    }>()
+
     const model = defineModel<string>({ default: "./icons/empty.svg" })
 
     /**
@@ -48,6 +56,13 @@
             </button>
         </div>
     </div>
+    <div :class="$style['list-container']" v-if="presets">
+        <button v-for="preset in presets" :class="[$style.item, {
+            [$style.selected]: preset == model,
+        }]" @click="model = preset">
+            <img :src="preset" />
+        </button>
+    </div>
 </template>
 
 <style lang="scss" module>
@@ -80,6 +95,42 @@
                 height: 100%;
                 object-fit: contain;
             }
+        }
+    }
+
+    .list-container {
+        width: 100%;
+        box-sizing: border-box;
+        margin: .5em 0;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .item {
+            width: 2.5em;
+            height: 2.5em;
+            border: .15em solid transparent;
+            flex-shrink: 0;
+            margin: .1em;
+            border-radius: .3em;
+            background-color: transparent;
+            cursor: pointer;
+            box-sizing: border-box;
+            padding: .3em;
+
+            & > img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        .item:hover {
+            border-color: var(--side-menu-input-border-color);
+        }
+
+        .item.selected {
+            border-color: var(--side-menu-input-border-color-focus);
         }
     }
 </style>
