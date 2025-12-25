@@ -109,8 +109,10 @@ export default class Vector2 {
     angle(other?: Vector2): number {
         if (this.isZero() || (other?.isZero() ?? false))
             throw new Error("Cannot determine angle of zero vector")
-        if (other == undefined)
-            return Math.atan2(this.y, this.x)
+        if (other == undefined) {
+            const angle = Math.atan2(this.y, this.x)
+            return angle < 0 ? angle + 2 * Math.PI : angle
+        }
         const thisAngle = this.angle()
         const otherAngle = other.angle()
         const diff = otherAngle - thisAngle
