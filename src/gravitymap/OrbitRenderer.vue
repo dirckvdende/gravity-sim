@@ -30,5 +30,6 @@
         v-for="{ id, position} in objects"
         :key="id"
         :point="position"
-        ref="orbits" />
+        ref="orbits"
+        :min-angle="Math.PI / 200" />
 </template>
