@@ -1,7 +1,9 @@
 <script setup lang="ts">
     import { defaultState, mapStateKey } from '@/map/state';
+    import { useOrbitsStore } from '@/stores/useOrbitsStore';
     import Vector2 from '@/util/linalg/Vector2';
-    import { computed, inject, ref, watch } from 'vue';
+    import { storeToRefs } from 'pinia';
+    import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue';
 
     // Maximum number of points used in a single SVG <path>
     const GROUP_SIZE = 50
@@ -114,6 +116,17 @@
             }
         }
     }
+
+    /** Clear all orbits */
+    function clear(): void {
+        paths.value = []
+        totalPoints.value = 0
+    }
+
+    const { clearCallbacks } = storeToRefs(useOrbitsStore())
+    onMounted(() => clearCallbacks.value.push(clear))
+    onUnmounted(() => clearCallbacks.value = clearCallbacks.value.filter((f) =>
+        f != clear))
 </script>
 
 <template>
