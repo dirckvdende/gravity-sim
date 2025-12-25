@@ -96,7 +96,22 @@
             click: deleteObject,
         }]">
         <SideMenuSection>
-            <SideMenuImageInput v-model="icon" />
+            <SideMenuImageInput v-model="icon" :presets="[
+                './icons/sun.svg',
+                './icons/moon.svg',
+                './icons/mercury.svg',
+                './icons/venus.svg',
+                './icons/earth.svg',
+                './icons/mars.svg',
+                './icons/jupiter.svg',
+                './icons/saturn.svg',
+                './icons/uranus.svg',
+                './icons/neptune.svg',
+                './icons/pluto.svg',
+                './icons/charon.svg',
+                './icons/nix.svg',
+                './icons/kerberos.svg',
+            ]" />
         </SideMenuSection>
         <SideMenuSection>
             <SideMenuInputContainer name="Name">
