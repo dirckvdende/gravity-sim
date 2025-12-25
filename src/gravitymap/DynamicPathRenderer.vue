@@ -9,11 +9,17 @@
     const {
         point,
         maxPoints = 1000,
+        minAngle = 0,
     } = defineProps<{
         /** Current head of the path */
         point: Vector2
         /** Maximum number of points to include in the path (default 1000) */
         maxPoints?: number
+        /**
+         * Minimum angle in radians between two lines to draw a new line
+         * (default 0)
+         */
+        minAngle?: number
     }>()
 
     const {
@@ -79,6 +85,19 @@
         const coords = toScaleCoords(point)
         const lastPath = paths.value[paths.value.length - 1]
         if (lastPath != undefined) {
+            // Remove last path point in case of small angle
+            if (lastPath.points.length >= 2 && isSmallAngle(
+                lastPath.points[lastPath.points.length - 2]!,
+                lastPath.points[lastPath.points.length - 1]!,
+                point,
+            )) {
+                const index = lastPath.d.lastIndexOf("L")
+                if (index != -1) {
+                    lastPath.d = lastPath.d.substring(0, index)
+                    lastPath.points.pop()
+                    totalPoints.value--
+                }
+            }
             lastPath.points.push(point)
             lastPath.d += ` L ${coords.x} ${coords.y}`
         }
@@ -89,6 +108,18 @@
             })
         }
         totalPoints.value++
+    }
+
+    function isSmallAngle(pointA: Vector2, pointB: Vector2, pointC: Vector2):
+    boolean {
+        const vectorA = pointB.subtract(pointA)
+        const vectorB = pointC.subtract(pointB)
+        if (vectorA.isZero() || vectorB.isZero())
+            return true
+        const angle = vectorA.angle(vectorB)
+        const trueAngle = Math.min(angle, 2 * Math.PI - angle)
+        // NOTE: I haven't figured out why the "* 2" is required here...
+        return trueAngle * 2 < minAngle
     }
 
     /**
