@@ -3,6 +3,7 @@
     import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject, ref, watch } from 'vue';
 
+    // Maximum number of points used in a single SVG <path>
     const GROUP_SIZE = 50
 
     const {
@@ -22,6 +23,7 @@
         pixelSize,
     } = inject(mapStateKey, defaultState())
 
+    /** SVG path with fallback points */
     type Path = {
         /** SVG path definition */
         d: string
@@ -29,15 +31,24 @@
         points: Vector2[]
     }
 
+    // List of paths to render. This ref is updated by addPoint and
+    // removeFirstPath
     const paths = ref<Path[]>([])
+    // Total number of points in all paths
     const totalPoints = ref(0)
+    // Target zoom level at which orbits are drawn. This value remains fixed
+    // unless the actual zoom level changes by a factor of 1000 (10^3)
     const targetScale = computed(() => Math.floor(zoomLevel.value / 3) * 3)
+    // When target scale changes, recalculate all SVG paths
     watch(targetScale, () => recalculatePaths())
+    // When point changes, add it to the last path. Remove first path when there
+    // are too many points
     watch(() => point, (point) => {
         addPoint(point)
         if (totalPoints.value > maxPoints)
-            removeFirstPart()
+            removeFirstPath()
     }, { deep: false })
+    // Transform to apply to all SVG elements
     const transform = computed(() => {
         const scale = `scale(${Math.exp(zoomLevel.value - targetScale.value)})`
         const pixelScale = Math.exp(-targetScale.value)
@@ -51,10 +62,19 @@
         return `${translateAfter} ${scale} ${translateBefore}`
     })
 
+    /**
+     * Coordinate transform for path coordinates
+     * @param point The original point coordinates
+     * @returns The SVG path point coordinates
+     */
     function toScaleCoords(point: Vector2): Vector2 {
         return point.scale(Math.exp(targetScale.value))
     }
 
+    /**
+     * Add a point to the last path
+     * @param point Coordinates of the point to add
+     */
     function addPoint(point: Vector2): void {
         const coords = toScaleCoords(point)
         const lastPath = paths.value[paths.value.length - 1]
@@ -71,7 +91,10 @@
         totalPoints.value++
     }
 
-    function removeFirstPart(): void {
+    /**
+     * Remove the first path
+     */
+    function removeFirstPath(): void {
         const firstPath = paths.value[0]
         if (firstPath == undefined)
             return
@@ -79,6 +102,9 @@
         paths.value.splice(0, 1)
     }
 
+    /**
+     * Recalculate all SVG path definitions using toScaleCoords()
+     */
     function recalculatePaths(): void {
         for (const path of paths.value) {
             path.d = ""
@@ -114,7 +140,6 @@
 
         .line {
             stroke: var(--orbit-color, #aaa);
-            stroke-width: 2;
             fill: none;
         }
     }
