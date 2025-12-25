@@ -1,20 +1,35 @@
 <script setup lang="ts">
-    import PathRenderer from '@/map/renderers/PathRenderer.vue';
     import { storeToRefs } from 'pinia';
-    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import { watch } from 'vue';
+    import DynamicPathRenderer from './DynamicPathRenderer.vue';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
+    import { onMounted, onUnmounted, useTemplateRef } from 'vue';
+    import { useOrbitsStore } from '@/stores/useOrbitsStore';
 
     const { showOrbits } = storeToRefs(useSettingsStore())
-    const store = useOrbitHistoryStore()
-    const { orbits } = storeToRefs(store)
+    const { objects } = storeToRefs(useGravitySimStore())
 
-    watch(showOrbits, () => store.clearOrbits())
+    const orbits = useTemplateRef("orbits")
+    /** Clear all orbits */
+    function clear(): void {
+        if (orbits.value == null)
+            return
+        for (const orbit of orbits.value)
+            orbit?.clear()
+    }
+
+    const { clearCallbacks } = storeToRefs(useOrbitsStore())
+    onMounted(() => clearCallbacks.value.push(clear))
+    onUnmounted(() => clearCallbacks.value = clearCallbacks.value.filter((f) =>
+        f != clear))
 </script>
 
 <template>
-    <PathRenderer
+    <DynamicPathRenderer
         v-if="showOrbits"
-        v-for="orbit in orbits"
-        :points="orbit.points.filter((value) => value != null)" />
+        v-for="{ id, position} in objects"
+        :key="id"
+        :point="position"
+        ref="orbits"
+        :min-angle="Math.PI / 200" />
 </template>

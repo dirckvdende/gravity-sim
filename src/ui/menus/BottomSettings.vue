@@ -16,10 +16,10 @@
     import { useMenuStore } from '@/stores/useMenuStore';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import Vector2 from '@/util/linalg/Vector2';
-    import { useOrbitHistoryStore } from '@/stores/useOrbitHistoryStore';
     import { getState } from '@/filesystem/state.mjs';
     import { saveToFile } from '@/filesystem/save.mjs';
     import type { StyledGravityObject } from '@/sim/object';
+    import { useOrbitsStore } from '@/stores/useOrbitsStore';
 
     const {
         showBarycenter,
@@ -92,7 +92,7 @@
     function resetToBarycenter() {
         useGravitySimStore().resetToBarycenter()
         useGravityMapStore().position = Vector2.Zero
-        useOrbitHistoryStore().clearOrbits()
+        useOrbitsStore().clear()
     }
 
     useKeyEvent("B", toggleBarycenter, { caseInsensitive: true })

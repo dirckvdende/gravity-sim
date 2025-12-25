@@ -4,9 +4,9 @@ import type { StateFile } from "./statefile.mts"
 import { storeToRefs } from "pinia"
 import { usePropertiesStore } from "@/stores/usePropertiesStore"
 import { useGravityMapStore } from "@/stores/useGravityMapStore"
-import { useOrbitHistoryStore } from "@/stores/useOrbitHistoryStore"
 import { useMenuStore } from "@/stores/useMenuStore"
 import { useSettingsStore } from "@/stores/useSettingsStore"
+import { useOrbitsStore } from "@/stores/useOrbitsStore"
 
 /**
  * Get the current state as a state file object. The entire state is deep copied
@@ -49,9 +49,8 @@ export function setState(state: Partial<StateFile>): void {
  * opened menus. Also pauses the sim
  */
 function cleanupForStateLoad(): void {
-    const { clearOrbits } = useOrbitHistoryStore()
     const { activeMenu } = storeToRefs(useMenuStore())
-    clearOrbits()
+    useOrbitsStore().clear()
     activeMenu.value = "none"
     const { paused } = storeToRefs(useSettingsStore())
     paused.value = true
