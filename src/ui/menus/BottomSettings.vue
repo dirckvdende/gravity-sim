@@ -27,6 +27,7 @@
         darkMode,
         showGrid,
         showVelocityArrows,
+        showAccelerationArrows,
     } = storeToRefs(useSettingsStore())
     const { speed, paused } = storeToRefs(useSettingsStore())
     const { slowed, objects } = storeToRefs(useGravitySimStore())
@@ -157,6 +158,8 @@
 
     useKeyEvent("V", () => showVelocityArrows.value = !showVelocityArrows.value,
         { caseInsensitive: true })
+    useKeyEvent("F", () => showAccelerationArrows.value =
+        !showAccelerationArrows.value, { caseInsensitive: true })
 </script>
 
 <template>
@@ -215,6 +218,13 @@
                     '--icon-color': showVelocityArrows ?
                         'var(--accent-color-blue)' : undefined
                 }">Show velocities (V)</BottomMenuButton>
+            <BottomMenuButton
+                :path-icon="mdiArrowTopRight"
+                @click="showAccelerationArrows = !showAccelerationArrows"
+                :style="{
+                    '--icon-color': showAccelerationArrows ?
+                        'var(--accent-color-purple)' : undefined
+                }">Show accelerations (F)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiGrid"
                 @click="toggleGrid"
