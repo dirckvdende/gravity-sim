@@ -3,11 +3,17 @@
     import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject } from 'vue';
 
-    const { start, end } = defineProps<{
+    const {
+        start,
+        end,
+        color = "var(--accent-color-blue)",
+    } = defineProps<{
         /** Coordinates of the start of the arrow */
         start: Vector2
         /** Coordinates of the tip of the arrow */
         end: Vector2
+        /** Arrow color (default blue accent color) */
+        color?: string
     }>()
 
     const HANDLE_ANGLE = Math.PI * 0.22
@@ -31,7 +37,9 @@
 </script>
 
 <template>
-    <svg :class="$style.svg">
+    <svg :class="$style.svg" :style="{
+        '--line-color': color,
+    }">
         <line
             :class="$style.line"
             :x1="startCoords.x"
@@ -62,7 +70,8 @@
         height: 100%;
         
         .line {
-            stroke: color-mix(in srgb, var(--accent-color-blue, blue), var(--background-color) 30%);
+            stroke: color-mix(in srgb, var(--line-color),
+                var(--background-color) 30%);
             fill: none;
             stroke-width: 2;
             stroke-linecap: round;
