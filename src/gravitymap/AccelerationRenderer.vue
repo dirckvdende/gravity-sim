@@ -68,5 +68,5 @@
         v-for="arrow in arrows"
         :start="arrow.start"
         :end="arrow.end"
-        color="var(--accent-color-purple)" />
+        color="var(--accent-color-red)" />
 </template>

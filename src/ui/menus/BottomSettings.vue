@@ -223,7 +223,7 @@
                 @click="showAccelerationArrows = !showAccelerationArrows"
                 :style="{
                     '--icon-color': showAccelerationArrows ?
-                        'var(--accent-color-purple)' : undefined
+                        'var(--accent-color-red)' : undefined
                 }">Show accelerations (F)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiGrid"
