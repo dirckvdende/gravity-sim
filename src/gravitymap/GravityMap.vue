@@ -13,6 +13,7 @@
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import VelocityRenderer from './VelocityRenderer.vue';
+import AccelerationRenderer from './AccelerationRenderer.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
@@ -49,6 +50,7 @@
             color="var(--grid-color, #eee)" />
         <OrbitRenderer />
         <VelocityRenderer />
+        <AccelerationRenderer />
         <GravityIconRenderer />
         <BarycenterRenderer />
         <Ruler />
