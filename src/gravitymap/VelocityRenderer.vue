@@ -8,24 +8,23 @@
 
     // Mass added to the mass total to avoid division by zero
     const EXTRA_MASS = 1e-6
-    // Arrow length will be this scale multiplied with velocity / totalMass
-    // / e^(2 * zoomLevel)
-    const ARROW_SCALE = 1e19
+    // Arrow length will be this scale multiplied with velocity / sqrt(totalMass
+    //  * e^zoomLevel) / e^zoomLevel
+    const ARROW_SCALE = 1e8
 
     const { pixelSize } = inject(mapStateKey, defaultState())
     const { objects } = storeToRefs(useGravitySimStore())
-    const totalMass = computed(() => objects.value.reduce((prev, cur) => prev +
-        cur.mass, 0))
+    const totalMass = computed(() =>
+        objects.value.reduce((prev, cur) => prev + cur.mass, 0) + EXTRA_MASS)
     
     const arrows = computed(() => {
         const out: {
             start: Vector2
             end: Vector2
         }[] = []
-        const mass = totalMass.value + EXTRA_MASS
         for (const object of objects.value) {
-            const arrowSize = ARROW_SCALE * object.velocity.length() / mass
-                * pixelSize.value * pixelSize.value
+            const arrowSize = ARROW_SCALE * object.velocity.length()
+                / Math.sqrt(totalMass.value / pixelSize.value) * pixelSize.value
             out.push({
                 start: object.position,
                 end: object.position.add(object.velocity.normalize()
