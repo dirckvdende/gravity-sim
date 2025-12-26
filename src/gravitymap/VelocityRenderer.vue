@@ -11,6 +11,8 @@
     // Arrow length will be this scale multiplied with velocity / sqrt(totalMass
     //  * e^zoomLevel) / e^zoomLevel
     const ARROW_SCALE = 1e8
+    // Length cutoff in pixels above which arrows are no longer rendered
+    const LENGTH_CUTOFF = 200
 
     const { pixelSize } = inject(mapStateKey, defaultState())
     const { objects } = storeToRefs(useGravitySimStore())
@@ -23,8 +25,11 @@
             end: Vector2
         }[] = []
         for (const object of objects.value) {
-            const arrowSize = ARROW_SCALE * object.velocity.length()
-                / Math.sqrt(totalMass.value / pixelSize.value) * pixelSize.value
+            const arrowSizePixels = ARROW_SCALE * object.velocity.length()
+                / Math.sqrt(totalMass.value / pixelSize.value)
+            if (arrowSizePixels > LENGTH_CUTOFF)
+                continue
+            const arrowSize = arrowSizePixels * pixelSize.value
             out.push({
                 start: object.position,
                 end: object.position.add(object.velocity.normalize()
