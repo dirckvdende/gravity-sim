@@ -12,6 +12,7 @@
     import { syncRef } from '@vueuse/core';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
+    import VelocityRenderer from './VelocityRenderer.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
@@ -47,6 +48,7 @@
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
         <OrbitRenderer />
+        <VelocityRenderer />
         <GravityIconRenderer />
         <BarycenterRenderer />
         <Ruler />
