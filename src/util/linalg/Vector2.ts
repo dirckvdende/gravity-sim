@@ -120,6 +120,18 @@ export default class Vector2 {
     }
 
     /**
+     * Rotate this vector by a given angle, counterclockwise
+     * @param angle The angle in radians by which to rotate the vector
+     * @returns The rotated vector
+     */
+    rotate(angle: number): Vector2 {
+        return new Vector2(
+            this.x * Math.cos(angle) - this.y * Math.sin(angle),
+            this.x * Math.sin(angle) + this.y * Math.cos(angle),
+        )
+    }
+
+    /**
      * Find the distance to another vector
      * @param other The other vector
      * @returns The distance
