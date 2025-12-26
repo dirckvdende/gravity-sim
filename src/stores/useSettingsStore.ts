@@ -15,6 +15,8 @@ export const useSettingsStore = defineStore("settings", () => ({
     showGrid: ref(true),
     /** Whether orbits should be displayed */
     showOrbits: ref(true),
+    /** Whether to show velocity direction/magnitude arrows of objects */
+    showVelocityArrows: ref(false),
     /** Whether an icon should be displayed at the barycenter of the system */
     showBarycenter: ref(false),
 }), {

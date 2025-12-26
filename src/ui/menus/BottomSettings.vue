@@ -1,8 +1,8 @@
 <script lang="ts" setup>
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
-    mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline } from
-    '@mdi/js';
+    mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
+    mdiArrowTopRight } from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '../../util/keyEvent';
     import BottomMenu from './bottom/BottomMenu.vue';
@@ -26,6 +26,7 @@
         showOrbits,
         darkMode,
         showGrid,
+        showVelocityArrows,
     } = storeToRefs(useSettingsStore())
     const { speed, paused } = storeToRefs(useSettingsStore())
     const { slowed, objects } = storeToRefs(useGravitySimStore())
@@ -153,6 +154,9 @@
         focusedObject.value = null
         objects.value = []
     }
+
+    useKeyEvent("V", () => showVelocityArrows.value = !showVelocityArrows.value,
+        { caseInsensitive: true })
 </script>
 
 <template>
@@ -204,6 +208,13 @@
                     '--icon-color': showOrbits ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Show orbits (O)</BottomMenuButton>
+            <BottomMenuButton
+                :path-icon="mdiArrowTopRight"
+                @click="showVelocityArrows = !showVelocityArrows"
+                :style="{
+                    '--icon-color': showVelocityArrows ?
+                        'var(--accent-color-blue)' : undefined
+                }">Show velocities (V)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiGrid"
                 @click="toggleGrid"
