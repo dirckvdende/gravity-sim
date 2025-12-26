@@ -60,9 +60,9 @@
         left: 0;
         width: 100%;
         height: 100%;
-
+        
         .line {
-            stroke: red;
+            stroke: color-mix(in srgb, var(--accent-color-blue, blue), var(--background-color) 30%);
             fill: none;
             stroke-width: 2;
             stroke-linecap: round;
