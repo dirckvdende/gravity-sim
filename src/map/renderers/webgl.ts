@@ -1,5 +1,7 @@
 
-import { computed, shallowRef, toRef, toValue, watch, type ComputedRef, type MaybeRefOrGetter } from "vue"
+import { useDevicePixelRatio, useElementSize } from "@vueuse/core"
+import { computed, toRef, toValue, watch, type ComputedRef, type InjectionKey,
+type MaybeRefOrGetter } from "vue"
 
 /**
  * Compile a shader from source code
@@ -30,7 +32,7 @@ sourceCode: string): WebGLShader {
  */
 export function createVertexShader(gl: WebGLRenderingContext,
 sourceCode: string): WebGLShader {
-    return createShader(gl, WebGLRenderingContext.VERTEX_SHADER, sourceCode)
+    return createShader(gl, gl.VERTEX_SHADER, sourceCode)
 }
 
 /**
@@ -41,7 +43,7 @@ sourceCode: string): WebGLShader {
  */
 export function createFragmentShader(gl: WebGLRenderingContext,
 sourceCode: string): WebGLShader {
-    return createShader(gl, WebGLRenderingContext.FRAGMENT_SHADER, sourceCode)
+    return createShader(gl, gl.FRAGMENT_SHADER, sourceCode)
 }
 
 /**
@@ -111,6 +113,8 @@ export type UseWebGLReturn = {
      * @param id Identifier returned by addCallbacks
      */
     removeCallbacks: (id: number) => void
+    /** When called, an extra frame is rendered */
+    extraFrame: () => void
 }
 
 /**
@@ -192,5 +196,18 @@ UseWebGLReturn {
         callbackList.delete(id)
     }
 
-    return { gl, addCallbacks, removeCallbacks }
+    /**
+     * Render an extra frame. This can be useful when canvas is cleared because
+     * its size changes
+     */
+    function extraFrame(): void {
+        if (!gl.value)
+            return
+        frame(gl.value)
+    }
+
+    return { gl, addCallbacks, removeCallbacks, extraFrame }
 }
+
+/** Key for injected WebGL context */
+export const webGLKey = Symbol() as InjectionKey<UseWebGLReturn>
