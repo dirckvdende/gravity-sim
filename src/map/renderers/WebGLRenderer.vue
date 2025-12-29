@@ -1,15 +1,11 @@
 <script setup lang="ts">
-    import { provide, useTemplateRef, watch } from 'vue';
+    import { provide, useTemplateRef } from 'vue';
     import { useWebGL, webGLKey, createProgram } from './webgl';
-    import { useAdaptiveCanvasSize } from './useAdaptiveCanvasSize';
 
     const canvas = useTemplateRef("canvas")
     const webgl = useWebGL(canvas)
     provide(webGLKey, webgl)
-    const { addCallbacks, extraFrame } = webgl
-
-    const { width, height } = useAdaptiveCanvasSize(canvas)
-    watch([width, height], () => extraFrame())
+    const { addCallbacks } = webgl
 
     let program: WebGLProgram | null = null
     let positionLocation = 0

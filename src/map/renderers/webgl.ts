@@ -1,7 +1,7 @@
 
-import { useDevicePixelRatio, useElementSize } from "@vueuse/core"
-import { computed, toRef, toValue, watch, type ComputedRef, type InjectionKey,
-type MaybeRefOrGetter } from "vue"
+import { computed, toValue, watch, type ComputedRef, type InjectionKey,
+type MaybeRefOrGetter, type ShallowRef} from "vue"
+import { useAdaptiveCanvasSize } from "./useAdaptiveCanvasSize"
 
 /**
  * Compile a shader from source code
@@ -115,10 +115,15 @@ export type UseWebGLReturn = {
     removeCallbacks: (id: number) => void
     /** When called, an extra frame is rendered */
     extraFrame: () => void
+    /** Width of the canvas */
+    canvasWidth: Readonly<ShallowRef<number>>
+    /** Height of the canvas */
+    canvasHeight: Readonly<ShallowRef<number>>
 }
 
 /**
- * Get a WebGL rendering context for a canvas element
+ * Get a WebGL rendering context for a canvas element. This also automatically
+ * changes the canvas width and height to the correct number of screen pixels
  * @param canvas The canvas element to create a WebGL rendering context for
  * @returns The rendering context, and addCallbacks and removeCallbacks
  * functions to manage callbacks at initialization, every frame, and at exit
@@ -196,17 +201,23 @@ UseWebGLReturn {
         callbackList.delete(id)
     }
 
-    /**
-     * Render an extra frame. This can be useful when canvas is cleared because
-     * its size changes
-     */
+    /** Render an extra frame */
     function extraFrame(): void {
         if (!gl.value)
             return
         frame(gl.value)
     }
 
-    return { gl, addCallbacks, removeCallbacks, extraFrame }
+    const {
+        width: canvasWidth,
+        height: canvasHeight,
+    } = useAdaptiveCanvasSize(canvas)
+    watch([canvasWidth, canvasHeight], () => extraFrame())
+
+    return {
+        gl, addCallbacks, removeCallbacks, extraFrame, canvasWidth,
+        canvasHeight,
+    }
 }
 
 /** Key for injected WebGL context */
