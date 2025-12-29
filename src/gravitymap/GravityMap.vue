@@ -4,7 +4,7 @@
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
     import { storeToRefs } from 'pinia';
-    import { onMounted, useTemplateRef, watch, type Ref } from 'vue';
+    import { onMounted, useTemplateRef } from 'vue';
     import GravityIconRenderer from './GravityIconRenderer.vue';
     import OrbitRenderer from './OrbitRenderer.vue';
     import BarycenterRenderer from './BarycenterRenderer.vue';
@@ -13,7 +13,8 @@
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import VelocityRenderer from './VelocityRenderer.vue';
-import AccelerationRenderer from './AccelerationRenderer.vue';
+    import AccelerationRenderer from './AccelerationRenderer.vue';
+    import WebGLRenderer from '@/map/renderers/WebGLRenderer.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
@@ -49,6 +50,7 @@ import AccelerationRenderer from './AccelerationRenderer.vue';
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
         <OrbitRenderer />
+        <WebGLRenderer />
         <VelocityRenderer />
         <AccelerationRenderer />
         <GravityIconRenderer />
