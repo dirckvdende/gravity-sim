@@ -77,24 +77,24 @@ WebGLProgram {
  * Object that can be used to set callbacks when WebGL rendering context
  * changes, at initialization, at exit, and every frame
  */
-export type WebGLCallbacks = {
+export type WebGLCallbacks<T> = {
     /**
      * Called on initialization of a rendering context, and when the callback is
      * registered and there's already a context present
      * @param gl The rendering context
      */
-    init?: (gl: WebGLRenderingContext) => void
+    init?: (gl: WebGLRenderingContext) => T
     /**
      * Called every frame, as long as there's a rendering context
      * @param gl The rendering context
      */
-    frame?: (gl: WebGLRenderingContext) => void
+    frame?: (gl: WebGLRenderingContext, data: T) => void
     /**
      * Called on exit of a rendering context, and when the callback is
      * unregistered and there's a context present
      * @param gl The rendering context
      */
-    exit?: (gl: WebGLRenderingContext) => void
+    exit?: (gl: WebGLRenderingContext, data: T) => void
 }
 
 /** Return value of the useWebGL composable */
@@ -107,7 +107,7 @@ export type UseWebGLReturn = {
      * @returns Unique identifier that can be used to remove the callbacks using
      * removeCallbacks()
      */
-    addCallbacks: (callbacks: WebGLCallbacks) => number
+    addCallbacks: <T>(callbacks: WebGLCallbacks<T>) => number
     /**
      * Remove callbacks createed with addCallbacks()
      * @param id Identifier returned by addCallbacks
@@ -130,10 +130,11 @@ export type UseWebGLReturn = {
  */
 export function useWebGL(canvas: MaybeRefOrGetter<HTMLCanvasElement | null>):
 UseWebGLReturn {
-    const callbackList: [number, WebGLCallbacks][] = []
+    // List with ID, callbacks, and callbacks data
+    const callbackList: [number, WebGLCallbacks<any>, any][] = []
     let availableId = 0
     const gl = computed(() =>
-        toValue(canvas)?.getContext("webgl", { antialias: true}) ?? null)
+        toValue(canvas)?.getContext("webgl", { antialias: true }) ?? null)
     let animationFrame = -1
 
     /**
@@ -143,8 +144,10 @@ UseWebGLReturn {
     function init(gl: WebGLRenderingContext): void {
         gl.viewport(0, 0, toValue(canvas)?.width ?? 0,
             toValue(canvas)?.height ?? 0)
-        for (const [ _id, { init } ] of callbackList)
-            init?.(gl)
+        for (const entry of callbackList) {
+            const [_id, { init }] = entry
+            entry[2] = init?.(gl)
+        }
         animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
@@ -158,8 +161,8 @@ UseWebGLReturn {
             toValue(canvas)?.height ?? 0)
         gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT)
-        for (const [ _id, { frame } ] of callbackList)
-            frame?.(gl)
+        for (const [ _id, { frame }, data ] of callbackList)
+            frame?.(gl, data)
         animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
@@ -171,8 +174,8 @@ UseWebGLReturn {
         if (animationFrame != -1)
             cancelAnimationFrame(animationFrame)
         animationFrame = -1
-        for (const [ _id, { exit } ] of callbackList)
-            exit?.(gl)
+        for (const [ _id, { exit }, data ] of callbackList)
+            exit?.(gl, data)
     }
 
     watch(gl, (newGL, oldGL) => {
@@ -188,11 +191,12 @@ UseWebGLReturn {
      * @returns Unique identifier that can be used to remove the callbacks using
      * removeCallbacks()
      */
-    function addCallbacks(callbacks: WebGLCallbacks): number {
+    function addCallbacks<T>(callbacks: WebGLCallbacks<T>): number {
         const id = availableId++
-        callbackList.push([id, { ...callbacks }])
+        const entry: (typeof callbackList)[0] = [id, { ...callbacks }, null]
         if (gl.value != null)
-            callbacks.init?.(gl.value)
+            entry[2] = callbacks.init?.(gl.value)
+        callbackList.push(entry)
         return id
     }
 
@@ -203,7 +207,7 @@ UseWebGLReturn {
     function removeCallbacks(id: number): void {
         const index = callbackList.findIndex(([itemId]) => id == itemId)
         if (gl.value != null)
-            callbackList[index]?.[1].exit?.(gl.value)
+            callbackList[index]?.[1].exit?.(gl.value, callbackList[index]?.[2])
         if (index != -1)
             callbackList.splice(index, 1)
     }

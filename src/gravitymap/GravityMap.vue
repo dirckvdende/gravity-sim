@@ -4,7 +4,7 @@
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
     import { storeToRefs } from 'pinia';
-    import { onMounted, useTemplateRef } from 'vue';
+    import { onMounted, ref, useTemplateRef } from 'vue';
     import GravityIconRenderer from './GravityIconRenderer.vue';
     import OrbitRenderer from './OrbitRenderer.vue';
     import BarycenterRenderer from './BarycenterRenderer.vue';
@@ -15,6 +15,8 @@
     import VelocityRenderer from './VelocityRenderer.vue';
     import AccelerationRenderer from './AccelerationRenderer.vue';
     import WebGLRenderer from '@/map/renderers/webgl/WebGLRenderer.vue';
+    import TriangleStripRenderer from '@/map/renderers/webgl/TriangleStripRenderer.vue';
+    import Vector2 from '@/util/linalg/Vector2';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
@@ -38,6 +40,9 @@
             return
         syncGravityMapStore()
     })
+
+    const visible = ref(false)
+    setInterval(() => visible.value = !visible.value, 1000)
 </script>
 
 <template>
@@ -50,7 +55,9 @@
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
         <OrbitRenderer />
-        <WebGLRenderer />
+        <WebGLRenderer>
+            <TriangleStripRenderer v-if="visible" :head="Vector2.Zero" />
+        </WebGLRenderer>
         <VelocityRenderer />
         <AccelerationRenderer />
         <GravityIconRenderer />
