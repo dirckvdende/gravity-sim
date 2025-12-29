@@ -1,7 +1,7 @@
 
 import { computed, toValue, watch, type ComputedRef, type InjectionKey,
 type MaybeRefOrGetter, type ShallowRef} from "vue"
-import { useAdaptiveCanvasSize } from "./useAdaptiveCanvasSize"
+import { useAdaptiveCanvasSize } from "../useAdaptiveCanvasSize"
 
 /**
  * Compile a shader from source code
@@ -223,6 +223,3 @@ UseWebGLReturn {
         canvasHeight,
     }
 }
-
-/** Key for injected WebGL context */
-export const webGLKey = Symbol() as InjectionKey<UseWebGLReturn>

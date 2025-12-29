@@ -1,6 +1,6 @@
 
 import { useDevicePixelRatio, useElementSize } from "@vueuse/core";
-import { toRef, watch, type MaybeRefOrGetter, type ShallowRef,
+import { computed, toRef, watch, type ComputedRef, type MaybeRefOrGetter,
 type WatchHandle } from "vue";
 
 /**
@@ -15,18 +15,20 @@ type WatchHandle } from "vue";
 export function useAdaptiveCanvasSize(canvas: MaybeRefOrGetter<
 HTMLCanvasElement | null>): {
     watchHandle: WatchHandle
-    width: Readonly<ShallowRef<number>>
-    height: Readonly<ShallowRef<number>>
+    width: ComputedRef<number>
+    height: ComputedRef<number>
 } {
     canvas = toRef(canvas)
-    const { width, height } = useElementSize(canvas)
+    const { width: eltWidth, height: eltHeight } = useElementSize(canvas)
     const { pixelRatio } = useDevicePixelRatio()
-    const watchHandle = watch([canvas, width, height, pixelRatio], ([canvas,
-    width, height, pixelRatio]) => {
+    const width = computed(() => eltWidth.value * pixelRatio.value)
+    const height = computed(() => eltHeight.value * pixelRatio.value)
+    const watchHandle = watch([canvas, width, height], ([canvas, width,
+    height])=> {
         if (!canvas)
             return
-        canvas.width = width * pixelRatio
-        canvas.height = height * pixelRatio
+        canvas.width = width
+        canvas.height = height
     }, { immediate: true })
     return { watchHandle, width, height }
 }

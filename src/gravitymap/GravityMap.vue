@@ -14,7 +14,7 @@
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import VelocityRenderer from './VelocityRenderer.vue';
     import AccelerationRenderer from './AccelerationRenderer.vue';
-    import WebGLRenderer from '@/map/renderers/WebGLRenderer.vue';
+    import WebGLRenderer from '@/map/renderers/webgl/WebGLRenderer.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
