@@ -8,7 +8,8 @@
     provide(webGLKey, webgl)
     const { addCallbacks, extraFrame } = webgl
 
-    useAdaptiveCanvasSize(canvas, extraFrame)
+    const { width, height } = useAdaptiveCanvasSize(canvas)
+    watch([width, height], () => extraFrame())
 
     let program: WebGLProgram | null = null
     let positionLocation = 0
