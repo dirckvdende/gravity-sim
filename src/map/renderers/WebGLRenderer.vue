@@ -40,11 +40,9 @@
         ]
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions),
             gl.STATIC_DRAW)
-        gl.viewport(0, 0, canvas.value?.width ?? 0, canvas.value?.height ?? 0)
     }
 
     function frame(gl: WebGLRenderingContext): void {
-        gl.viewport(0, 0, canvas.value?.width ?? 0, canvas.value?.height ?? 0)
         gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT)
         gl.useProgram(program)

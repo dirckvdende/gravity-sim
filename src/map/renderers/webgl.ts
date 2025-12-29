@@ -141,6 +141,8 @@ UseWebGLReturn {
      * @param gl The rendering context
      */
     function init(gl: WebGLRenderingContext): void {
+        gl.viewport(0, 0, toValue(canvas)?.width ?? 0,
+            toValue(canvas)?.height ?? 0)
         for (const [ _id, { init } ] of callbackList)
             init?.(gl)
         animationFrame = requestAnimationFrame(() => frame(gl))
@@ -152,6 +154,8 @@ UseWebGLReturn {
      */
     function frame(gl: WebGLRenderingContext): void {
         animationFrame = -1
+        gl.viewport(0, 0, toValue(canvas)?.width ?? 0,
+            toValue(canvas)?.height ?? 0)
         for (const [ _id, { frame } ] of callbackList)
             frame?.(gl)
         animationFrame = requestAnimationFrame(() => frame(gl))
