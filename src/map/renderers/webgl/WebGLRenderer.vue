@@ -53,18 +53,16 @@
         positionBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
         const positions = [
-            0, 1,
-            1, 0,
-            0, -1,
-            -1, 0,
+            0, 1e11,
+            1e11, 0,
+            0, -1e11,
+            -1e11, 0,
         ]
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions),
             gl.STATIC_DRAW)
     }
 
     function frame(gl: WebGLRenderingContext): void {
-        gl.clearColor(0, 0, 0, 0)
-        gl.clear(gl.COLOR_BUFFER_BIT)
         gl.useProgram(program)
         gl.uniform2f(canvasSizeLocation, canvas.value?.width ?? 0, canvas.value?.height ?? 0)
         gl.uniformMatrix3fv(transformLocation, false, transform.value)

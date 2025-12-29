@@ -130,7 +130,7 @@ export type UseWebGLReturn = {
  */
 export function useWebGL(canvas: MaybeRefOrGetter<HTMLCanvasElement | null>):
 UseWebGLReturn {
-    const callbackList: Map<number, WebGLCallbacks> = new Map()
+    const callbackList: [number, WebGLCallbacks][] = []
     let availableId = 0
     const gl = computed(() =>
         toValue(canvas)?.getContext("webgl", { antialias: true}) ?? null)
@@ -156,6 +156,8 @@ UseWebGLReturn {
         animationFrame = -1
         gl.viewport(0, 0, toValue(canvas)?.width ?? 0,
             toValue(canvas)?.height ?? 0)
+        gl.clearColor(0, 0, 0, 0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
         for (const [ _id, { frame } ] of callbackList)
             frame?.(gl)
         animationFrame = requestAnimationFrame(() => frame(gl))
@@ -188,7 +190,7 @@ UseWebGLReturn {
      */
     function addCallbacks(callbacks: WebGLCallbacks): number {
         const id = availableId++
-        callbackList.set(id, { ...callbacks })
+        callbackList.push([id, { ...callbacks }])
         if (gl.value != null)
             callbacks.init?.(gl.value)
         return id
@@ -199,10 +201,11 @@ UseWebGLReturn {
      * @param id Identifier returned by addCallbacks
      */
     function removeCallbacks(id: number): void {
-        const callbacks = callbackList.get(id)
+        const index = callbackList.findIndex(([itemId]) => id == itemId)
         if (gl.value != null)
-            callbacks?.exit?.(gl.value)
-        callbackList.delete(id)
+            callbackList[index]?.[1].exit?.(gl.value)
+        if (index != -1)
+            callbackList.splice(index, 1)
     }
 
     /** Render an extra frame */
