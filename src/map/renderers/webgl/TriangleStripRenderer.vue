@@ -2,7 +2,7 @@
     import type Vector2 from '@/util/linalg/Vector2';
     import { inject, onMounted, onUnmounted, ref, type Ref } from 'vue';
     import { webGLKey } from './state';
-    import { createProgram } from './useWebGL';
+    import { createProgram } from './util';
     import vertexShader from './triangleStrip.vert?raw';
     import fragmentShader from './triangleStrip.frag?raw';
 
