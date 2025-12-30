@@ -77,3 +77,24 @@ export function createProgram(
     gl.deleteProgram(program)
     throw new Error(error ?? "Coudn't create program")
 }
+
+/**
+ * Set the viewport of a WebGL rendering context to the size of its canvas
+ * @param gl The rendering context
+ */
+export function viewportToCanvasSize(gl: WebGLRenderingContext): void {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+}
+
+/**
+ * Clear a rendering context
+ * @param gl The rendering context
+ * @param color The color to clear with (default transparent)
+ */
+export function clearContext(
+    gl: WebGLRenderingContext,
+    color?: [number, number, number, number],
+): void {
+    gl.clearColor(...(color ?? [0, 0, 0, 0]))
+    gl.clear(gl.COLOR_BUFFER_BIT)
+}

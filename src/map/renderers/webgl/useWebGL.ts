@@ -2,6 +2,7 @@
 import { computed, toValue, watch, type ComputedRef, type MaybeRefOrGetter,
 type ShallowRef} from "vue"
 import { useAdaptiveCanvasSize } from "../useAdaptiveCanvasSize"
+import { clearContext, viewportToCanvasSize } from "./util"
 
 /**
  * Object that can be used to set callbacks when WebGL rendering context
@@ -72,8 +73,7 @@ UseWebGLReturn {
      * @param gl The rendering context
      */
     function init(gl: WebGLRenderingContext): void {
-        gl.viewport(0, 0, toValue(canvas)?.width ?? 0,
-            toValue(canvas)?.height ?? 0)
+        viewportToCanvasSize(gl)
         for (const entry of callbackList) {
             const [_id, { init }] = entry
             entry[2] = init?.(gl)
@@ -87,10 +87,8 @@ UseWebGLReturn {
      */
     function frame(gl: WebGLRenderingContext): void {
         animationFrame = -1
-        gl.viewport(0, 0, toValue(canvas)?.width ?? 0,
-            toValue(canvas)?.height ?? 0)
-        gl.clearColor(0, 0, 0, 0)
-        gl.clear(gl.COLOR_BUFFER_BIT)
+        viewportToCanvasSize(gl)
+        clearContext(gl)
         for (const [ _id, { frame }, data ] of callbackList)
             frame?.(gl, data)
         animationFrame = requestAnimationFrame(() => frame(gl))
