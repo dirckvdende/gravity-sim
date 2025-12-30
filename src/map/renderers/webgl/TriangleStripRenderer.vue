@@ -49,7 +49,7 @@
                 }
                 const offset = (start + length - 1) * 2 % bufferSize
                 console.log(start, length, offset, head)
-                gl.bufferSubData(gl.ARRAY_BUFFER, offset,
+                gl.bufferSubData(gl.ARRAY_BUFFER, offset * 4,
                     new Float32Array([head.x, head.y]))
             }
             lastPosition = head
