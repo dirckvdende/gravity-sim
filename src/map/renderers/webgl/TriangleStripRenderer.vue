@@ -1,10 +1,11 @@
 <script setup lang="ts">
     import type Vector2 from '@/util/linalg/Vector2';
-    import { inject, onMounted, onUnmounted, ref, type Ref } from 'vue';
+    import { inject } from 'vue';
     import { webGLKey } from './state';
     import { createProgram } from './util';
     import vertexShader from './triangleStrip.vert?raw';
     import fragmentShader from './triangleStrip.frag?raw';
+    import { useWebGLCallback } from './useWebGLCallback';
 
     const {
         head,
@@ -15,11 +16,9 @@
     }>()
 
     const webgl = inject(webGLKey)!
-    const {
-        addCallback, removeCallback, transform, canvasWidth, canvasHeight,
-    } = webgl
+    const { transform, canvasWidth, canvasHeight } = webgl
 
-    function init(gl: WebGLRenderingContext) {
+    useWebGLCallback((gl: WebGLRenderingContext) => {
         let program = createProgram(gl, vertexShader, fragmentShader)
         let positionLocation = gl.getAttribLocation(program, "a_position")
         let canvasSizeLocation = gl.getUniformLocation(program, "canvas_size")
@@ -50,13 +49,6 @@
         }
 
         return { frame, exit }
-    }
-
-    let callbackId = -1
-    onMounted(() => callbackId = addCallback(init))
-    onUnmounted(() => {
-        if (callbackId != -1)
-            removeCallback(callbackId)
     })
 </script>
 
