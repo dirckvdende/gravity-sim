@@ -168,7 +168,6 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
  */
 export function useWebGL(canvas: MaybeRefOrGetter<HTMLCanvasElement | null>):
 UseWebGLReturn {
-    let availableId = 0
     const gl = computed(() =>
         toValue(canvas)?.getContext("webgl", { antialias: true }) ?? null)
     let animationFrame = -1
