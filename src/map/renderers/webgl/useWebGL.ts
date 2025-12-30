@@ -59,6 +59,8 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
     const exitCallbacks: [number, () => void][] = []
     // Available unique ID to assign
     let availableId = 0
+    // Whether a rendering context is currently active
+    let active = false
 
     /**
      * Call the init callback with the given ID and register frame and exit
@@ -92,7 +94,7 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
         const id = availableId++
         callbacks.push([id, callback])
         const glValue = toValue(gl)
-        if (glValue)
+        if (active && glValue)
             initCallback(id, callback, glValue)
         return id
     }
@@ -130,8 +132,11 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
      * @param gl The rendering context
      */
     function init(gl: WebGLRenderingContext): void {
+        if (active)
+            return
         for (const [id, callback] of callbacks)
             initCallback(id, callback, gl)
+        active = true
     }
 
     /**
@@ -150,12 +155,15 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
      * @param _gl The rendering context
      */
     function exit(_gl: WebGLRenderingContext): void {
+        if (!active)
+            return
         for (const [_id, callback] of exitCallbacks)
             callback()
         while (frameCallbacks.length > 0)
             frameCallbacks.pop()
         while (exitCallbacks.length > 0)
             exitCallbacks.pop()
+        active = false
     }
 
     return { add, remove, init, frame, exit }
