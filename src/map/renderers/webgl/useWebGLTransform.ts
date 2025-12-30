@@ -70,7 +70,7 @@ export function useWebGLTransform(
     const transform = computed(() => {
         // Scale = [
         //     1/sx, 0, 0,
-        //     0, 1/sy, 0,
+        //     0, -1/sy, 0,
         //     0, 0, 1,
         // ]
         // Translate = [
@@ -80,15 +80,15 @@ export function useWebGLTransform(
         // ]
         // Scale * translate = [
         //     1/sx, 0, tx/sx,
-        //     0, 1/sy, ty/sy,
+        //     0, -1/sy, -ty/sy,
         //     0, 0, 1,
         // ]
         const scaleX = canvasScaleX.value / toValue(scale).x
-        const scaleY = canvasScaleY.value / toValue(scale).y
+        const scaleY = -canvasScaleY.value / toValue(scale).y
         const m = [
             scaleX, 0, 0,
             0, scaleY, 0,
-            toValue(translate).x * scaleX, -toValue(translate).y * scaleY, 1,
+            toValue(translate).x * scaleX, toValue(translate).y * scaleY, 1,
         ]
         return m
     })
