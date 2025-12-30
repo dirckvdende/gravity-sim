@@ -16,7 +16,7 @@
 
     const webgl = inject(webGLKey)!
     const {
-        addCallbacks, removeCallbacks, transform, canvasWidth, canvasHeight,
+        addCallback, removeCallback, transform, canvasWidth, canvasHeight,
     } = webgl
 
     function init(gl: WebGLRenderingContext) {
@@ -34,37 +34,29 @@
         ]
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions),
             gl.STATIC_DRAW)
-        return {
-            program, positionLocation, canvasSizeLocation, transformLocation,
-            positionBuffer,
+        
+        function frame(): void {
+            gl.useProgram(program)
+            gl.uniform2f(canvasSizeLocation, canvasWidth.value, canvasHeight.value)
+            gl.uniformMatrix3fv(transformLocation, false, transform.value)
+            gl.enableVertexAttribArray(positionLocation)
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
         }
+
+        function exit(): void {
+            gl.deleteBuffer(positionBuffer)
+        }
+
+        return { frame, exit }
     }
 
-    function frame(gl: WebGLRenderingContext, data: ReturnType<typeof init>):
-    void {
-        const {
-            program, canvasSizeLocation, transformLocation, positionBuffer,
-            positionLocation,
-        } = data
-        gl.useProgram(program)
-        gl.uniform2f(canvasSizeLocation, canvasWidth.value, canvasHeight.value)
-        gl.uniformMatrix3fv(transformLocation, false, transform.value)
-        gl.enableVertexAttribArray(positionLocation)
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
-        gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
-    }
-
-    function exit(gl: WebGLRenderingContext, data: ReturnType<typeof init>):
-    void {
-        gl.deleteBuffer(data.positionBuffer)
-    }
-
-    let callbacksId = -1
-    onMounted(() => callbacksId = addCallbacks({ init, frame, exit }))
+    let callbackId = -1
+    onMounted(() => callbackId = addCallback(init))
     onUnmounted(() => {
-        if (callbacksId != -1)
-            removeCallbacks(callbacksId)
+        if (callbackId != -1)
+            removeCallback(callbackId)
     })
 </script>
 

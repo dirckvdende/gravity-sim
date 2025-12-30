@@ -5,27 +5,16 @@ import { useAdaptiveCanvasSize } from "../useAdaptiveCanvasSize"
 import { clearContext, viewportToCanvasSize } from "./util"
 
 /**
- * Object that can be used to set callbacks when WebGL rendering context
- * changes, at initialization, at exit, and every frame
+ * Callback for when a new rendering context is created/used by the useWebGL
+ * composable. An object with frame and exit functions can be returned, which
+ * are called on every frame and when the rendering context exits, respectively
+ * @param gl The new rendering context
  */
-export type WebGLCallbacks<T> = {
-    /**
-     * Called on initialization of a rendering context, and when the callback is
-     * registered and there's already a context present
-     * @param gl The rendering context
-     */
-    init?: (gl: WebGLRenderingContext) => T
-    /**
-     * Called every frame, as long as there's a rendering context
-     * @param gl The rendering context
-     */
-    frame?: (gl: WebGLRenderingContext, data: T) => void
-    /**
-     * Called on exit of a rendering context, and when the callback is
-     * unregistered and there's a context present
-     * @param gl The rendering context
-     */
-    exit?: (gl: WebGLRenderingContext, data: T) => void
+export type WebGLCallback = (gl: WebGLRenderingContext) => void | {
+    /** Called every frame, as long as the context is active */
+    frame?: () => void
+    /** Called when the context is no longer used */
+    exit?: () => void
 }
 
 /** Return value of the useWebGL composable */
@@ -33,23 +22,99 @@ export type UseWebGLReturn = {
     /** WebGL rendering context of the canvas */
     gl: ComputedRef<WebGLRenderingContext | null>
     /**
-     * Add callbacks for initialization, exit, and every frame
-     * @param callbacks The callbacks to add
-     * @returns Unique identifier that can be used to remove the callbacks using
-     * removeCallbacks()
+     * Add a callback for initialization of a rendering context. The callback is
+     * also called when addCallback is called and a context is already active
+     * @param callback The callback to add
+     * @returns Unique identifier that can be used to remove the callback using
+     * removeCallback()
      */
-    addCallbacks: <T>(callbacks: WebGLCallbacks<T>) => number
+    addCallback: (callback: WebGLCallback) => number
     /**
-     * Remove callbacks createed with addCallbacks()
-     * @param id Identifier returned by addCallbacks
+     * Remove callback created with addCallback(). This immediately calls the
+     * exit() function if it was given. frame() is no longer called
+     * @param id Identifier returned by addCallback
      */
-    removeCallbacks: (id: number) => void
+    removeCallback: (id: number) => void
     /** When called, an extra frame is rendered */
     extraFrame: () => void
     /** Width of the canvas */
     canvasWidth: Readonly<ShallowRef<number>>
     /** Height of the canvas */
     canvasHeight: Readonly<ShallowRef<number>>
+}
+
+function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
+    // List with ID and callback (initializer)
+    const callbacks: [number, WebGLCallback][] = []
+    // List with ID and frame callback
+    const frameCallbacks: [number, () => void][] = []
+    // List with ID and exit callback
+    const exitCallbacks: [number, () => void][] = []
+    // Available unique ID to assign
+    let availableId = 0
+
+    function initCallback(
+        id: number,
+        callback: WebGLCallback,
+        gl: WebGLRenderingContext,
+    ): void {
+        const { frame, exit } = callback(gl) ?? {}
+        if (frame)
+            frameCallbacks.push([id, frame])
+        if (exit)
+            exitCallbacks.push([id, exit])
+    }
+
+    function add(callback: WebGLCallback): number {
+        const id = availableId++
+        callbacks.push([id, callback])
+        const glValue = toValue(gl)
+        if (glValue)
+            initCallback(id, callback, glValue)
+        return id
+    }
+
+    function spliceById<T>(array: [number, T][], id: number): T | null {
+        const index = array.findIndex(([itemId]) => itemId == id)
+        if (index == -1)
+            return null
+        const removed = array.splice(index, 1)
+        return removed[0]?.[1] ?? null
+    }
+
+    function remove(id: number): void {
+        spliceById(callbacks, id)
+        spliceById(frameCallbacks, id)
+        const exit = spliceById(exitCallbacks, id)
+        if (toValue(gl))
+            exit?.()
+    }
+
+    function init(): void {
+        const glValue = toValue(gl)
+        if (!glValue)
+            throw new Error("Called init() when rendering context is null")
+        for (const [id, callback] of callbacks)
+            initCallback(id, callback, glValue)
+    }
+
+    function frame(): void {
+        if (!toValue(gl))
+            throw new Error("Called frame() when rendering context is null")
+        for (const [_id, callback] of frameCallbacks)
+            callback()
+    }
+
+    function exit(): void {
+        if (!toValue(gl))
+            throw new Error("Called exit() when rendering context is null")
+        for (const [_id, callback] of exitCallbacks)
+            callback()
+        frameCallbacks.length = 0
+        exitCallbacks.length = 0
+    }
+
+    return { add, remove, init, frame, exit }
 }
 
 /**
@@ -61,23 +126,28 @@ export type UseWebGLReturn = {
  */
 export function useWebGL(canvas: MaybeRefOrGetter<HTMLCanvasElement | null>):
 UseWebGLReturn {
-    // List with ID, callbacks, and callbacks data
-    const callbackList: [number, WebGLCallbacks<any>, any][] = []
     let availableId = 0
     const gl = computed(() =>
         toValue(canvas)?.getContext("webgl", { antialias: true }) ?? null)
     let animationFrame = -1
+
+    const {
+        add: addCallback,
+        remove: removeCallback,
+        init: initCallbacks,
+        frame: frameCallbacks,
+        exit: exitCallbacks,
+    } = useWebGLCallbacks(gl)
 
     /**
      * Called on initialization of a rendering context
      * @param gl The rendering context
      */
     function init(gl: WebGLRenderingContext): void {
+        if (!gl)
+            throw new Error("Called init() when rendering context is null")
         viewportToCanvasSize(gl)
-        for (const entry of callbackList) {
-            const [_id, { init }] = entry
-            entry[2] = init?.(gl)
-        }
+        initCallbacks()
         animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
@@ -89,56 +159,26 @@ UseWebGLReturn {
         animationFrame = -1
         viewportToCanvasSize(gl)
         clearContext(gl)
-        for (const [ _id, { frame }, data ] of callbackList)
-            frame?.(gl, data)
+        frameCallbacks()
         animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
     /**
      * Called at exit of a rendering context
-     * @param gl The rendering context
      */
-    function exit(gl: WebGLRenderingContext): void {
+    function exit(): void {
         if (animationFrame != -1)
             cancelAnimationFrame(animationFrame)
         animationFrame = -1
-        for (const [ _id, { exit }, data ] of callbackList)
-            exit?.(gl, data)
+        exitCallbacks()
     }
 
     watch(gl, (newGL, oldGL) => {
-        if (oldGL != null)
-            exit(oldGL)
-        if (newGL != null)
+        if (oldGL)
+            exit()
+        if (newGL)
             init(newGL)
     }, { immediate: true })
-
-    /**
-     * Add callbacks for initialization, exit, and every frame
-     * @param callbacks The callbacks to add
-     * @returns Unique identifier that can be used to remove the callbacks using
-     * removeCallbacks()
-     */
-    function addCallbacks<T>(callbacks: WebGLCallbacks<T>): number {
-        const id = availableId++
-        const entry: (typeof callbackList)[0] = [id, { ...callbacks }, null]
-        if (gl.value != null)
-            entry[2] = callbacks.init?.(gl.value)
-        callbackList.push(entry)
-        return id
-    }
-
-    /**
-     * Remove callbacks createed with addCallbacks()
-     * @param id Identifier returned by addCallbacks
-     */
-    function removeCallbacks(id: number): void {
-        const index = callbackList.findIndex(([itemId]) => id == itemId)
-        if (gl.value != null)
-            callbackList[index]?.[1].exit?.(gl.value, callbackList[index]?.[2])
-        if (index != -1)
-            callbackList.splice(index, 1)
-    }
 
     /** Render an extra frame */
     function extraFrame(): void {
@@ -154,7 +194,6 @@ UseWebGLReturn {
     watch([canvasWidth, canvasHeight], () => extraFrame())
 
     return {
-        gl, addCallbacks, removeCallbacks, extraFrame, canvasWidth,
-        canvasHeight,
+        gl, addCallback, removeCallback, extraFrame, canvasWidth, canvasHeight,
     }
 }
