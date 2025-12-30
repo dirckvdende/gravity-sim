@@ -40,9 +40,6 @@
             return
         syncGravityMapStore()
     })
-
-    const visible = ref(false)
-    setInterval(() => visible.value = !visible.value, 1000)
 </script>
 
 <template>
@@ -55,9 +52,6 @@
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
         <OrbitRenderer />
-        <WebGLRenderer>
-            <TriangleStripRenderer v-if="visible" :head="Vector2.Zero" />
-        </WebGLRenderer>
         <VelocityRenderer />
         <AccelerationRenderer />
         <GravityIconRenderer />

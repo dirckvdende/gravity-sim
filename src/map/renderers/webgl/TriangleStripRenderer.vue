@@ -23,25 +23,44 @@
         let positionLocation = gl.getAttribLocation(program, "a_position")
         let canvasSizeLocation = gl.getUniformLocation(program, "canvas_size")
         let transformLocation = gl.getUniformLocation(program, "u_transform")
+
         let positionBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-        const positions = [
-            0, 1e11,
-            1e11, 0,
-            0, -1e11,
-            -1e11, 0,
-        ]
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions),
+        const bufferSize = maxSize * 2
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferSize),
             gl.STATIC_DRAW)
+        let lastPosition = head
+        let start = 0
+        let length = 0
         
         function frame(): void {
             gl.useProgram(program)
-            gl.uniform2f(canvasSizeLocation, canvasWidth.value, canvasHeight.value)
+            gl.uniform2f(canvasSizeLocation, canvasWidth.value,
+                canvasHeight.value)
             gl.uniformMatrix3fv(transformLocation, false, transform.value)
             gl.enableVertexAttribArray(positionLocation)
+
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+            if (!lastPosition.subtract(head).isZero()) {
+                length++
+                if (length > maxSize) {
+                    length--
+                    start = (start + 1) % maxSize
+                }
+                const offset = (start + length - 1) * 2 % bufferSize
+                console.log(start, length, offset, head)
+                gl.bufferSubData(gl.ARRAY_BUFFER, offset,
+                    new Float32Array([head.x, head.y]))
+            }
+            lastPosition = head
+
             gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
-            gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
+            if (start + length <= maxSize) {
+                gl.drawArrays(gl.TRIANGLE_STRIP, start * 2, length)
+            } else {
+                gl.drawArrays(gl.TRIANGLE_STRIP, start, maxSize - start)
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, length - (maxSize - start))
+            }
         }
 
         function exit(): void {
@@ -50,6 +69,12 @@
 
         return { frame, exit }
     })
+
+    function clear(): void {
+
+    }
+
+    defineExpose({ clear })
 </script>
 
 <template></template>

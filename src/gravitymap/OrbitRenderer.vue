@@ -5,6 +5,9 @@
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { onMounted, onUnmounted, useTemplateRef } from 'vue';
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
+    import WebGLRenderer from '@/map/renderers/webgl/WebGLRenderer.vue';
+    import TriangleStripRenderer from
+        '@/map/renderers/webgl/TriangleStripRenderer.vue';
 
     const { showOrbits } = storeToRefs(useSettingsStore())
     const { objects } = storeToRefs(useGravitySimStore())
@@ -25,11 +28,19 @@
 </script>
 
 <template>
-    <DynamicPathRenderer
+    <!-- <DynamicPathRenderer
         v-if="showOrbits"
         v-for="{ id, position} in objects"
         :key="id"
         :point="position"
         ref="orbits"
-        :min-angle="Math.PI / 200" />
+        :min-angle="Math.PI / 200" /> -->
+    <WebGLRenderer>
+        <TriangleStripRenderer
+            v-if="showOrbits"
+            v-for="{ id, position } in objects"
+            :key="id"
+            :head="position"
+            ref="orbits" />
+    </WebGLRenderer>
 </template>
