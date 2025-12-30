@@ -43,6 +43,13 @@ export type UseWebGLReturn = {
     canvasHeight: Readonly<ShallowRef<number>>
 }
 
+/**
+ * Composable for registering callbacks at initialization, frame, and exit of
+ * rendering context
+ * @param gl The rendering context
+ * @returns Functions for adding and removing callbacks, and init/frame/exit
+ * functions to call the appropriate callbacks
+ */
 function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
     // List with ID and callback (initializer)
     const callbacks: [number, WebGLCallback][] = []
@@ -53,6 +60,15 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
     // Available unique ID to assign
     let availableId = 0
 
+    /**
+     * Call the init callback with the given ID and register frame and exit
+     * callbacks (if applicable)
+     * @param id The ID of the callback, which is given to the init, frame, and
+     * exit callbacks
+     * @param callback The init callback
+     * @param gl The rendering context (this has to exist for this function to
+     * be called)
+     */
     function initCallback(
         id: number,
         callback: WebGLCallback,
@@ -65,6 +81,13 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
             exitCallbacks.push([id, exit])
     }
 
+    /**
+     * Add a callback
+     * @param callback The callback to add, which is immediately called if there
+     * is already a rendering context
+     * @returns Unique ID of the callback, which can be used as a parameter of
+     * remove()
+     */
     function add(callback: WebGLCallback): number {
         const id = availableId++
         callbacks.push([id, callback])
@@ -74,6 +97,13 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
         return id
     }
 
+    /**
+     * Remove an item from an array of pairs [ID, value], given by its ID.
+     * Returns the value if it is found
+     * @param array The array to splice
+     * @param id The ID of the item to remove
+     * @returns The removed item if it was present, null otherwise
+     */
     function spliceById<T>(array: [number, T][], id: number): T | null {
         const index = array.findIndex(([itemId]) => itemId == id)
         if (index == -1)
@@ -82,6 +112,11 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
         return removed[0]?.[1] ?? null
     }
 
+    /**
+     * Remove a callback. Calls the exit() function immediately if a rendering
+     * context is active
+     * @param id The ID of the callback to remove
+     */
     function remove(id: number): void {
         spliceById(callbacks, id)
         spliceById(frameCallbacks, id)
@@ -90,24 +125,31 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
             exit?.()
     }
 
-    function init(): void {
-        const glValue = toValue(gl)
-        if (!glValue)
-            throw new Error("Called init() when rendering context is null")
+    /**
+     * Initialize all callbacks
+     * @param gl The rendering context
+     */
+    function init(gl: WebGLRenderingContext): void {
         for (const [id, callback] of callbacks)
-            initCallback(id, callback, glValue)
+            initCallback(id, callback, gl)
     }
 
-    function frame(): void {
-        if (!toValue(gl))
-            throw new Error("Called frame() when rendering context is null")
+    /**
+     * Call all frame callbacks
+     * @param _gl The rendering context
+     */
+    function frame(_gl: WebGLRenderingContext): void {
         for (const [_id, callback] of frameCallbacks)
             callback()
     }
 
-    function exit(): void {
-        if (!toValue(gl))
-            throw new Error("Called exit() when rendering context is null")
+    /**
+     * Call all exit callbacks, becuase rendering context exits. Note that the
+     * rendering context has to still be present when this is called. This
+     * rendering context is given as an argument
+     * @param _gl The rendering context
+     */
+    function exit(_gl: WebGLRenderingContext): void {
         for (const [_id, callback] of exitCallbacks)
             callback()
         frameCallbacks.length = 0
@@ -147,7 +189,7 @@ UseWebGLReturn {
         if (!gl)
             throw new Error("Called init() when rendering context is null")
         viewportToCanvasSize(gl)
-        initCallbacks()
+        initCallbacks(gl)
         animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
@@ -159,23 +201,24 @@ UseWebGLReturn {
         animationFrame = -1
         viewportToCanvasSize(gl)
         clearContext(gl)
-        frameCallbacks()
+        frameCallbacks(gl)
         animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
     /**
      * Called at exit of a rendering context
+     * @param gl The rendering context
      */
-    function exit(): void {
+    function exit(gl: WebGLRenderingContext): void {
         if (animationFrame != -1)
             cancelAnimationFrame(animationFrame)
         animationFrame = -1
-        exitCallbacks()
+        exitCallbacks(gl)
     }
 
     watch(gl, (newGL, oldGL) => {
         if (oldGL)
-            exit()
+            exit(oldGL)
         if (newGL)
             init(newGL)
     }, { immediate: true })
