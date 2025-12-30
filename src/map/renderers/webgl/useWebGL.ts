@@ -59,8 +59,6 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
     const exitCallbacks: [number, () => void][] = []
     // Available unique ID to assign
     let availableId = 0
-    // Whether there is an active rendering context
-    let active = false
 
     /**
      * Call the init callback with the given ID and register frame and exit
@@ -94,7 +92,7 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
         const id = availableId++
         callbacks.push([id, callback])
         const glValue = toValue(gl)
-        if (active && glValue)
+        if (glValue)
             initCallback(id, callback, glValue)
         return id
     }
@@ -132,11 +130,8 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
      * @param gl The rendering context
      */
     function init(gl: WebGLRenderingContext): void {
-        if (active)
-            return
         for (const [id, callback] of callbacks)
             initCallback(id, callback, gl)
-        active = true
     }
 
     /**
@@ -155,15 +150,12 @@ function useWebGLCallbacks(gl: MaybeRefOrGetter<WebGLRenderingContext | null>) {
      * @param _gl The rendering context
      */
     function exit(_gl: WebGLRenderingContext): void {
-        if (!active)
-            return
         for (const [_id, callback] of exitCallbacks)
             callback()
         while (frameCallbacks.length > 0)
             frameCallbacks.pop()
         while (exitCallbacks.length > 0)
             exitCallbacks.pop()
-        active = false
     }
 
     return { add, remove, init, frame, exit }
@@ -205,13 +197,16 @@ UseWebGLReturn {
     /**
      * Called every frame, as long as there's a rendering context
      * @param gl The rendering context
+     * @param once Whether to only execute one frame, and not request more
+     * animation frames
      */
-    function frame(gl: WebGLRenderingContext): void {
+    function frame(gl: WebGLRenderingContext, once: boolean = false): void {
         animationFrame = -1
         viewportToCanvasSize(gl)
         clearContext(gl)
         frameCallbacks(gl)
-        animationFrame = requestAnimationFrame(() => frame(gl))
+        if (!once)
+            animationFrame = requestAnimationFrame(() => frame(gl))
     }
 
     /**
@@ -236,7 +231,7 @@ UseWebGLReturn {
     function extraFrame(): void {
         if (!gl.value)
             return
-        frame(gl.value)
+        frame(gl.value, true)
     }
 
     const {
