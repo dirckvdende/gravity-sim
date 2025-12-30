@@ -9,7 +9,7 @@
 
     const {
         head,
-        maxSize = 1000,
+        maxSize = 10000,
     } = defineProps<{
         head: Vector2
         maxSize?: number
@@ -48,7 +48,6 @@
                     start = (start + 1) % maxSize
                 }
                 const offset = (start + length - 1) * 2 % bufferSize
-                console.log(start, length, offset, head)
                 gl.bufferSubData(gl.ARRAY_BUFFER, offset * 4,
                     new Float32Array([head.x, head.y]))
             }
@@ -56,10 +55,10 @@
 
             gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
             if (start + length <= maxSize) {
-                gl.drawArrays(gl.TRIANGLE_STRIP, start * 2, length)
+                gl.drawArrays(gl.LINE_STRIP, start * 2, length)
             } else {
-                gl.drawArrays(gl.TRIANGLE_STRIP, start, maxSize - start)
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, length - (maxSize - start))
+                gl.drawArrays(gl.LINE_STRIP, start, maxSize - start)
+                gl.drawArrays(gl.LINE_STRIP, 0, length - (maxSize - start))
             }
         }
 
