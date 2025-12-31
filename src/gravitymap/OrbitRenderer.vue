@@ -6,8 +6,7 @@
     import { onMounted, onUnmounted, useTemplateRef } from 'vue';
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
     import WebGLRenderer from '@/map/renderers/webgl/WebGLRenderer.vue';
-    import TriangleStripRenderer from
-        '@/map/renderers/webgl/TriangleStripRenderer.vue';
+    import PathRenderer from '@/map/renderers/webgl/PathRenderer.vue';
 
     const { showOrbits } = storeToRefs(useSettingsStore())
     const { objects } = storeToRefs(useGravitySimStore())
@@ -36,7 +35,7 @@
         ref="orbits"
         :min-angle="Math.PI / 200" /> -->
     <WebGLRenderer>
-        <TriangleStripRenderer
+        <PathRenderer
             v-if="showOrbits"
             v-for="{ id, position } in objects"
             :key="id"
