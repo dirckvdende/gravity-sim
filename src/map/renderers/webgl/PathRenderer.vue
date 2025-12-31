@@ -6,11 +6,13 @@
     import { createProgram } from './util';
     import { inject } from 'vue';
     import { webGLKey } from './state';
+    import { useDevicePixelRatio } from '@vueuse/core';
 
     const {
         head,
         maxSize = 10000,
         color = [0, 0, 0, 1],
+        width = 3,
     } = defineProps<{
         /** Current head of the path. Path is extended when this prop changes */
         head: Vector2
@@ -24,9 +26,12 @@
          * black)
          */
         color?: [number, number, number, number]
+        /** Width of the line in CSS pixels (not device pixels) (default 2) */
+        width?: number
     }>()
 
-    const { transform } = inject(webGLKey)!
+    const { transform, canvasHeight, canvasWidth } = inject(webGLKey)!
+    const { pixelRatio } = useDevicePixelRatio()
 
     // Current path length
     let length = 0
@@ -40,6 +45,8 @@
         ] as const
         const transformLocation = gl.getUniformLocation(program, "transform")
         const colorLocation = gl.getUniformLocation(program, "color")
+        const canvasSizeLocation = gl.getUniformLocation(program, "canvas_size")
+        const widthLocation = gl.getUniformLocation(program, "width")
 
         // Buffer data structure (with four points):
         //     [ * p2 p3 p4 * _ _ _ * p1 p2 * ]
@@ -160,6 +167,9 @@
             gl.useProgram(program)
             gl.uniformMatrix3fv(transformLocation, false, transform.value)
             gl.uniform4fv(colorLocation, color)
+            gl.uniform2f(canvasSizeLocation, canvasWidth.value,
+                canvasHeight.value)
+            gl.uniform1f(widthLocation, width * pixelRatio.value)
             if (!lastPosition.subtract(head).isZero())
                 addPointToBuffer(head, lastPosition)
             lastPosition = head
