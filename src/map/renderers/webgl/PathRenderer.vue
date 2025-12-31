@@ -27,51 +27,124 @@
 
     useWebGLCallback((gl: WebGLRenderingContext) => {
         const program = createProgram(gl, vertexShader, fragmentShader)
-        const positionLocation = gl.getAttribLocation(program, "position")
+        const positionLocations = [
+            gl.getAttribLocation(program, "prev_position"),
+            gl.getAttribLocation(program, "cur_position"),
+            gl.getAttribLocation(program, "next_position"),
+        ] as const
         const transformLocation = gl.getUniformLocation(program, "transform")
+
+        // Buffer data structure (with four points):
+        //     [ * p2 p3 p4 * _ _ _ * p1 p2 * ]
+        // Where the asterisks (*) indicate "padding" used to make sure
+        // "previous" and "next" can be passed for first and last point in the
+        // path. The startPointer points to the start of p1. Note that p2 is
+        // duplicates when the list of points wraps around. Each cell in this
+        // representation is 6 floats. E.g. for p1 this is
+        //     [ p1x, p1y, 0, p1x, p1y, 1 ]
+        // This allows the drawing of two vertices for every point in the path.
+        // The padding is of the form
+        //     [ 0, 0, -1, 0, 0, -1 ]
+        // When the buffer is full it will look like this:
+        //     [ * p2 p3 p4 p5 p6 p7 * p1 p2 * ]
+        // Note there are only three spots with padding
 
         const positionBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-        const bufferItemSize = 2
-        const floatSize = 4
-        // const bufferSize = bufferItemSize * (maxSize + 4)
-        const bufferSize = bufferItemSize * maxSize
+        const bufferItemStride = 3
+        const bufferItemSize = bufferItemStride * 2
+        const floatSize = Float32Array.BYTES_PER_ELEMENT
+        const bufferSize = bufferItemSize * (maxSize + 4)
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferSize),
             gl.STATIC_DRAW)
         
         let lastPosition = head
-        let startPointer = 0
+        let startPointer = bufferItemSize
         length = 0
+
+        /**
+         * Add a point to the position buffer, with padding after it
+         * @param point The point to add
+         * @param pointer Pointer to the location in the buffer
+         * @param paddingBefore Whether to add padding before the point. Padding
+         * will always be added after
+         */
+        function updateBufferPoint(
+            point: Vector2,
+            pointer: number,
+            paddingBefore: boolean,
+        ): void {
+            if (paddingBefore) {
+                const offset = (pointer - bufferItemSize) * floatSize
+                gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array([
+                    0, 0, -1,
+                    0, 0, -1,
+                    point.x, point.y, 0,
+                    point.x, point.y, 1,
+                    0, 0, -1,
+                    0, 0, -1,
+                ]))
+            } else {
+                const offset = pointer * floatSize
+                gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array([
+                    point.x, point.y, 0,
+                    point.x, point.y, 1,
+                    0, 0, -1,
+                    0, 0, -1,
+                ]))
+            }
+        }
 
         /**
          * Add a point to the end of the position buffer
          * @param point The point to add
          */
-        function addPointToBuffer(point: Vector2): void {
+        function addPointToBuffer(point: Vector2, last: Vector2): void {
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
             length++
+            if (length == 1) {
+                updateBufferPoint(point, startPointer, true)
+                return
+            }
             if (length > maxSize) {
                 length--
                 startPointer = (startPointer + bufferItemSize) % bufferSize
             }
-            const offset = (startPointer + (length - 1) * bufferItemSize)
+            let endPointer = (startPointer + (length - 1) * bufferItemSize)
                 % bufferSize
-            gl.bufferSubData(gl.ARRAY_BUFFER, offset * floatSize,
-                new Float32Array([point.x, point.y]))
+            if (endPointer + bufferItemSize >= bufferSize) {
+                updateBufferPoint(last, bufferItemSize, true)
+                endPointer = bufferItemSize * 2
+            }
+            updateBufferPoint(point, endPointer, false)
+        }
+
+        /**
+         * Draw a path from a list of points that is contiguously stored in
+         * memory
+         * @param startPointer Pointer to the first point in the path
+         * @param length Number of points in the path
+         */
+        function drawPathRange(startPointer: number, length: number): void {
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+            for (const [index, location] of positionLocations.entries()) {
+                gl.enableVertexAttribArray(location)
+                gl.vertexAttribPointer(location, bufferItemStride, gl.FLOAT,
+                    false, bufferItemStride * floatSize, (startPointer +
+                    (index - 1) * bufferItemSize) * floatSize)
+            }
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, length * 2)
         }
 
         /** Draw the path stored in the position buffer */
         function drawPath(): void {
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-            gl.enableVertexAttribArray(positionLocation)
-            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
-            if (startPointer + length * bufferItemSize <= bufferSize) {
-                gl.drawArrays(gl.LINE_STRIP, startPointer, length)
+            if (startPointer + (length + 1) * bufferItemSize <= bufferSize) {
+                drawPathRange(startPointer, length)
             } else {
-                gl.drawArrays(gl.LINE_STRIP, startPointer,
-                    bufferSize - startPointer)
-                gl.drawArrays(gl.LINE_STRIP, 0,
-                    length - (bufferSize - startPointer) / bufferItemSize)
+                const firstLength = (bufferSize - startPointer)
+                    / bufferItemSize - 1
+                drawPathRange(startPointer, firstLength)
+                drawPathRange(bufferItemSize, length - firstLength)
             }
         }
 
@@ -80,7 +153,7 @@
             gl.useProgram(program)
             gl.uniformMatrix3fv(transformLocation, false, transform.value)
             if (!lastPosition.subtract(head).isZero())
-                addPointToBuffer(head)
+                addPointToBuffer(head, lastPosition)
             lastPosition = head
             drawPath()
         }
