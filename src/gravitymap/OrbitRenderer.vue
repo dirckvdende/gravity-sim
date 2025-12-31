@@ -40,6 +40,7 @@
             v-for="{ id, position } in objects"
             :key="id"
             :head="position"
-            ref="orbits" />
+            ref="orbits"
+            :color="[0.67, 0.67, 0.67, 1]" />
     </WebGLRenderer>
 </template>

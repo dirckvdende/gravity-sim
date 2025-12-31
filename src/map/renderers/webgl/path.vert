@@ -1,4 +1,6 @@
+
 precision mediump float;
+
 attribute vec3 prev_position;
 attribute vec3 cur_position;
 attribute vec3 next_position;

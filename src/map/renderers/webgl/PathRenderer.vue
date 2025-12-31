@@ -10,6 +10,7 @@
     const {
         head,
         maxSize = 10000,
+        color = [0, 0, 0, 1],
     } = defineProps<{
         /** Current head of the path. Path is extended when this prop changes */
         head: Vector2
@@ -18,6 +19,11 @@
          * path is cut off. This cannot be changed dynamically!
          */
         maxSize?: number
+        /**
+         * RGBA color of the path, with entries in the range [0, 1] (default
+         * black)
+         */
+        color?: [number, number, number, number]
     }>()
 
     const { transform } = inject(webGLKey)!
@@ -33,6 +39,7 @@
             gl.getAttribLocation(program, "next_position"),
         ] as const
         const transformLocation = gl.getUniformLocation(program, "transform")
+        const colorLocation = gl.getUniformLocation(program, "color")
 
         // Buffer data structure (with four points):
         //     [ * p2 p3 p4 * _ _ _ * p1 p2 * ]
@@ -152,6 +159,7 @@
         function frame(): void {
             gl.useProgram(program)
             gl.uniformMatrix3fv(transformLocation, false, transform.value)
+            gl.uniform4fv(colorLocation, color)
             if (!lastPosition.subtract(head).isZero())
                 addPointToBuffer(head, lastPosition)
             lastPosition = head
