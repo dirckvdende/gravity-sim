@@ -10,7 +10,7 @@
 
     const {
         head,
-        maxSize = 10000,
+        maxSize = 1000,
         color = [0, 0, 0, 1],
         width = 2,
     } = defineProps<{
@@ -18,7 +18,7 @@
         head: Vector2
         /**
          * Maximum number of points in the path, after which the start of the
-         * path is cut off. This cannot be changed dynamically! (default 10,000)
+         * path is cut off. This cannot be changed dynamically! (default 1000)
          */
         maxSize?: number
         /**
