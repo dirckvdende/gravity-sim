@@ -4,7 +4,7 @@
     import Map from '@/map/Map.vue';
     import GridRenderer from '@/map/renderers/GridRenderer.vue';
     import { storeToRefs } from 'pinia';
-    import { onMounted, useTemplateRef, watch, type Ref } from 'vue';
+    import { onMounted, ref, useTemplateRef } from 'vue';
     import GravityIconRenderer from './GravityIconRenderer.vue';
     import OrbitRenderer from './OrbitRenderer.vue';
     import BarycenterRenderer from './BarycenterRenderer.vue';
@@ -13,7 +13,10 @@
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import VelocityRenderer from './VelocityRenderer.vue';
-import AccelerationRenderer from './AccelerationRenderer.vue';
+    import AccelerationRenderer from './AccelerationRenderer.vue';
+    import WebGLRenderer from '@/map/renderers/webgl/WebGLRenderer.vue';
+    import TriangleStripRenderer from '@/map/renderers/webgl/TriangleStripRenderer.vue';
+    import Vector2 from '@/util/linalg/Vector2';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
