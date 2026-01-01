@@ -1,5 +1,5 @@
 
-precision mediump float;
+precision highp float;
 
 // Previous point in the path
 attribute vec3 prev_position;
