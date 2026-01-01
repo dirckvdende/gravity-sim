@@ -12,7 +12,7 @@
         head,
         maxSize = 10000,
         color = [0, 0, 0, 1],
-        width = 3,
+        width = 2,
     } = defineProps<{
         /** Current head of the path. Path is extended when this prop changes */
         head: Vector2
