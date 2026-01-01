@@ -1,5 +1,5 @@
 
-precision mediump float;
+precision highp float;
 
 // Color is passed from the vertex shader
 varying vec4 frag_color;
