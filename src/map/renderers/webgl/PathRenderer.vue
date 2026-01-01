@@ -18,7 +18,7 @@
         head: Vector2
         /**
          * Maximum number of points in the path, after which the start of the
-         * path is cut off. This cannot be changed dynamically!
+         * path is cut off. This cannot be changed dynamically! (default 10,000)
          */
         maxSize?: number
         /**
@@ -47,6 +47,11 @@
         const colorLocation = gl.getUniformLocation(program, "color")
         const canvasSizeLocation = gl.getUniformLocation(program, "canvas_size")
         const widthLocation = gl.getUniformLocation(program, "width")
+        const indexLocation = gl.getAttribLocation(program, "index")
+        const indexSizeLocation = gl.getUniformLocation(program, "index_size")
+        const indexStartLocation = gl.getUniformLocation(program, "index_start")
+        const indexMaxSizeLocation = gl.getUniformLocation(program,
+            "index_max_size")
 
         // Buffer data structure (with four points):
         //     [ * p2 p3 p4 * _ _ _ * p1 p2 * ]
@@ -72,6 +77,15 @@
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferSize),
             gl.STATIC_DRAW)
         
+        const indexBuffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer)
+        const indices: number[] = []
+        for (let i = 0; i < maxSize + 4; i++)
+            indices.push(i, i)
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(indices),
+            gl.STATIC_DRAW)
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+
         let lastPosition = head
         let startPointer = bufferItemSize
         length = 0
@@ -122,13 +136,16 @@
             }
             if (length > maxSize) {
                 length--
-                startPointer = (startPointer + bufferItemSize) % bufferSize
+                startPointer += bufferItemSize
+                if (startPointer + bufferItemSize >= bufferSize)
+                    startPointer = bufferItemSize
             }
-            let endPointer = (startPointer + (length - 1) * bufferItemSize)
-                % bufferSize
-            if (endPointer + bufferItemSize >= bufferSize) {
+            let endPointer = startPointer + (length - 1) * bufferItemSize
+            if (endPointer + bufferItemSize == bufferSize) {
                 updateBufferPoint(last, bufferItemSize, true)
                 endPointer = bufferItemSize * 2
+            } else if (endPointer + bufferItemSize >= bufferSize) {
+                endPointer = (endPointer + 3 * bufferItemSize) % bufferSize
             }
             updateBufferPoint(point, endPointer, false)
         }
@@ -140,6 +157,10 @@
          * @param length Number of points in the path
          */
         function drawPathRange(startPointer: number, length: number): void {
+            gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer)
+            gl.enableVertexAttribArray(indexLocation)
+            gl.vertexAttribPointer(indexLocation, 1, gl.FLOAT, false, 0,
+                startPointer / bufferItemStride * floatSize)
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
             for (const [index, location] of positionLocations.entries()) {
                 gl.enableVertexAttribArray(location)
@@ -158,7 +179,7 @@
                 const firstLength = (bufferSize - startPointer)
                     / bufferItemSize - 1
                 drawPathRange(startPointer, firstLength)
-                drawPathRange(bufferItemSize, length - firstLength)
+                drawPathRange(bufferItemSize, length - firstLength + 1)
             }
         }
 
@@ -170,6 +191,9 @@
             gl.uniform2f(canvasSizeLocation, canvasWidth.value,
                 canvasHeight.value)
             gl.uniform1f(widthLocation, width * pixelRatio.value)
+            gl.uniform1f(indexSizeLocation, length)
+            gl.uniform1f(indexMaxSizeLocation, indices.length / 2)
+            gl.uniform1f(indexStartLocation, startPointer / bufferItemSize - 1)
             if (!lastPosition.subtract(head).isZero())
                 addPointToBuffer(head, lastPosition)
             lastPosition = head
