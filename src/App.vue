@@ -5,11 +5,15 @@
     import { useGravitySimStore } from './stores/useGravitySimStore';
     import UI from './ui/UI.vue';
     import { useGravityMapStore } from './stores/useGravityMapStore';
+    import { useExitWarning } from './util/useExitWarning';
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
     const { timestamp, objects } = storeToRefs(useGravitySimStore())
     const { zoomLevel } = storeToRefs(useGravityMapStore())
+
+    if (import.meta.env.VITE_EXIT_WARNING !== "false")
+        useExitWarning()
 
     // timestamp.value = new Date("2013-1-1 0:00:00 UTC")
     // // Pluto
