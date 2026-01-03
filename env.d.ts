@@ -13,3 +13,8 @@ interface ImportMetaEnv {
      */
     readonly VITE_EXIT_WARNING?: "false" | "true",
 }
+
+/** List of scenario files in the public folder */
+declare const SCENARIOS: string[]
+/** List of icon files in the public folder */
+declare const ICON_FILES: string[]
