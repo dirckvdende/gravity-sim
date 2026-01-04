@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { storeToRefs } from 'pinia';
-    import GravityMap from './gravitymap/GravityMap.vue';
-    import Vector2 from './util/linalg/Vector2';
-    import { useGravitySimStore } from './stores/useGravitySimStore';
-    import UI from './ui/UI.vue';
-    import { useGravityMapStore } from './stores/useGravityMapStore';
-    import { useExitWarning } from './util/useExitWarning';
+    import GravityMap from '@/gravitymap/GravityMap.vue';
+    import Vector2 from '@/util/linalg/Vector2';
+    import { useGravitySimStore } from '@/stores/useGravitySimStore';
+    import UI from '@/ui/UI.vue';
+    import { useGravityMapStore } from '@/stores/useGravityMapStore';
+    import { useExitWarning } from '@/util/useExitWarning';
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
@@ -216,5 +216,5 @@
 </style>
 
 <style lang="scss">
-    @use "./colors.scss";
+    @use "@/colors.scss";
 </style>

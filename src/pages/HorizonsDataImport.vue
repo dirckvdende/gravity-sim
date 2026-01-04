@@ -1,11 +1,11 @@
 <script lang="ts" setup>
     import { ref, useTemplateRef } from 'vue';
     import type { StateFile } from '@/filesystem/statefile.mjs';
-    import { convertToStateFile } from './convert';
+    import { convertToStateFile } from '@/horizonsdata/convert';
     import { saveToFile } from '@/filesystem/save.mjs';
-    import FileList from './filelist/FileList.vue';
-    import ErrorMessage from './ErrorMessage.vue';
-    import { ConversionError } from './convert/error';
+    import FileList from '@/horizonsdata/filelist/FileList.vue';
+    import ErrorMessage from '@/horizonsdata/ErrorMessage.vue';
+    import { ConversionError } from '@/horizonsdata/convert/error';
 
     // List of objects that have been uploaded
     const fileList = useTemplateRef("file-list")
