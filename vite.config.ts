@@ -6,28 +6,31 @@ import vueDevTools from "vite-plugin-vue-devtools"
 import { readdirSync } from 'node:fs'
 import { resolve, join } from 'node:path'
 
-// List of predefined gravity sim scenarios
-const scenarios = readdirSync(join(__dirname, "public", "scenarios"))
-// List of icons
-const iconFiles = readdirSync(join(__dirname, "public", "icons"))
+/**
+ * Get an array of all files in a subdirectory of the "public" folder
+ * @param dir The subdirectory to look through
+ * @returns An array of all filenames
+ */
+function publicFiles(dir: string): string[] {
+    const url = new URL(`./public/${dir}`, import.meta.url)
+    return readdirSync(fileURLToPath(url))
+}
 
 // https://vite.dev/config/
 export default defineConfig({
     base: "/gravity-sim/",
     plugins: [
         vue(),
-        vueDevTools()
+        vueDevTools(),
     ],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
     define: {
-        /** List of predefined gravity sim scenarios */
-        SCENARIOS: JSON.stringify(scenarios),
-        /** List of icon filenames */
-        ICON_FILES: JSON.stringify(iconFiles),
+        SCENARIOS: publicFiles("scenarios"),
+        ICON_FILES: publicFiles("icons"),
     },
     build: {
         rollupOptions: {
