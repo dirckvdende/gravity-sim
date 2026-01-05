@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 const pinia = createPinia()
 
 const app = createApp(App)
-app.config.performance = true
+if (import.meta.env.VITE_MEASURE_PERFORMANCE == "true")
+    app.config.performance = true
 app.use(pinia)
 app.mount('#app')

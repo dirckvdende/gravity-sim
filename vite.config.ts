@@ -1,10 +1,11 @@
-import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from "node:url"
+import { type ConfigEnv, defineConfig, loadEnv } from "vite"
+import vue from "@vitejs/plugin-vue"
 import vueDevTools from "vite-plugin-vue-devtools"
-import { readdirSync } from 'node:fs'
-import { resolve, join } from 'node:path'
+import { readdirSync } from "node:fs"
+import { resolve } from "node:path"
+import { cwd } from "node:process"
 
 /**
  * Get an array of all files in a subdirectory of the "public" folder
@@ -16,28 +17,47 @@ function publicFiles(dir: string): string[] {
     return readdirSync(fileURLToPath(url))
 }
 
+/**
+ * Get a path to an HTML file
+ * @param name The name of the file, without ".html"
+ * @returns The path to the file
+ */
+function htmlPath(name: string): string {
+    return resolve(__dirname, `${name}.html`)
+}
+
+/**
+ * Get the base URL from environment variables, or default to "/"
+ * @param configEnv Loaded configuration
+ * @returns The base URL as a string
+ */
+function baseURL(configEnv: ConfigEnv): string {
+    const env = loadEnv(configEnv.mode, cwd())
+    return env.VITE_BASE_URL ?? "/"
+}
+
 // https://vite.dev/config/
-export default defineConfig({
-    base: "/gravity-sim/",
+export default defineConfig((configEnv) => ({
+    base: baseURL(configEnv),
     plugins: [
         vue(),
         vueDevTools(),
     ],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
     },
     define: {
-        SCENARIOS: publicFiles("scenarios"),
-        ICON_FILES: publicFiles("icons"),
+        SCENARIOS: JSON.stringify(publicFiles("scenarios")),
+        ICON_FILES: JSON.stringify(publicFiles("icons")),
     },
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, "index.html"),
-                horizonsdata: resolve(__dirname, "horizons-data-import.html"),
+                main: htmlPath("index"),
+                horizonsdata: htmlPath("horizons-data-import"),
             }
         }
     }
-})
+}))

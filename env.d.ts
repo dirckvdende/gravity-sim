@@ -12,6 +12,10 @@ interface ImportMetaEnv {
      * page
      */
     readonly VITE_EXIT_WARNING?: "false" | "true",
+    /** Project base URL */
+    readonly VITE_BASE_URL?: string,
+    /** Whether component performance markers should be inserted */
+    readonly VITE_MEASURE_PERFORMANCE?: "false" | "true",
 }
 
 /** List of scenario files in the public folder */
