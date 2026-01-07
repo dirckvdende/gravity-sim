@@ -8,7 +8,7 @@
     import { computed, ref } from 'vue';
     import { loadFromFile, loadFromURL, saveToFile } from '@/filesystem/save.mjs';
     import { getState, setState } from '@/filesystem/state.mjs';
-    import { scenariosList } from '@/filesystem/scenarioslist.mjs';
+    import { scenarioURLs } from '@/util/assetURLs';
     import type { StateFile } from '@/filesystem/statefile.mjs';
 
     // List of predefined scenarios, loaded asynchronously
@@ -30,7 +30,7 @@
      * Scenarios ref is sorted alphabetically after every insert
      */
     function loadScenarios(): void {
-        for (const url of scenariosList()) {
+        for (const url of scenarioURLs) {
             loadFromURL(url).then((state) => {
                 scenarios.value.push(state)
                 scenarios.value.sort((stateA, stateB) => {
