@@ -1,5 +1,5 @@
 
-import { onMounted, onUnmounted } from "vue"
+import { useEventListener } from "@vueuse/core"
 
 /**
  * Display a warning in the browser when the user exits the page or refreshes
@@ -9,33 +9,7 @@ import { onMounted, onUnmounted } from "vue"
 export function useExitWarning(): {
     stop: () => void
 } {
-    let stopped = false
-    let listener: null | ((event: BeforeUnloadEvent) => void) = null
-
-    /** Bind the window event listener */
-    function bind(): void {
-        if (stopped)
-            return
-        listener = (event) => event.preventDefault()
-        window.addEventListener("beforeunload", listener)
-    }
-
-    /** Unbind the window event listener */
-    function unbind(): void {
-        if (!listener)
-            return
-        window.removeEventListener("beforeunload", listener)
-        listener = null
-    }
-
-    /** Stop displaying the browser warning */
-    function stop(): void {
-        stopped = true
-        unbind()
-    }
-
-    onMounted(bind)
-    onUnmounted(unbind)
-
+    const stop = useEventListener("beforeunload", (event) =>
+        event.preventDefault())
     return { stop }
 }
