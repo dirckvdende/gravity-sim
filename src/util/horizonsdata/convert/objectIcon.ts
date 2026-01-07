@@ -1,5 +1,6 @@
 
-import { iconList } from "@/filesystem/iconlist"
+import { iconURLs } from "@/util/assetURLs"
+import moonIcon from "@/assets/icons/moon.svg"
 
 /**
  * Find an icon to give to a gravity object based on its name. Icons are listed
@@ -8,8 +9,8 @@ import { iconList } from "@/filesystem/iconlist"
  * @returns Name of the icon to use as a path to the file
  */
 export function objectIconFromName(name: string): string {
-    let icon = "./icons/moon.svg"
-    for (const iconFile of iconList()) {
+    let icon = moonIcon
+    for (const iconFile of iconURLs) {
         const split = iconFile.split("/")
         const iconName = split[split.length - 1]!.split(".")[0]!
         if (name.toUpperCase().includes(iconName.toUpperCase()))

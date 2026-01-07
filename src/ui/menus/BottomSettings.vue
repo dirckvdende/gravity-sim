@@ -20,6 +20,7 @@
     import { saveToFile } from '@/filesystem/save.mjs';
     import type { StyledGravityObject } from '@/sim/object';
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
+    import moonIcon from "@/assets/icons/moon.svg"
 
     const {
         showBarycenter,
@@ -141,7 +142,7 @@
             name: "New object",
             description: "",
             size: 1,
-            icon: "./icons/moon.svg",
+            icon: moonIcon,
         }
         objects.value.push(object)
         focusedObject.value = object

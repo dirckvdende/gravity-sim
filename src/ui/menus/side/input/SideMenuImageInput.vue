@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { useDropZone, useFileDialog } from '@vueuse/core';
     import { useTemplateRef } from 'vue';
+    import emptyIcon from "@/assets/icons/empty.svg"
 
     const { presets } = defineProps<{
         /**
@@ -10,7 +11,7 @@
         presets?: string[]
     }>()
 
-    const model = defineModel<string>({ default: "./icons/empty.svg" })
+    const model = defineModel<string>({ default: emptyIcon })
 
     /**
      * Process list of uploaded files (should only have one file) and update

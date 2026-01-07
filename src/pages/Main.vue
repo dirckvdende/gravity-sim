@@ -6,6 +6,15 @@
     import UI from '@/ui/UI.vue';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useExitWarning } from '@/composables/useExitWarning';
+    import marsIcon from "@/assets/icons/mars.svg"
+    import sunIcon from "@/assets/icons/sun.svg"
+    import mercuryIcon from "@/assets/icons/mercury.svg"
+    import venusIcon from "@/assets/icons/venus.svg"
+    import earthIcon from "@/assets/icons/earth.svg"
+    import jupiterIcon from "@/assets/icons/jupiter.svg"
+    import saturnIcon from "@/assets/icons/saturn.svg"
+    import uranusIcon from "@/assets/icons/uranus.svg"
+    import neptuneIcon from "@/assets/icons/neptune.svg"
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
@@ -104,7 +113,7 @@
         mass: 6.4171e+23,
         position: new Vector2(219331860751.8892, -3.07482006171276e-06),
         velocity: new Vector2(-2161.201612056362, 25071.162096161017),
-        icon: "./icons/mars.svg",
+        icon: marsIcon,
         size: 6_779_000,
         name: "Mars",
         description: "",
@@ -114,7 +123,7 @@
         mass: 1.98841e+30,
         position: new Vector2(848634613.9098889, -451849082.26611096),
         velocity: new Vector2(-0.4097221427660388, 12.55523946105921),
-        icon: "./icons/sun.svg",
+        icon: sunIcon,
         size: 1_392_700_000,
         name: "Sol",
         description: "",
@@ -124,7 +133,7 @@
         mass: 5.97219e+24,
         position: new Vector2(-141081000038.2215, 39474087820.45221),
         velocity: new Vector2(-7915.160638621885, -29123.98240226964),
-        icon: "./icons/earth.svg",
+        icon: earthIcon,
         size: 12_742_000,
         name: "Earth",
         description: "Our home!",
@@ -134,7 +143,7 @@
         mass: 3.302e+23,
         position: new Vector2(-29834537827.31945, -40455481011.01213),
         velocity: new Vector2(37103.64877771851, -39634.69322681381),
-        icon: "./icons/mercury.svg",
+        icon: mercuryIcon,
         size: 4_879_400,
         name: "Mercury",
         description: "",
@@ -144,7 +153,7 @@
         mass: 4.8685e+24,
         position: new Vector2(89656347232.53941, -62434220202.28404),
         velocity: new Vector2(20223.571925826516, 28534.252011848803),
-        icon: "./icons/venus.svg",
+        icon: venusIcon,
         size: 12_104_000,
         name: "Venus",
         description: "",
@@ -154,7 +163,7 @@
         mass: 1.89819e+27,
         position: new Vector2(-733770320394.0323, -256510379204.82162),
         velocity: new Vector2(3697.9630469766134, -12519.091774373986),
-        icon: "./icons/jupiter.svg",
+        icon: jupiterIcon,
         size: 139_820_000,
         name: "Jupiter",
         description: "",
@@ -164,7 +173,7 @@
         mass: 5.6834e+26,
         position: new Vector2(-77507984011.84268, 1422304621904.8862),
         velocity: new Vector2(-9594.914243919056, -1057.6776389139093),
-        icon: "./icons/saturn.svg",
+        icon: saturnIcon,
         size: 120_536_000,
         name: "Saturn",
         description: "",
@@ -174,7 +183,7 @@
         mass: 8.6813e+25,
         position: new Vector2(-2568876601491.96, 1378270461947.779),
         velocity: new Vector2(-2899.158837100163, -6037.676866393813),
-        icon: "./icons/uranus.svg",
+        icon: uranusIcon,
         size: 51_118_000,
         name: "Uranus",
         description: "",
@@ -184,7 +193,7 @@
         mass: 1.02409e+26,
         position: new Vector2(-263078058929.1874, 4462502936784.5205),
         velocity: new Vector2(-5452.886561546886, -356.19481326340053),
-        icon: "./icons/neptune.svg",
+        icon: neptuneIcon,
         size: 49_244_000,
         name: "Neptune",
         description: "",

@@ -12,6 +12,7 @@ import { objectIconFromName } from "./objectIcon";
 import { zoomLevelCover } from "./zoomLevelCover";
 import { ConversionError } from "./error";
 import { getTimestamp } from "./timestamp";
+import moonIcon from "@/assets/icons/moon.svg"
 
 /**
  * Convert a list of object files to a combined state file, by flattening coords
@@ -32,7 +33,7 @@ export function convertToStateFile(files: ObjectFile[]): StateFile {
     for (const [index, { generatorData }] of objects.entries())
         files[index]!.generatorData = generatorData
     return {
-        icon: "./icons/moon.svg",
+        icon: moonIcon,
         name: "Horizons data import",
         objects: objects.map(({ object }) => object),
         position: Vector2.Zero,
