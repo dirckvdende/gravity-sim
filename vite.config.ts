@@ -3,19 +3,8 @@ import { fileURLToPath, URL } from "node:url"
 import { type ConfigEnv, defineConfig, loadEnv } from "vite"
 import vue from "@vitejs/plugin-vue"
 import vueDevTools from "vite-plugin-vue-devtools"
-import { readdirSync } from "node:fs"
 import { resolve } from "node:path"
 import { cwd } from "node:process"
-
-/**
- * Get an array of all files in a subdirectory of the "public" folder
- * @param dir The subdirectory to look through
- * @returns An array of all filenames
- */
-function publicFiles(dir: string): string[] {
-    const url = new URL(`./public/${dir}`, import.meta.url)
-    return readdirSync(fileURLToPath(url))
-}
 
 /**
  * Get a path to an HTML file
@@ -47,10 +36,6 @@ export default defineConfig((configEnv) => ({
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
-    },
-    define: {
-        SCENARIOS: JSON.stringify(publicFiles("scenarios")),
-        ICON_FILES: JSON.stringify(publicFiles("icons")),
     },
     build: {
         rollupOptions: {
