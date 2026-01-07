@@ -5,13 +5,13 @@
     import { saveToFile } from '@/filesystem/save.mjs';
     import ErrorMessage from '@/horizonsdata/ErrorMessage.vue';
     import { ConversionError } from '@/horizonsdata/convert/error';
-    import FileList from '@/FileList/FileList.vue';
+    import FileList from '@/components/FileList.vue';
     import type { ObjectFile } from '@/horizonsdata/object';
     import { unitToHTML, MASS_UNITS, LENGTH_UNITS, VELOCITY_UNITS } from
     '@/util/units';
     import { DeserializationError } from '@/horizonsdata/deserialize/error';
     import { deserializeObjectFile } from '@/horizonsdata/deserialize';
-    import UploadField from '@/FileList/UploadField.vue';
+    import UploadField from '@/components/UploadField.vue';
 
     // List of objects that have been uploaded
     const fileList = useTemplateRef("file-list")
