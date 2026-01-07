@@ -1,16 +1,16 @@
 <script lang="ts" setup>
     import { ref, useTemplateRef } from 'vue';
     import type { StateFile } from '@/filesystem/statefile.mjs';
-    import { convertToStateFile } from '@/horizonsdata/convert';
+    import { convertToStateFile } from '@/util/horizonsdata/convert';
     import { saveToFile } from '@/filesystem/save.mjs';
     import ErrorMessage from '@/components/ErrorMessage.vue';
-    import { ConversionError } from '@/horizonsdata/convert/error';
+    import { ConversionError } from '@/util/horizonsdata/convert/error';
     import FileList from '@/components/FileList.vue';
-    import type { ObjectFile } from '@/horizonsdata/object';
+    import type { ObjectFile } from '@/util/horizonsdata/object';
     import { unitToHTML, MASS_UNITS, LENGTH_UNITS, VELOCITY_UNITS } from
     '@/util/units';
-    import { DeserializationError } from '@/horizonsdata/deserialize/error';
-    import { deserializeObjectFile } from '@/horizonsdata/deserialize';
+    import { DeserializationError } from '@/util/horizonsdata/deserialize/error';
+    import { deserializeObjectFile } from '@/util/horizonsdata/deserialize';
     import UploadField from '@/components/UploadField.vue';
 
     // List of objects that have been uploaded
