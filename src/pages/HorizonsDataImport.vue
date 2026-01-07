@@ -3,7 +3,7 @@
     import type { StateFile } from '@/filesystem/statefile.mjs';
     import { convertToStateFile } from '@/horizonsdata/convert';
     import { saveToFile } from '@/filesystem/save.mjs';
-    import ErrorMessage from '@/horizonsdata/ErrorMessage.vue';
+    import ErrorMessage from '@/components/ErrorMessage.vue';
     import { ConversionError } from '@/horizonsdata/convert/error';
     import FileList from '@/components/FileList.vue';
     import type { ObjectFile } from '@/horizonsdata/object';
