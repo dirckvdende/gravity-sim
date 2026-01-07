@@ -28,7 +28,6 @@ export function useFullscreen(
     const mounted = useMounted()
 
     watch(isFullscreen, (value) => {
-        console.log(value)
         if (!mounted.value)
             return
         if (value) {
