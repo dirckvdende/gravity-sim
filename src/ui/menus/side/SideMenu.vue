@@ -3,7 +3,7 @@
     import SVGIcon from '@/ui/SVGIcon.vue';
     import { onClickOutside } from '@vueuse/core';
     import { useTemplateRef } from 'vue';
-    import { useScrollbarWidth } from '@/util/useScrollbarWidth';
+    import { useScrollbarWidth } from '@/composables/useScrollbarWidth';
     import SideMenuBottomButtons, { type SideMenuBottomButton } from
     "./SideMenuBottomButtons.vue"
 

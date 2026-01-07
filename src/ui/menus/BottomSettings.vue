@@ -4,7 +4,7 @@
     mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
     mdiArrowTopRight, mdiArrowTopLeft } from '@mdi/js';
     import { computed } from 'vue';
-    import { useKeyEvent } from '../../util/keyEvent';
+    import { useKeyEvent } from '../../composables/useKeyEvent';
     import BottomMenu from './bottom/BottomMenu.vue';
     import BottomMenuButton from './bottom/BottomMenuButton.vue';
     import BottomMenuSection from './bottom/BottomMenuSection.vue';

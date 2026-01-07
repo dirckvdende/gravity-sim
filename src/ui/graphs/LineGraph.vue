@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { useAnimationFrame } from '@/util/animationFrame';
+    import { useAnimationFrame } from '@/composables/useAnimationFrame';
     import GraphContainer from './GraphContainer.vue';
     import { mdiDeleteOutline, mdiContentSaveOutline } from '@mdi/js';
     import { ref, useTemplateRef, computed } from 'vue';

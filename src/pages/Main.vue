@@ -5,7 +5,7 @@
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import UI from '@/ui/UI.vue';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
-    import { useExitWarning } from '@/util/useExitWarning';
+    import { useExitWarning } from '@/composables/useExitWarning';
 
     const NORMALIZE_FACTOR = 1 / 6.6743e-20
 
