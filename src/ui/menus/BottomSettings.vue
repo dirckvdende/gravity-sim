@@ -10,7 +10,7 @@
     import BottomMenuSection from './bottom/BottomMenuSection.vue';
     import BottomMenuText from './bottom/BottomMenuText.vue';
     import { storeToRefs } from 'pinia';
-    import { toggleFullscreen, isFullscreenRef } from '@/util/fullscreen';
+    import { useFullscreen } from '@/composables/useFullscreen';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { useMenuStore } from '@/stores/useMenuStore';
@@ -32,6 +32,8 @@
     } = storeToRefs(useSettingsStore())
     const { speed, paused } = storeToRefs(useSettingsStore())
     const { slowed, objects } = storeToRefs(useGravitySimStore())
+
+    const isFullscreen = useFullscreen()
 
     type Mode = {
         name: string,
@@ -242,9 +244,9 @@
                 }">Dark mode</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiFullscreen"
-                @click="() => toggleFullscreen()"
+                @click="isFullscreen = !isFullscreen"
                 :style="{
-                    '--icon-color': isFullscreenRef ?
+                    '--icon-color': isFullscreen ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Full screen</BottomMenuButton>
         </BottomMenuSection>
