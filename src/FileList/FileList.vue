@@ -1,20 +1,12 @@
-<script lang="ts" setup generic="TFile">
-    import { computed, ref, watch } from "vue";
-    import type { FileListItemDisplay } from "./fileListItemDisplay";
+<script lang="ts" setup generic="TFile extends UnwrapRef<any>">
+    import { ref, watch, type Ref, type UnwrapRef } from "vue";
     import FileListItem from "./FileListItem.vue";
 
     const {
         deleteButtons = true,
-        display,
     } = defineProps<{
         /** Whether to show delete buttons next to list items */
         deleteButtons?: boolean
-        /**
-         * Function to apply to items to generate display information
-         * @param item The item in the list
-         * @returns Display information object
-         */
-        display?: (item: TFile) => Partial<FileListItemDisplay>
     }>()
 
     const emit = defineEmits<{
@@ -22,50 +14,53 @@
         (e: "update"): void
     }>()
 
-    /**
-     * Add default display info to custom display() function output
-     * @param item The item to get the display info of
-     * @returns The full display info of the item
-     */
-    function defaultDisplay(item: TFile): FileListItemDisplay {
-        const defaults: FileListItemDisplay = item instanceof File ? {
-            filename: item.name,
-            displayName: "",
-            annotation: "",
-        } : {
-            filename: String(item),
-            displayName: "",
-            annotation: "",
-        }
-        return {
-            ...defaults,
-            ...display?.(item),
-        }
-    }
-
     /** Items in the list */
-    const items = ref<TFile[]>([])
-    watch(items, () => emit("update"))
-    /** Items with their display information */
-    const itemsWithDisplay = computed(() =>
-        items.value.map(item => ({ item, ...defaultDisplay(item as TFile) })))
+    const items = ref<TFile[]>([]) as Ref<TFile[]>
+    // Update is only emitted if the actual list is updated, not if object
+    // properties are changed
+    watch(items, () => emit("update"), { deep: 1 })
+
+    const slots = defineSlots<{
+        /** Filename of an item */
+        filename?: (props: { item: TFile }) => any
+        /**
+         * Display name to show instead of the filename. If this is present, the
+         * filename will be displayed greyed out next to the display name
+         */
+        displayName?: (props: { item: TFile }) => any
+        /** Text below the filename */
+        annotation?: (props: { item: TFile }) => any
+    }>()
+
+    /**
+     * Check if an item is a file object
+     * @param item The item to check
+     * @returns Whether the item is a file object
+     */
+    function itemIsFile(item: TFile): boolean {
+        return item instanceof File
+    }
 
     defineExpose({ items })
 </script>
 
 <template>
     <FileListItem
-        v-for="item in itemsWithDisplay"
+        v-for="item in items"
         @delete="items = items.filter(x => x != item)"
         :delete-button="deleteButtons">
-        <template #filename>{{ item.filename }}</template>
-        <template #displayName v-if="item.displayName">
-            {{ item.displayName }}
+        <template #filename>
+            <slot name="filename" :item="(item as TFile)">
+                {{ itemIsFile(item as TFile) ? (item as File).name : item }}
+            </slot>
         </template>
-        <template #annotation>{{ item.annotation }}</template>
+        <template #displayName v-if="slots.displayName">
+            <slot name="displayName" :item="(item as TFile)" />
+        </template>
+        <template #annotation v-if="slots.annotation">
+            <slot name="annotation" :item="(item as TFile)" />
+        </template>
     </FileListItem>
 </template>
 
-<style lang="scss" module>
-
-</style>
+<style lang="scss" module></style>

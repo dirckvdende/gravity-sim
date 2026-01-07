@@ -21,9 +21,9 @@
          * Display name to show instead of the filename. If this is present, the
          * filename will be displayed greyed out next to the display name
          */
-        displayName: (props: {}) => any
+        displayName?: (props: {}) => any
         /** Text below the filename */
-        annotation: (props: {}) => any
+        annotation?: (props: {}) => any
     }>()
 </script>
 
@@ -37,10 +37,10 @@
                 <slot v-if="slots.displayName" name="displayName" />
                 <slot v-else name="filename" />
                 <span v-if="slots.displayName" :class="$style.filename">
-                    (<slot name="displayName" />)
+                    (<slot name="filename" />)
                 </span>
             </div>
-            <div v-if="$slots.subtext" :class="$style.subtext">
+            <div v-if="slots.annotation" :class="$style.subtext">
                 <slot name="annotation" />
             </div>
         </div>
