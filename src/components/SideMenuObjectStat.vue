@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import { type UnitsList } from '@/util/units';
     import { computed, ref, useTemplateRef } from 'vue';
-    import type { SideMenuStatButtonDef } from '@/components/SideMenuStatButton.vue';
+    import type { SideMenuStatButtonDef } from
+    '@/components/SideMenuStatButton.vue';
     import { mdiChartLine } from '@mdi/js';
     import SideMenuStat from '@/components/SideMenuStat.vue';
     import { storeToRefs } from 'pinia';

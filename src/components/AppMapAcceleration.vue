@@ -4,7 +4,7 @@
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { storeToRefs } from 'pinia';
     import { computed, inject } from 'vue';
-    import MapArrow from './MapArrow.vue';
+    import MapArrow from '@/components/MapArrow.vue';
     import type Vector2 from '@/util/linalg/Vector2';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import type { GravityObject } from '@/util/sim/object';

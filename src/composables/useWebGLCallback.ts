@@ -1,6 +1,6 @@
 
 import { inject, onMounted, onUnmounted } from "vue";
-import type { WebGLCallback } from "./useWebGL";
+import type { WebGLCallback } from "@/composables/useWebGL";
 import { webGLKey } from '@/util/keys';
 
 /**

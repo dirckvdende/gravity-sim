@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, inject, provide, useTemplateRef } from 'vue';
     import { webGLKey } from '@/util/keys';
-    import { useWebGLTransform } from '../composables/useWebGLTransform';
+    import { useWebGLTransform } from '@/composables/useWebGLTransform';
     import { defaultState } from '@/util/mapState';
     import { mapStateKey } from '@/util/keys';
     import Vector2 from '@/util/linalg/Vector2';

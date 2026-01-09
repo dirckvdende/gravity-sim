@@ -1,7 +1,7 @@
 
 import { usePointer } from "@vueuse/core"
 import { watch } from "vue"
-import { usePointerState } from "./useMapPointerState"
+import { usePointerState } from "@/composables/useMapPointerState"
 
 /** Amount to add to both old and new pinch size when calculating ratio */
 const SMOOTHING_FACTOR = 2

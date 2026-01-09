@@ -5,7 +5,7 @@
     import { useTemplateRef } from 'vue';
     import { useScrollbarWidth } from '@/composables/useScrollbarWidth';
     import SideMenuBottomButtons, { type SideMenuBottomButton } from
-    "./SideMenuBottomButtons.vue"
+    "@/components/SideMenuBottomButtons.vue"
 
     const { visible = false, menuTitle = "", bottomButtons } = defineProps<{
         /** Whether the side menu is currently visible */

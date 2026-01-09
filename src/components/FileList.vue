@@ -1,6 +1,6 @@
 <script lang="ts" setup generic="TFile extends UnwrapRef<any>">
     import { ref, watch, type Ref, type UnwrapRef } from "vue";
-    import FileListItem from "./FileListItem.vue";
+    import FileListItem from "@/components/FileListItem.vue";
 
     const {
         deleteButtons = true,

@@ -5,15 +5,15 @@
     import MapGrid from '@/components/MapGrid.vue';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef } from 'vue';
-    import AppMapIcons from './AppMapIcons.vue';
-    import AppMapOrbits from './AppMapOrbits.vue';
-    import AppMapBarycenter from './AppMapBarycenter.vue';
-    import AppMapRuler from './AppMapRuler.vue';
+    import AppMapIcons from '@/components/AppMapIcons.vue';
+    import AppMapOrbits from '@/components/AppMapOrbits.vue';
+    import AppMapBarycenter from '@/components/AppMapBarycenter.vue';
+    import AppMapRuler from '@/components/AppMapRuler.vue';
     import { syncRef } from '@vueuse/core';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import AppMapVelocity from './AppMapVelocity.vue';
-    import AppMapAcceleration from './AppMapAcceleration.vue';
+    import AppMapVelocity from '@/components/AppMapVelocity.vue';
+    import AppMapAcceleration from '@/components//AppMapAcceleration.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())

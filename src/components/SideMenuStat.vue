@@ -2,8 +2,9 @@
     import { unitToHTML, type FormatOptions, type UnitsList } from
     '@/util/units';
     import { computed } from 'vue';
-    import type { SideMenuStatButtonDef } from './SideMenuStatButton.vue';
-    import SideMenuStatButton from './SideMenuStatButton.vue';
+    import type { SideMenuStatButtonDef } from
+    '@/components/SideMenuStatButton.vue';
+    import SideMenuStatButton from '@/components/SideMenuStatButton.vue';
 
     const {
         value,

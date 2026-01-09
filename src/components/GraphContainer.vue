@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-    import GraphControls from './GraphControls.vue';
-    import type { GraphControlsDefition } from './GraphControls.vue';
+    import GraphControls from '@/components/GraphControls.vue';
+    import type { GraphControlsDefition } from '@/components/GraphControls.vue';
 
     const { controls } = defineProps<{
         controls?: GraphControlsDefition

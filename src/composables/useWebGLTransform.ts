@@ -1,7 +1,7 @@
 
 import { computed, toValue, type ComputedRef, type MaybeRefOrGetter } from
 "vue";
-import { useWebGL, type UseWebGLReturn } from "./useWebGL";
+import { useWebGL, type UseWebGLReturn } from "@/composables/useWebGL";
 import Vector2 from "@/util/linalg/Vector2";
 import { useDevicePixelRatio } from "@vueuse/core";
 

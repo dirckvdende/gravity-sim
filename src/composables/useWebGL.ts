@@ -1,8 +1,8 @@
 
 import { computed, toValue, watch, type ComputedRef, type MaybeRefOrGetter,
 type ShallowRef} from "vue"
-import { useAdaptiveCanvasSize } from "./useAdaptiveCanvasSize"
-import { clearContext, viewportToCanvasSize } from "../util/webGL"
+import { useAdaptiveCanvasSize } from "@/composables/useAdaptiveCanvasSize"
+import { clearContext, viewportToCanvasSize } from "@/util/webGL"
 
 /**
  * Callback for when a new rendering context is created/used by the useWebGL

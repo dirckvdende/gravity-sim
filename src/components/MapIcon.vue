@@ -32,9 +32,9 @@
 
 <script lang="ts" setup>
     import type Vector2 from '@/util/linalg/Vector2';
-    import MapIconScaled from './MapIconScaled.vue';
+    import MapIconScaled from '@/components/MapIconScaled.vue';
     import { computed, inject } from 'vue';
-    import MapIconPin from './MapIconPin.vue';
+    import MapIconPin from '@/components/MapIconPin.vue';
     import { defaultState } from '@/util/mapState';
     import { mapStateKey } from '@/util/keys';
 

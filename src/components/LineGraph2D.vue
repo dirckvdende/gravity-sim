@@ -3,7 +3,7 @@
     import Vector2 from '@/util/linalg/Vector2';
     import { useElementSize } from '@vueuse/core';
     import { computed, ref, useTemplateRef, watch } from 'vue';
-    import GraphContainer from './GraphContainer.vue';
+    import GraphContainer from '@/components/GraphContainer.vue';
     import { mdiContentSaveOutline, mdiDeleteOutline } from '@mdi/js';
 
     const {

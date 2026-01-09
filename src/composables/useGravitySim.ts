@@ -1,9 +1,10 @@
 
 import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter,
 type Ref } from "vue";
-import type { GravityObject } from "../util/sim/object";
-import { objectsToState, slopeFunction, stateToObjects } from "../util/sim/odeConvert";
-import { RKFSolver } from "../util/sim/rkf45";
+import type { GravityObject } from "@/util/sim/object";
+import { objectsToState, slopeFunction, stateToObjects } from
+"@/util/sim/odeConvert";
+import { RKFSolver } from "@/util/sim/rkf45";
 import Vector2 from "@/util/linalg/Vector2";
 
 /** Options to pass to the gravity sim */

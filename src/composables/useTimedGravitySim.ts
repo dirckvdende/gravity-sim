@@ -1,7 +1,7 @@
 
 import { ref, toValue, type MaybeRefOrGetter, type Ref } from "vue";
 import { useGravitySim, type GravitySimOptions, type GravitySimReturn } from
-"./useGravitySim";
+"@/composables/useGravitySim";
 import { useAnimationFrame } from "@/composables/useAnimationFrame";
 import type { GravityObject } from "@/util/sim/object";
 
