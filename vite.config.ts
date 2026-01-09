@@ -42,6 +42,11 @@ export default defineConfig((configEnv) => ({
             input: {
                 main: htmlPath("index"),
                 horizonsdata: htmlPath("horizons-data-import"),
+            },
+            output: {
+                assetFileNames: "[hash:16][extname]",
+                chunkFileNames: "[hash:16].js",
+                entryFileNames: "[hash:16].js",
             }
         }
     }
