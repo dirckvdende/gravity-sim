@@ -1,40 +1,48 @@
-import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from "node:url"
+import { type ConfigEnv, defineConfig, loadEnv } from "vite"
+import vue from "@vitejs/plugin-vue"
 import vueDevTools from "vite-plugin-vue-devtools"
-import { readdirSync } from 'node:fs'
-import { resolve, join } from 'node:path'
+import { resolve } from "node:path"
+import { cwd } from "node:process"
 
-// List of predefined gravity sim scenarios
-const scenarios = readdirSync(join(__dirname, "public", "scenarios"))
-// List of icons
-const iconFiles = readdirSync(join(__dirname, "public", "icons"))
+/**
+ * Get a path to an HTML file
+ * @param name The name of the file, without ".html"
+ * @returns The path to the file
+ */
+function htmlPath(name: string): string {
+    return resolve(__dirname, `${name}.html`)
+}
+
+/**
+ * Get the base URL from environment variables, or default to "/"
+ * @param configEnv Loaded configuration
+ * @returns The base URL as a string
+ */
+function baseURL(configEnv: ConfigEnv): string {
+    const env = loadEnv(configEnv.mode, cwd())
+    return env.VITE_BASE_URL ?? "/"
+}
 
 // https://vite.dev/config/
-export default defineConfig({
-    base: "/gravity-sim/",
+export default defineConfig((configEnv) => ({
+    base: baseURL(configEnv),
     plugins: [
         vue(),
-        vueDevTools()
+        vueDevTools(),
     ],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
-    },
-    define: {
-        /** List of predefined gravity sim scenarios */
-        SCENARIOS: JSON.stringify(scenarios),
-        /** List of icon filenames */
-        ICON_FILES: JSON.stringify(iconFiles),
     },
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, "index.html"),
-                horizonsdata: resolve(__dirname, "horizons-data-import.html"),
+                main: htmlPath("index"),
+                horizonsdata: htmlPath("horizons-data-import"),
             }
         }
     }
-})
+}))
