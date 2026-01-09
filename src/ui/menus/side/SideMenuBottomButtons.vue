@@ -10,7 +10,7 @@
 </script>
 
 <script setup lang="ts">
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
 
     const { buttons } = defineProps<{
         /** The buttons to display */

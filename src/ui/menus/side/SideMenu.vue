@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { mdiClose } from '@mdi/js';
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
     import { onClickOutside } from '@vueuse/core';
     import { useTemplateRef } from 'vue';
     import { useScrollbarWidth } from '@/composables/useScrollbarWidth';

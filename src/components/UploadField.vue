@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
     import { mdiUpload } from '@mdi/js';
     import { useDropZone, useFileDialog } from '@vueuse/core';
     import { useTemplateRef } from 'vue';

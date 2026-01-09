@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
     import { mdiFile, mdiDeleteOutline } from '@mdi/js';
 
     const {

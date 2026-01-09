@@ -16,7 +16,7 @@
 </script>
 
 <script setup lang="ts">
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
 
     const { buttonDef } = defineProps<{
         buttonDef: SideMenuStatButtonDef

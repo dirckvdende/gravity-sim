@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
 
     const { pathIcon, icon } = defineProps<{
         /** SVG path of the icon of the button */

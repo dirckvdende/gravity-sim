@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-    import SVGIcon from '@/ui/SVGIcon.vue';
+    import SVGIcon from '@/components/SVGIcon.vue';
     import { ref, useTemplateRef, computed, onMounted } from 'vue';
     
     const container = useTemplateRef("container")
