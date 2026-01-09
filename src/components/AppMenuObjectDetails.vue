@@ -11,12 +11,13 @@
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import SideMenuInputContainer from
     '@/components/SideMenuInputContainer.vue';
-    import SideMenuOptionsInput from '@/components/SideMenuInputOptions.vue';
+    import SideMenuInputOptions from '@/components/SideMenuInputOptions.vue';
     import type { StyledGravityObject } from '@/util/sim/object';
     import { useObjectStats } from '@/composables/useObjectStats';
     import { useObjectCompareStats } from '@/composables/useObjectCompareStats';
-    import ObjectStat from '@/components/SideMenuObjectStat.vue';
-    import ObjectVectorStat from '@/components/SideMenuObjectVectorStat.vue';
+    import SideMenuObjectStat from '@/components/SideMenuObjectStat.vue';
+    import SideMenuObjectVectorStat from
+    '@/components/SideMenuObjectVectorStat.vue';
     import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';
 
     const { objects } = storeToRefs(useGravitySimStore())
@@ -119,56 +120,56 @@
 
         <SideMenuSection divider>
 
-            <ObjectStat :value="name">Name</ObjectStat>
-            <ObjectStat :value="mass" :units="MASS_UNITS">Mass</ObjectStat>
-            <ObjectStat :value="massProportion">Mass / total</ObjectStat>
-            <ObjectStat :value="size" :units="LENGTH_UNITS">
-                Diameter</ObjectStat>
+            <SideMenuObjectStat :value="name">Name</SideMenuObjectStat>
+            <SideMenuObjectStat :value="mass" :units="MASS_UNITS">Mass</SideMenuObjectStat>
+            <SideMenuObjectStat :value="massProportion">Mass / total</SideMenuObjectStat>
+            <SideMenuObjectStat :value="size" :units="LENGTH_UNITS">
+                Diameter</SideMenuObjectStat>
 
-            <ObjectVectorStat :value="position" :units="LENGTH_UNITS" has-graph
-                ref="position-ref">Position</ObjectVectorStat>
-            <ObjectVectorStat :value="velocity" :units="VELOCITY_UNITS"
+            <SideMenuObjectVectorStat :value="position" :units="LENGTH_UNITS" has-graph
+                ref="position-ref">Position</SideMenuObjectVectorStat>
+            <SideMenuObjectVectorStat :value="velocity" :units="VELOCITY_UNITS"
                 show-length has-graph ref="velocity-ref">
-                Velocity</ObjectVectorStat>
-            <ObjectVectorStat :value="force" :units="FORCE_UNITS" show-length
-                has-graph ref="force-ref">Acting force</ObjectVectorStat>
+                Velocity</SideMenuObjectVectorStat>
+            <SideMenuObjectVectorStat :value="force" :units="FORCE_UNITS" show-length
+                has-graph ref="force-ref">Acting force</SideMenuObjectVectorStat>
 
         </SideMenuSection>
         <SideMenuSection divider>
 
             <SideMenuInputContainer name="Compare" style="margin-bottom: 1em;">
-                <SideMenuOptionsInput
+                <SideMenuInputOptions
                     :options="compareOptions"
                     @update="updateCompareObject" />
             </SideMenuInputContainer>
 
             <template v-if="compareObject && focusedObject">
-                <ObjectStat :value="massRatio">Relative mass</ObjectStat>
-                <ObjectStat :value="sizeRatio">Relative size</ObjectStat>
+                <SideMenuObjectStat :value="massRatio">Relative mass</SideMenuObjectStat>
+                <SideMenuObjectStat :value="sizeRatio">Relative size</SideMenuObjectStat>
 
-                <ObjectStat :value="distance" :units="LENGTH_UNITS" has-graph
-                    ref="distance-ref">Distance</ObjectStat>
-                <ObjectVectorStat :value="relativePosition"
+                <SideMenuObjectStat :value="distance" :units="LENGTH_UNITS" has-graph
+                    ref="distance-ref">Distance</SideMenuObjectStat>
+                <SideMenuObjectVectorStat :value="relativePosition"
                     ref="relative-position-ref" :units="LENGTH_UNITS" has-graph>
-                    Relative position</ObjectVectorStat>
-                <ObjectVectorStat :value="relativeVelocity"
+                    Relative position</SideMenuObjectVectorStat>
+                <SideMenuObjectVectorStat :value="relativeVelocity"
                     ref="relative-velocity-ref" :units="VELOCITY_UNITS"
-                    show-length has-graph>Relative velocity</ObjectVectorStat>
+                    show-length has-graph>Relative velocity</SideMenuObjectVectorStat>
 
-                <ObjectStat :value="escapeVelocity" ref="escape-velocity-ref"
+                <SideMenuObjectStat :value="escapeVelocity" ref="escape-velocity-ref"
                     :units="VELOCITY_UNITS" has-graph>
-                    Rel. escape velocity</ObjectStat>
-                <ObjectStat :value="gravBound === undefined ? undefined 
+                    Rel. escape velocity</SideMenuObjectStat>
+                <SideMenuObjectStat :value="gravBound === undefined ? undefined 
                     : gravBound ? 'yes' : 'no'" :units="VELOCITY_UNITS">
-                    Grav. bound</ObjectStat>
+                    Grav. bound</SideMenuObjectStat>
 
-                <ObjectStat :value="eccentricityVector?.length()"
+                <SideMenuObjectStat :value="eccentricityVector?.length()"
                     ref="eccentricity-ref" has-graph>Orbital eccentricity
-                    </ObjectStat>
-                <ObjectStat :value="semiMajorAxis" ref="semi-major-axis-ref"
-                    :units="LENGTH_UNITS" has-graph>Semi-major axis</ObjectStat>
-                <ObjectStat :value="orbitalPeriod" ref="orbital-period-ref"
-                    :units="TIME_UNITS" has-graph>Orbital period</ObjectStat>
+                    </SideMenuObjectStat>
+                <SideMenuObjectStat :value="semiMajorAxis" ref="semi-major-axis-ref"
+                    :units="LENGTH_UNITS" has-graph>Semi-major axis</SideMenuObjectStat>
+                <SideMenuObjectStat :value="orbitalPeriod" ref="orbital-period-ref"
+                    :units="TIME_UNITS" has-graph>Orbital period</SideMenuObjectStat>
             </template>
 
         </SideMenuSection>

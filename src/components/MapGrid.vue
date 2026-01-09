@@ -3,7 +3,7 @@
     import { defaultState } from '../util/mapState';
     import { mapStateKey } from '@/util/keys';
     import Vector2 from '@/util/linalg/Vector2';
-    import GridRendererAtScale from './MapGridAtScale.vue';
+    import MapGridAtScale from './MapGridAtScale.vue';
 
     const {
         separationInterval = [2, 5],
@@ -152,7 +152,7 @@
 </script>
 
 <template>
-    <GridRendererAtScale
+    <MapGridAtScale
         v-for="{ lineWidth, separation, opacity } in grids"
         :color="color"
         :line-width="lineWidth"

@@ -9,10 +9,10 @@
     import SideMenuTextInput from '@/components/SideMenuInputText.vue';
     import type { StyledGravityObject } from '@/util/sim/object';
     import SideMenuSection from '@/components/SideMenuSection.vue';
-    import SideMenuNumberInput from '@/components/SideMenuInputNumber.vue';
+    import SideMenuInputNumber from '@/components/SideMenuInputNumber.vue';
     import Vector2 from '@/util/linalg/Vector2';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
-    import SideMenuImageInput from '@/components/SideMenuInputImage.vue';
+    import SideMenuInputImage from '@/components/SideMenuInputImage.vue';
     import emptyIcon from "@/assets/icons/empty.svg"
     import sunIcon from '@/assets/icons/sun.svg'
     import moonIcon from '@/assets/icons/moon.svg'
@@ -111,7 +111,7 @@
             click: deleteObject,
         }]">
         <SideMenuSection>
-            <SideMenuImageInput v-model="icon" :presets="[
+            <SideMenuInputImage v-model="icon" :presets="[
                 sunIcon,
                 moonIcon,
                 mercuryIcon,
@@ -136,27 +136,27 @@
                 <SideMenuTextInput v-model="description" />
             </SideMenuInputContainer>
             <SideMenuInputContainer name="Mass" suffix="kg">
-                <SideMenuNumberInput v-model="mass" :validator="(v) => v > 0" />
+                <SideMenuInputNumber v-model="mass" :validator="(v) => v > 0" />
             </SideMenuInputContainer>
             <SideMenuInputContainer name="Diameter" suffix="m">
-                <SideMenuNumberInput v-model="size"
+                <SideMenuInputNumber v-model="size"
                     :validator="(v) => v >= 0" />
             </SideMenuInputContainer>
 
             <SideMenuInputContainer name="Position" />
             <SideMenuInputContainer name="x" suffix="m" :level=1>
-                <SideMenuNumberInput v-model="posX" />
+                <SideMenuInputNumber v-model="posX" />
             </SideMenuInputContainer>
             <SideMenuInputContainer name="y" suffix="m" :level=1>
-                <SideMenuNumberInput v-model="posY" />
+                <SideMenuInputNumber v-model="posY" />
             </SideMenuInputContainer>
 
             <SideMenuInputContainer name="Velocity" />
             <SideMenuInputContainer name="x" suffix="m/s" :level=1>
-                <SideMenuNumberInput v-model="velX" />
+                <SideMenuInputNumber v-model="velX" />
             </SideMenuInputContainer>
             <SideMenuInputContainer name="y" suffix="m/s" :level=1>
-                <SideMenuNumberInput v-model="velY" />
+                <SideMenuInputNumber v-model="velY" />
             </SideMenuInputContainer>
         </SideMenuSection>
     </SideMenu>

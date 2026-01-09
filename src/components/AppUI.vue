@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import BottomSettings from '@/components/AppMenuBottom.vue';
-    import TimeDisplay from '@/components/AppTimeDisplay.vue';
-    import LoadMenu from '@/components/AppMenuLoad.vue';
-    import ObjectDetailsMenu from '@/components/AppMenuObjectDetails.vue';
-    import DemoOverlay from '@/components/AppDemoOverlay.vue';
-    import ObjectEditMenu from '@/components/AppMenuObjectEdit.vue';
+    import AppMenuBottom from '@/components/AppMenuBottom.vue';
+    import AppTimeDisplay from '@/components/AppTimeDisplay.vue';
+    import AppMenuLoad from '@/components/AppMenuLoad.vue';
+    import AppMenuObjectDetails from '@/components/AppMenuObjectDetails.vue';
+    import AppDemoOverlay from '@/components/AppDemoOverlay.vue';
+    import AppMenuObjectEdit from '@/components/AppMenuObjectEdit.vue';
     import { useDarkMode } from '@/composables/useDarkMode';
 
     useDarkMode()
@@ -13,14 +13,14 @@
 <template>
     <div :class="$style.container">
         <div>
-            <TimeDisplay />
-            <LoadMenu />
-            <ObjectDetailsMenu />
-            <ObjectEditMenu />
-            <BottomSettings />
+            <AppTimeDisplay />
+            <AppMenuLoad />
+            <AppMenuObjectDetails />
+            <AppMenuObjectEdit />
+            <AppMenuBottom />
         </div>
     </div>
-    <DemoOverlay />
+    <AppDemoOverlay />
 </template>
 
 <style lang="scss" module>

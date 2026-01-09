@@ -4,7 +4,7 @@
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { storeToRefs } from 'pinia';
     import { computed, inject } from 'vue';
-    import ArrowRenderer from './MapArrow.vue';
+    import MapArrow from './MapArrow.vue';
     import type Vector2 from '@/util/linalg/Vector2';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import type { GravityObject } from '@/util/sim/object';
@@ -65,7 +65,7 @@
 </script>
 
 <template>
-    <ArrowRenderer
+    <MapArrow
         v-for="arrow in arrows"
         :start="arrow.start"
         :end="arrow.end"
