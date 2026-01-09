@@ -6,7 +6,7 @@
     import SideMenuStat from '../side/SideMenuStat.vue';
     import { storeToRefs } from 'pinia';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import LineGraph from '@/ui/graphs/LineGraph.vue';
+    import LineGraph from '@/components/LineGraph.vue';
 
     const {
         value,

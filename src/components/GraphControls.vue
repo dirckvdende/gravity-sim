@@ -11,7 +11,7 @@
 </script>
 
 <script setup lang="ts">
-    import SVGIcon from '../SVGIcon.vue';
+    import SVGIcon from '@/ui/SVGIcon.vue';
 
     const { controls } = defineProps<{
         /** List of controls to display */
