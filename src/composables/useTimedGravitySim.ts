@@ -3,7 +3,7 @@ import { ref, toValue, type MaybeRefOrGetter, type Ref } from "vue";
 import { useGravitySim, type GravitySimOptions, type GravitySimReturn } from
 "./useGravitySim";
 import { useAnimationFrame } from "@/composables/useAnimationFrame";
-import type { GravityObject } from "./object";
+import type { GravityObject } from "@/util/sim/object";
 
 // Difference between target time and elapsed time where sim is marked as
 // "slowed"

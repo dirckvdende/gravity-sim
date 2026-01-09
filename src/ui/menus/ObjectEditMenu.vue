@@ -7,7 +7,7 @@
     import SideMenuInputContainer from
     './side/input/SideMenuInputContainer.vue';
     import SideMenuTextInput from './side/input/SideMenuTextInput.vue';
-    import type { StyledGravityObject } from '@/sim/object';
+    import type { StyledGravityObject } from '@/util/sim/object';
     import SideMenuSection from './side/SideMenuSection.vue';
     import SideMenuNumberInput from './side/input/SideMenuNumberInput.vue';
     import Vector2 from '@/util/linalg/Vector2';

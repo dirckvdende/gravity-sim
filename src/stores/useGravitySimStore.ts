@@ -2,8 +2,8 @@
 import { defineStore, storeToRefs } from "pinia"
 import { useSettingsStore } from "./useSettingsStore"
 import { ref, computed } from "vue"
-import { type StyledGravityObject } from "@/sim/object"
-import { useTimedGravitySim } from "@/sim/useTimedGravitySim"
+import { type StyledGravityObject } from "@/util/sim/object"
+import { useTimedGravitySim } from "@/composables/useTimedGravitySim"
 import { useMenuStore } from "./useMenuStore"
 import { useWindowFocus } from "@vueuse/core"
 

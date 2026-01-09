@@ -1,9 +1,9 @@
 
 import type Vector2 from "@/util/linalg/Vector2";
-import type { StyledGravityObject } from "./object";
+import type { StyledGravityObject } from "@/util/sim/object";
 import { toValue, computed, type ComputedRef, type MaybeRefOrGetter } from
 "vue";
-import { forceOnObject } from "./odeConvert";
+import { forceOnObject } from "@/util/sim/odeConvert";
 
 /** Return value of the objects stat composable */
 export type ObjectStatsReturn = {

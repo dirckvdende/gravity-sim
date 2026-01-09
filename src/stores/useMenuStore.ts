@@ -1,5 +1,5 @@
 
-import type { StyledGravityObject } from "@/sim/object";
+import type { StyledGravityObject } from "@/util/sim/object";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 

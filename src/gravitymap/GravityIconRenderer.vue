@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import IconRenderer from '@/map/renderers/icons/IconRenderer.vue';
-    import type { StyledGravityObject } from '@/sim/object';
+    import type { StyledGravityObject } from '@/util/sim/object';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { storeToRefs } from 'pinia';

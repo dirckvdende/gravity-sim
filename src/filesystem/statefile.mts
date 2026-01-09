@@ -1,5 +1,5 @@
 
-import type { StyledGravityObject } from "@/sim/object"
+import type { StyledGravityObject } from "@/util/sim/object"
 import type Vector2 from "@/util/linalg/Vector2"
 
 /** Deserialized form of a gravity sim state file */

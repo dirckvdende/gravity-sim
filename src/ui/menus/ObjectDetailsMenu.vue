@@ -12,9 +12,9 @@
     import SideMenuInputContainer from
     './side/input/SideMenuInputContainer.vue';
     import SideMenuOptionsInput from './side/input/SideMenuOptionsInput.vue';
-    import type { StyledGravityObject } from '@/sim/object';
-    import { useObjectStats } from '@/sim/useObjectStats';
-    import { useObjectCompareStats } from '@/sim/useObjectCompareStats';
+    import type { StyledGravityObject } from '@/util/sim/object';
+    import { useObjectStats } from '@/composables/useObjectStats';
+    import { useObjectCompareStats } from '@/composables/useObjectCompareStats';
     import ObjectStat from './objectdetails/ObjectStat.vue';
     import ObjectVectorStat from './objectdetails/ObjectVectorStat.vue';
     import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';

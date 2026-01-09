@@ -6,8 +6,8 @@
     import ArrowRenderer from './ArrowRenderer.vue';
     import type Vector2 from '@/util/linalg/Vector2';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import type { GravityObject } from '@/sim/object';
-    import { forceOnObject } from '@/sim/odeConvert';
+    import type { GravityObject } from '@/util/sim/object';
+    import { forceOnObject } from '@/util/sim/odeConvert';
 
     // Mass added to every object's mass, and once extra to the total mass to
     // avoid division by zero
