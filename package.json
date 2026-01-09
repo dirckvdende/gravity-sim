@@ -11,12 +11,14 @@
         "build": "run-p type-check \"build-only {@}\" --",
         "preview": "vite preview",
         "build-only": "vite build",
-        "type-check": "vue-tsc --build"
+        "type-check": "vue-tsc --build",
+        "build-rust": "cd rust && wasm-pack build --target web"
     },
     "dependencies": {
         "@vueuse/core": "^14.1.0",
         "npm-run-all2": "^8.0.4",
         "pinia": "^3.0.4",
+        "rust": "file:rust/pkg",
         "vue": "^3.5.22"
     },
     "devDependencies": {
