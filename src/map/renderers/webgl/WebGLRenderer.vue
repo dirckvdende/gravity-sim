@@ -2,7 +2,7 @@
     import { computed, inject, provide, useTemplateRef } from 'vue';
     import { webGLKey } from './state';
     import { useWebGLTransform } from './useWebGLTransform';
-    import { defaultState, mapStateKey } from '@/map/state';
+    import { defaultState, mapStateKey } from '@/util/mapState';
     import Vector2 from '@/util/linalg/Vector2';
 
     const { position, pixelSize } = inject(mapStateKey, defaultState())

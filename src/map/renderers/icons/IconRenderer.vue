@@ -35,7 +35,7 @@
     import Icon from './Icon.vue';
     import { computed, inject } from 'vue';
     import IconPin from './IconPin.vue';
-    import { defaultState, mapStateKey } from '@/map/state';
+    import { defaultState, mapStateKey } from '@/util/mapState';
 
     const {
         icons = [],

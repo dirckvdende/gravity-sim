@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { inject } from 'vue';
-    import { defaultState, mapStateKey } from '../state';
+    import { defaultState, mapStateKey } from '../../util/mapState';
     import { usePointerPan } from './usePointerPan';
 
     const { disabled = false } = defineProps<{

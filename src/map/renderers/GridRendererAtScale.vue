@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject, useTemplateRef } from 'vue';
-    import { defaultState, mapStateKey } from '../state';
+    import { defaultState, mapStateKey } from '../../util/mapState';
     import { useElementSize } from '@vueuse/core';
 
     const {

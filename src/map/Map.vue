@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, provide, ref, useTemplateRef, watch } from 'vue';
-    import { extendMapState, mapStateKey } from './state';
+    import { extendMapState, mapStateKey } from '../util/mapState';
     import Vector2 from '@/util/linalg/Vector2';
     import { useElementSize } from '@vueuse/core';
 

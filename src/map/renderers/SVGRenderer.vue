@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { inject } from 'vue';
-    import { mapStateKey, defaultState } from '../state';
+    import { mapStateKey, defaultState } from '../../util/mapState';
 
     const { viewport } = inject(mapStateKey, defaultState())
     const viewBox = computed(() => {

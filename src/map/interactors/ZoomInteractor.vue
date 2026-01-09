@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { inject } from 'vue';
-    import { defaultState, mapStateKey } from '../state';
+    import { defaultState, mapStateKey } from '../../util/mapState';
     import Vector2 from '@/util/linalg/Vector2';
     import { usePointerPinch } from './usePointerPinch';
     import { useScrollWheel } from './useScrollWheel';
