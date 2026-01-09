@@ -12,7 +12,6 @@
 </template>
 
 <style lang="scss" module>
-    @use "./style.scss";
     .section {
         width: 100%;
         padding: 0 0 .8em 0;

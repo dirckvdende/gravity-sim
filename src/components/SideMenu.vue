@@ -66,8 +66,7 @@
 </template>
 
 <style lang="scss" module>
-    @use "@/colors.scss";
-    @use "./style.scss";
+    @use "@/assets/scss/colors.scss";
 
     .container {
         position: absolute;

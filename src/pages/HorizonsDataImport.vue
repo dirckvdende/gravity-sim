@@ -255,5 +255,5 @@
 </style>
 
 <style lang="scss">
-    @use "@/colors.scss";
+    @use "@/assets/scss/colors.scss";
 </style>

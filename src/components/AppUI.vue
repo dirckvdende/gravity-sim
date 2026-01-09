@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import BottomSettings from './menus/BottomSettings.vue';
-    import TimeDisplay from './TimeDisplay.vue';
-    import LoadMenu from './menus/LoadMenu.vue';
-    import ObjectDetailsMenu from './menus/ObjectDetailsMenu.vue';
-    import DemoOverlay from './DemoOverlay.vue';
-    import ObjectEditMenu from './menus/ObjectEditMenu.vue';
+    import BottomSettings from '@/components/AppMenuBottom.vue';
+    import TimeDisplay from '@/components/AppTimeDisplay.vue';
+    import LoadMenu from '@/components/AppMenuLoad.vue';
+    import ObjectDetailsMenu from '@/components/AppMenuObjectDetails.vue';
+    import DemoOverlay from '@/components/AppDemoOverlay.vue';
+    import ObjectEditMenu from '@/components/AppMenuObjectEdit.vue';
     import { useDarkMode } from '@/composables/useDarkMode';
 
     useDarkMode()

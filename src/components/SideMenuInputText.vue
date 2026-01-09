@@ -7,7 +7,7 @@
 </template>
 
 <style lang="scss" module>
-    @use "./style.scss";
+    @use "@/assets/scss/text-input.scss";
 
     .input {
         @extend %text-input;

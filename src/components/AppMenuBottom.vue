@@ -4,11 +4,11 @@
     mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
     mdiArrowTopRight, mdiArrowTopLeft } from '@mdi/js';
     import { computed } from 'vue';
-    import { useKeyEvent } from '../../composables/useKeyEvent';
-    import BottomMenu from './bottom/BottomMenu.vue';
-    import BottomMenuButton from './bottom/BottomMenuButton.vue';
-    import BottomMenuSection from './bottom/BottomMenuSection.vue';
-    import BottomMenuText from './bottom/BottomMenuText.vue';
+    import { useKeyEvent } from '../composables/useKeyEvent';
+    import BottomMenu from '@/components/BottomMenu.vue';
+    import BottomMenuButton from '@/components/BottomMenuButton.vue';
+    import BottomMenuSection from '@/components/BottomMenuSection.vue';
+    import BottomMenuText from '@/components/BottomMenuText.vue';
     import { storeToRefs } from 'pinia';
     import { useFullscreen } from '@/composables/useFullscreen';
     import { useSettingsStore } from '@/stores/useSettingsStore';

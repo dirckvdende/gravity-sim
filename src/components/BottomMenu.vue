@@ -70,7 +70,7 @@
 </template>
 
 <style lang="scss" module>
-    @use "@/colors.scss";
+    @use "@/assets/scss/colors.scss";
 
     %arrow {
         position: absolute;

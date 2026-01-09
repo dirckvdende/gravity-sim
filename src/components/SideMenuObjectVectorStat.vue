@@ -1,9 +1,9 @@
 <script lang="ts" setup>
     import { type UnitsList } from '@/util/units';
     import { computed, ref, useTemplateRef } from 'vue';
-    import type { SideMenuStatButtonDef } from '../side/SideMenuStatButton.vue';
+    import type { SideMenuStatButtonDef } from "@/components/SideMenuStatButton.vue";
     import { mdiChartLine, mdiChartMultiline } from '@mdi/js';
-    import SideMenuStat from '../side/SideMenuStat.vue';
+    import SideMenuStat from '@/components/SideMenuStat.vue';
     import { storeToRefs } from 'pinia';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import type Vector2 from '@/util/linalg/Vector2';

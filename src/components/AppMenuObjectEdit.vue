@@ -1,18 +1,18 @@
 <script setup lang="ts">
-    import SideMenu from './side/SideMenu.vue';
+    import SideMenu from '@/components/SideMenu.vue';
     import { mdiDeleteOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, type Ref, type WritableComputedRef } from 'vue';
     import SideMenuInputContainer from
-    './side/input/SideMenuInputContainer.vue';
-    import SideMenuTextInput from './side/input/SideMenuTextInput.vue';
+    '@/components/SideMenuInputContainer.vue';
+    import SideMenuTextInput from '@/components/SideMenuInputText.vue';
     import type { StyledGravityObject } from '@/util/sim/object';
-    import SideMenuSection from './side/SideMenuSection.vue';
-    import SideMenuNumberInput from './side/input/SideMenuNumberInput.vue';
+    import SideMenuSection from '@/components/SideMenuSection.vue';
+    import SideMenuNumberInput from '@/components/SideMenuInputNumber.vue';
     import Vector2 from '@/util/linalg/Vector2';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
-    import SideMenuImageInput from './side/input/SideMenuImageInput.vue';
+    import SideMenuImageInput from '@/components/SideMenuInputImage.vue';
     import emptyIcon from "@/assets/icons/empty.svg"
     import sunIcon from '@/assets/icons/sun.svg'
     import moonIcon from '@/assets/icons/moon.svg'

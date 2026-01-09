@@ -1,22 +1,22 @@
 <script lang="ts" setup>
-    import SideMenu from './side/SideMenu.vue';
-    import SideMenuSection from './side/SideMenuSection.vue';
+    import SideMenu from '@/components/SideMenu.vue';
+    import SideMenuSection from '@/components/SideMenuSection.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, ref, useTemplateRef, watch, type ComputedRef } from 'vue';
     import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS, TIME_UNITS } from
     '@/util/units';
-    import SideMenuStat from './side/SideMenuStat.vue';
-    import SideMenuCenterImage from './side/SideMenuCenterImage.vue';
+    import SideMenuStat from '@/components/SideMenuStat.vue';
+    import SideMenuCenterImage from '@/components/SideMenuCenterImage.vue';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import SideMenuInputContainer from
-    './side/input/SideMenuInputContainer.vue';
-    import SideMenuOptionsInput from './side/input/SideMenuOptionsInput.vue';
+    '@/components/SideMenuInputContainer.vue';
+    import SideMenuOptionsInput from '@/components/SideMenuInputOptions.vue';
     import type { StyledGravityObject } from '@/util/sim/object';
     import { useObjectStats } from '@/composables/useObjectStats';
     import { useObjectCompareStats } from '@/composables/useObjectCompareStats';
-    import ObjectStat from './objectdetails/ObjectStat.vue';
-    import ObjectVectorStat from './objectdetails/ObjectVectorStat.vue';
+    import ObjectStat from '@/components/SideMenuObjectStat.vue';
+    import ObjectVectorStat from '@/components/SideMenuObjectVectorStat.vue';
     import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';
 
     const { objects } = storeToRefs(useGravitySimStore())

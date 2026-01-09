@@ -3,7 +3,7 @@
     import AppMap from '@/components/AppMap.vue';
     import Vector2 from '@/util/linalg/Vector2';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
-    import UI from '@/ui/UI.vue';
+    import AppUI from '@/components/AppUI.vue';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useExitWarning } from '@/composables/useExitWarning';
     import marsIcon from "@/assets/icons/mars.svg"
@@ -202,7 +202,7 @@
 
 <template>
     <AppMap />
-    <UI />
+    <AppUI />
 </template>
 
 <style lang="scss" module>
@@ -225,5 +225,5 @@
 </style>
 
 <style lang="scss">
-    @use "@/colors.scss";
+    @use "@/assets/scss/colors.scss";
 </style>
