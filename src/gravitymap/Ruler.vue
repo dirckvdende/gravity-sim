@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-    import { defaultState, mapStateKey } from '@/util/mapState';
+    import { defaultState } from '@/util/mapState';
+    import { mapStateKey } from '@/util/keys';
     import Vector2 from '@/util/linalg/Vector2';
     import { computed, inject } from 'vue';
 

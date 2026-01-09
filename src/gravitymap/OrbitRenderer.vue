@@ -4,8 +4,8 @@
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { onMounted, onUnmounted, useTemplateRef } from 'vue';
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
-    import WebGLRenderer from '@/map/renderers/webgl/WebGLRenderer.vue';
-    import PathRenderer from '@/map/renderers/webgl/PathRenderer.vue';
+    import MapWebGL from '@/components/MapWebGL.vue';
+    import MapWebGLPath from '@/components/MapWebGLPath.vue';
 
     const { showOrbits, darkMode } = storeToRefs(useSettingsStore())
     const { objects } = storeToRefs(useGravitySimStore())
@@ -26,8 +26,8 @@
 </script>
 
 <template>
-    <WebGLRenderer>
-        <PathRenderer
+    <MapWebGL>
+        <MapWebGLPath
             v-if="showOrbits"
             v-for="{ id, position } in objects"
             :key="id"
@@ -36,5 +36,5 @@
             :color="darkMode
                 ? [0.2, 0.263, 0.357, 1]
                 : [0.67, 0.67, 0.67, 1]" />
-    </WebGLRenderer>
+    </MapWebGL>
 </template>

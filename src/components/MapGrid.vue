@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { computed, inject } from 'vue';
-    import { defaultState, mapStateKey } from '../../util/mapState';
+    import { defaultState } from '../util/mapState';
+    import { mapStateKey } from '@/util/keys';
     import Vector2 from '@/util/linalg/Vector2';
-    import GridRendererAtScale from './GridRendererAtScale.vue';
+    import GridRendererAtScale from './MapGridAtScale.vue';
 
     const {
         separationInterval = [2, 5],

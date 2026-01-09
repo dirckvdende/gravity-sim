@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { defaultState, mapStateKey } from '@/util/mapState';
+    import { defaultState } from '@/util/mapState';
+    import { mapStateKey } from '@/util/keys';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { storeToRefs } from 'pinia';
     import { computed, inject } from 'vue';

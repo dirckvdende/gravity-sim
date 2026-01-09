@@ -1,7 +1,8 @@
 <script setup lang="ts">
     import { inject } from 'vue';
-    import { defaultState, mapStateKey } from '../../util/mapState';
-    import { usePointerPan } from './usePointerPan';
+    import { defaultState } from '../util/mapState';
+    import { mapStateKey } from '@/util/keys';
+    import { usePointerPan } from '../composables/useMapPointerPan';
 
     const { disabled = false } = defineProps<{
         /** Whether panning is enabled (default false) */

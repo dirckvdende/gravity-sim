@@ -1,6 +1,6 @@
 
 import Vector2 from "@/util/linalg/Vector2";
-import { toggleCursor, usePointerDrag, type PointerStateOptions } from "./usePointerDrag";
+import { toggleCursor, usePointerDrag, type PointerStateOptions } from "./useMapPointerDrag";
 
 /** Options for the pointer pan composable */
 export type PointerPanOptions = PointerStateOptions & {

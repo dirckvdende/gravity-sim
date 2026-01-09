@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import IconRenderer from '@/map/renderers/icons/IconRenderer.vue';
+    import MapIcon from '@/components/MapIcon.vue';
     import type { StyledGravityObject } from '@/util/sim/object';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { useMenuStore } from '@/stores/useMenuStore';
@@ -15,7 +15,7 @@
 </script>
 
 <template>
-    <IconRenderer :icons="objects.map((object) => ({
+    <MapIcon :icons="objects.map((object) => ({
         src: object.icon,
         size: object.size,
         position: object.position,

@@ -1,7 +1,7 @@
 
 import { usePointer } from "@vueuse/core"
 import { watch } from "vue"
-import { usePointerState } from "./usePointerState"
+import { usePointerState } from "./useMapPointerState"
 
 /** Options to pass to the pointer drag tracker */
 export type PointerStateOptions = Parameters<typeof usePointer>[0] & {

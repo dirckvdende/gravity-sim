@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import PanInteractor from '@/map/interactors/PanInteractor.vue';
-    import ZoomInteractor from '@/map/interactors/ZoomInteractor.vue';
-    import Map from '@/map/Map.vue';
-    import GridRenderer from '@/map/renderers/GridRenderer.vue';
+    import MapInteractorPan from '@/components/MapInteractorPan.vue';
+    import MapInteractorZoom from '@/components/MapInteractorZoom.vue';
+    import Map from '@/components/Map.vue';
+    import MapGrid from '@/components/MapGrid.vue';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef } from 'vue';
     import GravityIconRenderer from './GravityIconRenderer.vue';
@@ -41,9 +41,9 @@
 
 <template>
     <Map :class="$style.map" ref="map">
-        <PanInteractor />
-        <ZoomInteractor />
-        <GridRenderer
+        <MapInteractorPan />
+        <MapInteractorZoom />
+        <MapGrid
             v-if="showGrid"
             :separation-interval="[2, 5]"
             :visibility-range="[15, 50, 700, 800]"

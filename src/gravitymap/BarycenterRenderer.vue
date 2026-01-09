@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import IconRenderer from '@/map/renderers/icons/IconRenderer.vue';
+    import MapIcon from '@/components/MapIcon.vue';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import { storeToRefs } from 'pinia';
@@ -10,7 +10,7 @@
 </script>
 
 <template>
-    <IconRenderer
+    <MapIcon
         v-if="showBarycenter"
         :icons="[{
             src: baryCenterIcon,

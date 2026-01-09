@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import type Vector2 from '@/util/linalg/Vector2';
-    import { useWebGLCallback } from './useWebGLCallback';
-    import vertexShader from "./path.vert?raw";
-    import fragmentShader from "./path.frag?raw";
-    import { createProgram } from './util';
+    import { useWebGLCallback } from '../composables/useWebGLCallback';
+    import vertexShader from "@/assets/shaders/path.vert?raw";
+    import fragmentShader from "@/assets/shaders/path.frag?raw";
+    import { createProgram } from '../util/webGL';
     import { inject } from 'vue';
-    import { webGLKey } from './state';
+    import { webGLKey } from '@/util/keys';
     import { useDevicePixelRatio } from '@vueuse/core';
 
     const {

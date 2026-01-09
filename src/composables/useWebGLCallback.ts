@@ -1,7 +1,7 @@
 
 import { inject, onMounted, onUnmounted } from "vue";
 import type { WebGLCallback } from "./useWebGL";
-import { webGLKey } from "./state";
+import { webGLKey } from '@/util/keys';
 
 /**
  * Add a callback to a provided WebGL context once the component is mounted.

@@ -67,9 +67,6 @@ export type MapState = MapStateBase & {
     zoomRatio(ratio: number, at?: Vector2): void
 }
 
-/** Key used for inject-provide in map component */
-export const mapStateKey = Symbol() as InjectionKey<MapState>
-
 /**
  * Default value to use for map state inject(). Returns a new object such that
  * no modifications bleed over

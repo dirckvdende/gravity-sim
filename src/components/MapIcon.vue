@@ -32,10 +32,11 @@
 
 <script lang="ts" setup>
     import type Vector2 from '@/util/linalg/Vector2';
-    import Icon from './Icon.vue';
+    import MapIconScaled from './MapIconScaled.vue';
     import { computed, inject } from 'vue';
-    import IconPin from './IconPin.vue';
-    import { defaultState, mapStateKey } from '@/util/mapState';
+    import MapIconPin from './MapIconPin.vue';
+    import { defaultState } from '@/util/mapState';
+    import { mapStateKey } from '@/util/keys';
 
     const {
         icons = [],
@@ -82,7 +83,7 @@
 <template>
     <div :class="$style.container">
         <template v-for="icon in iconsWithZ">
-            <IconPin
+            <MapIconPin
                 v-if="icon.size < showPinAt && !icon.ignoreScaling"
                 :src="icon.src"
                 :position="icon.position"
@@ -92,7 +93,7 @@
                     zIndex: icon.zIndex,
                     pointerEvents: icon.click ? undefined : 'none',
                 }" />
-            <Icon
+            <MapIconScaled
                 v-else
                 :src="icon.src"
                 :position="icon.position"

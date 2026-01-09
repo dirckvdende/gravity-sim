@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import { inject } from 'vue';
-    import { defaultState, mapStateKey } from '../../util/mapState';
+    import { defaultState } from '../util/mapState';
+    import { mapStateKey } from '@/util/keys';
     import Vector2 from '@/util/linalg/Vector2';
-    import { usePointerPinch } from './usePointerPinch';
-    import { useScrollWheel } from './useScrollWheel';
+    import { usePointerPinch } from '../composables/useMapPointerPinch';
+    import { useScrollWheel } from '../composables/useMapScrollWheel';
 
     const { disabled = false, wheelRatios = [1e-3, 5e-5, 1e-6] } = defineProps<{
         /** Whether the interactor is enabled or not (default false) */
