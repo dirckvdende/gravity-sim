@@ -16,8 +16,8 @@
     import { useMenuStore } from '@/stores/useMenuStore';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import Vector2 from '@/util/linalg/Vector2';
-    import { getState } from '@/filesystem/state.mjs';
-    import { saveToFile } from '@/filesystem/save.mjs';
+    import { getState } from '@/util/filesystem/state.mjs';
+    import { saveToFile } from '@/util/filesystem/save.mjs';
     import type { StyledGravityObject } from '@/util/sim/object';
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
     import moonIcon from "@/assets/icons/moon.svg"

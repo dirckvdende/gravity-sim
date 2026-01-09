@@ -1,8 +1,8 @@
 <script lang="ts" setup>
     import { ref, useTemplateRef } from 'vue';
-    import type { StateFile } from '@/filesystem/statefile.mjs';
+    import type { StateFile } from '@/util/filesystem/statefile.mjs';
     import { convertToStateFile } from '@/util/horizonsdata/convert';
-    import { saveToFile } from '@/filesystem/save.mjs';
+    import { saveToFile } from '@/util/filesystem/save.mjs';
     import ErrorMessage from '@/components/ErrorMessage.vue';
     import { ConversionError } from '@/util/horizonsdata/convert/error';
     import FileList from '@/components/FileList.vue';

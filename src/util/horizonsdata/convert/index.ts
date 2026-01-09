@@ -1,5 +1,5 @@
 
-import type { StateFile } from "@/filesystem/statefile.mjs";
+import type { StateFile } from "@/util/filesystem/statefile.mjs";
 import type { ObjectFile } from "../object";
 import Vector2 from "@/util/linalg/Vector2";
 import type { StyledGravityObject } from "@/util/sim/object";

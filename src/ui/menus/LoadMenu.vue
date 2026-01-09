@@ -6,10 +6,11 @@
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, ref } from 'vue';
-    import { loadFromFile, loadFromURL, saveToFile } from '@/filesystem/save.mjs';
-    import { getState, setState } from '@/filesystem/state.mjs';
+    import { loadFromFile, loadFromURL, saveToFile } from
+    '@/util/filesystem/save.mjs';
+    import { getState, setState } from '@/util/filesystem/state.mjs';
     import { scenarioURLs } from '@/util/assetURLs';
-    import type { StateFile } from '@/filesystem/statefile.mjs';
+    import type { StateFile } from '@/util/filesystem/statefile.mjs';
 
     // List of predefined scenarios, loaded asynchronously
     const scenarios = ref<StateFile[]>([])
