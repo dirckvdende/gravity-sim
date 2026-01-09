@@ -5,15 +5,15 @@
     import MapGrid from '@/components/MapGrid.vue';
     import { storeToRefs } from 'pinia';
     import { onMounted, useTemplateRef } from 'vue';
-    import GravityIconRenderer from './GravityIconRenderer.vue';
-    import OrbitRenderer from './OrbitRenderer.vue';
-    import BarycenterRenderer from './BarycenterRenderer.vue';
-    import Ruler from './Ruler.vue';
+    import AppMapIcons from './AppMapIcons.vue';
+    import AppMapOrbits from './AppMapOrbits.vue';
+    import AppMapBarycenter from './AppMapBarycenter.vue';
+    import AppMapRuler from './AppMapRuler.vue';
     import { syncRef } from '@vueuse/core';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import VelocityRenderer from './VelocityRenderer.vue';
-    import AccelerationRenderer from './AccelerationRenderer.vue';
+    import AppMapVelocity from './AppMapVelocity.vue';
+    import AppMapAcceleration from './AppMapAcceleration.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
@@ -48,12 +48,12 @@
             :separation-interval="[2, 5]"
             :visibility-range="[15, 50, 700, 800]"
             color="var(--grid-color, #eee)" />
-        <OrbitRenderer />
-        <VelocityRenderer />
-        <AccelerationRenderer />
-        <GravityIconRenderer />
-        <BarycenterRenderer />
-        <Ruler />
+        <AppMapOrbits />
+        <AppMapVelocity />
+        <AppMapAcceleration />
+        <AppMapIcons />
+        <AppMapBarycenter />
+        <AppMapRuler />
     </Map>
 </template>
 
