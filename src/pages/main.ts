@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './Main.vue'
 import { createPinia } from 'pinia'
+// Temporary
+import "@/util/tmp"
 
 const pinia = createPinia()
 

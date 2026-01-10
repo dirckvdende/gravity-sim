@@ -1,3 +1,4 @@
+// Temporary
 
 import init, * as wasm from "rust"
 
