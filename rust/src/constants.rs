@@ -1,0 +1,3 @@
+
+const GRAV_CONSTANT: f64 = 6.6743e-11;
+const DISTANCE_SMOOTHING: f64 = 1e-5;
