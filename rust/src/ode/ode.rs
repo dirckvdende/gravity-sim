@@ -15,7 +15,6 @@ pub trait ScalarLike<B>:
     + Div<B, Output = B>
     + From<f64>
     + Into<f64>
-    + Copy
     + Clone
 {}
 
@@ -28,7 +27,6 @@ where T:
     + Div<B, Output = B>
     + From<f64>
     + Into<f64>
-    + Copy
     + Clone
 {}
 
@@ -38,7 +36,6 @@ pub trait VectorLike<B, V>:
     Mul<B, Output = V>
     + Add<V, Output = V>
     + HasNorm<B>
-    + Copy
     + Clone
 where
     B: ScalarLike<B>,
@@ -52,7 +49,6 @@ where
         Mul<B, Output = V>
         + Add<V, Output = V>
         + HasNorm<B>
-        + Copy
         + Clone,
 {}
 

@@ -8,9 +8,9 @@ where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
 {
-    let mut out = vectors[0] * B::from(0.);
-    for (f, v) in zip(*factors, *vectors) {
-        out = out + v * B::from(f);
+    let mut out = vectors[0].clone() * B::from(0.);
+    for (f, v) in zip(factors, vectors) {
+        out = out + v.clone() * B::from(*f);
     }
     out
 }
@@ -36,15 +36,15 @@ fn next_k<B, V>(
 }
 
 /// Options for the RKF solver
-struct RKFOptions {
+pub struct RKFOptions {
     /// Tolerance for the solver to determine required step sizes. Lower
     /// tolerance means step size will be smaller
-    tolerance: f64,
+    pub tolerance: f64,
     /// Maximum number of steps to execute during an evolve() call
-    max_steps: usize,
+    pub max_steps: usize,
     /// Maximum time in seconds to spend on an evolve call. Once this threshold
     /// is reached no more steps are executed
-    max_compute_time: Duration,
+    pub max_compute_time: Duration,
 }
 
 /// Factors while calculating k's
@@ -62,18 +62,18 @@ const C5: [f64; 6] = [47. / 450., 0., 12. / 25., 32. / 225., 1. / 30.,
     6. / 25.];
 
 /// State of the RKF solver
-struct RKFState<B, V, Func>
+pub struct RKFState<B, V, Func>
 where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
     Func: Fn(V) -> V,
 {
     /// Differential equation to simulate
-    diff_eq: DiffEq<B, V, Func>,
+    pub diff_eq: DiffEq<B, V, Func>,
     /// Current state
-    state: V,
+    pub state: V,
     /// Solver options
-    options: RKFOptions,
+    pub options: RKFOptions,
 }
 
 impl<B, V, Func> RKFState<B, V, Func>
@@ -95,7 +95,7 @@ where
     /// that was actually evolved. This is equal to time, unless max_steps or
     /// max_compute_time has been reached
     pub fn evolve(&mut self, mut time: B) -> B {
-        let initial_time = time;
+        let initial_time = time.clone();
         let start_time = Instant::now();
         let RKFOptions {
             tolerance,
@@ -103,23 +103,24 @@ where
             max_compute_time,
             ..
         } = self.options;
-        let zero = self.state * B::from(0.);
-        while time.into() > 0. && max_steps > 0 && start_time.elapsed() <
+        let zero = self.state.clone() * B::from(0.);
+        while time.clone().into() > 0. && max_steps > 0 && start_time.elapsed() <
         max_compute_time {
             let mut high_error = true;
-            let mut h = time;
+            let mut h = time.clone();
             while high_error {
-                let mut k = [zero; 6];
+                let mut k: [V; 6] = core::array::from_fn(|_| zero.clone());
                 for i in 0..k.len() {
-                    next_k(&mut k, h, i, &self.diff_eq.slope);
+                    next_k(&mut k, h.clone(), i, &self.diff_eq.slope);
                 }
-                let order4 = self.state + linear_comb(&C4, &k);
-                let order5 = self.state + linear_comb(&C5, &k);
+                let order4 = self.state.clone() + linear_comb(&C4, &k);
+                let order5 = self.state.clone() + linear_comb(&C5, &k);
                 let error: f64 = B::into(
-                    (order4 + (order5 * B::from(-1.))).norm());
+                    (order4.clone() + (order5 * B::from(-1.))).norm());
                 high_error = error > tolerance;
                 if high_error {
-                    h = B::from(0.9 * (tolerance / error).powf(0.2)) * h;
+                    h = B::from(0.9 * (tolerance / error).powf(0.2))
+                        * h.clone();
                 } else {
                     self.state = order4;
                 }
