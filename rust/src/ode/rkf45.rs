@@ -1,6 +1,7 @@
 
 use super::ode::*;
-use std::{iter::zip, time::Instant};
+use std::iter::zip;
+// use std::time::Instant;
 use wasm_bindgen::prelude::*;
 
 /// Linear combination of vectors, with factors as f64
@@ -47,6 +48,18 @@ pub struct RKFOptions {
     /// Maximum time in seconds to spend on an evolve call. Once this threshold
     /// is reached no more steps are executed
     pub max_compute_time: f64,
+}
+
+#[wasm_bindgen]
+impl RKFOptions {
+    #[wasm_bindgen(constructor)]
+    pub fn new(
+        tolerance: f64,
+        max_steps: usize,
+        max_compute_time: f64,
+    ) -> RKFOptions {
+        RKFOptions { tolerance, max_steps, max_compute_time }
+    }
 }
 
 /// Factors while calculating k's
@@ -98,16 +111,16 @@ where
     /// max_compute_time has been reached
     pub fn evolve(&mut self, mut time: B) -> B {
         let initial_time = time.clone();
-        let start_time = Instant::now();
+        // let start_time = Instant::now();
         let RKFOptions {
             tolerance,
             mut max_steps,
-            max_compute_time,
+            // max_compute_time,
             ..
         } = self.options;
         let zero = self.state.clone() * B::from(0.);
-        while time.clone().into() > 0. && max_steps > 0 &&
-        start_time.elapsed().as_secs_f64() < max_compute_time {
+        while time.clone().into() > 0. && max_steps > 0 {
+        // && start_time.elapsed().as_secs_f64() < max_compute_time {
             let mut high_error = true;
             let mut h = time.clone();
             while high_error {

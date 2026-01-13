@@ -18,3 +18,16 @@ pub struct GravityObject {
     /// Mass in kg of the object
     pub mass: Float,
 }
+
+#[wasm_bindgen]
+impl GravityObject {
+    #[wasm_bindgen(constructor)]
+    pub fn new(
+        id: ObjectID,
+        position: PosVector,
+        velocity: PosVector,
+        mass: Float,
+    ) -> GravityObject {
+        GravityObject { id, position, velocity, mass }
+    }
+}

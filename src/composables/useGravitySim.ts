@@ -6,6 +6,12 @@ import { objectsToState, slopeFunction, stateToObjects } from
 "@/util/sim/odeConvert";
 import { RKFSolver } from "@/util/sim/rkf45";
 import Vector2 from "@/util/linalg/Vector2";
+import {
+    GravityObject as GravityObjectRust,
+    GravitySim as GravitySimRust,
+    Vector3 as Vector3Rust,
+    RKFOptions as RKFOptionsRust,
+} from "rust";
 
 /** Options to pass to the gravity sim */
 export type GravitySimOptions = {
@@ -79,20 +85,53 @@ options?: GravitySimOptions): GravitySimReturn {
      * @returns The amount of time actually evolved
      */
     function evolve(time: number): number {
-        const backward = time < 0
-        time = Math.min(toValue(fullOptions.maxEvolveTime), Math.abs(time))
-        const state = objectsToState(objects.value)
-        const slope = slopeFunction(objects.value, backward)
-        const solver = new RKFSolver(state, slope, {
-            tolerance: toValue(fullOptions.tolerance) * maxDistance()
-        })
-        const { state: newState, time: elapsedTime } = solver.evolve(time,
-            toValue(fullOptions.maxStepsPerEvolve), toValue(
-            fullOptions.maxComputeTime))
-        timestamp.value = new Date(Math.round(timestamp.value.getTime() +
-            elapsedTime * 1000 * (backward ? -1 : 1)))
-        stateToObjects(newState, objects.value)
-        return elapsedTime * (backward ? -1 : 1)
+        const sim = new GravitySimRust()
+        // Pass objects to rust
+        for (const object of objects.value) {
+            const { position, velocity } = object;
+            sim.objects.push(new GravityObjectRust(
+                object.id,
+                new Vector3Rust(position.x, position.y, 0),
+                new Vector3Rust(velocity.x, velocity.y, 0),
+                object.mass,
+            ))
+        }
+
+        const elapsedTime = sim.evolve(time, new RKFOptionsRust(
+            toValue(fullOptions.tolerance),
+            toValue(fullOptions.maxStepsPerEvolve),
+            toValue(fullOptions.maxComputeTime),
+        ))
+
+        // Get objects from rust
+        for (const [index, rustObject] of sim.objects.entries()) {
+            const object = objects.value[index]!
+            object.position = new Vector2(
+                rustObject.position.x,
+                rustObject.position.y,
+            )
+            object.velocity = new Vector2(
+                rustObject.velocity.x,
+                rustObject.velocity.y,
+            )
+        }
+
+        return elapsedTime
+
+        // const backward = time < 0
+        // time = Math.min(toValue(fullOptions.maxEvolveTime), Math.abs(time))
+        // const state = objectsToState(objects.value)
+        // const slope = slopeFunction(objects.value, backward)
+        // const solver = new RKFSolver(state, slope, {
+        //     tolerance: toValue(fullOptions.tolerance) * maxDistance()
+        // })
+        // const { state: newState, time: elapsedTime } = solver.evolve(time,
+        //     toValue(fullOptions.maxStepsPerEvolve), toValue(
+        //     fullOptions.maxComputeTime))
+        // timestamp.value = new Date(Math.round(timestamp.value.getTime() +
+        //     elapsedTime * 1000 * (backward ? -1 : 1)))
+        // stateToObjects(newState, objects.value)
+        // return elapsedTime * (backward ? -1 : 1)
     }
 
     /**

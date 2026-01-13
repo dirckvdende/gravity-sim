@@ -22,6 +22,10 @@ pub struct GravitySim {
 
 #[wasm_bindgen]
 impl GravitySim {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> GravitySim {
+        GravitySim { objects: Vec::new(), time: 0. }
+    }
     #[wasm_bindgen(getter)]
     pub fn objects(&self) -> Vec<GravityObject> {
         self.objects.clone()
@@ -102,8 +106,9 @@ impl GravityVector {
 
 #[wasm_bindgen]
 impl GravitySim {
-    /// Evolve the sim a given amount of time
-    pub fn evolve(&mut self, time: Float, options: RKFOptions) {
+    /// Evolve the sim a given amount of time. Returns the amount of time
+    /// simulated
+    pub fn evolve(&mut self, time: Float, options: RKFOptions) -> Float {
         let state = GravityVector(self.objects.clone());
         let time_abs = time.abs();
         let backward = time < 0.;
@@ -116,7 +121,8 @@ impl GravitySim {
             state,
             options,
         );
-        rkf.evolve(time_abs);
+        let true_time = rkf.evolve(time_abs);
         self.objects = rkf.state.0;
+        if backward { -true_time } else { true_time }
     }
 }
