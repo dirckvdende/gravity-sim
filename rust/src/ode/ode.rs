@@ -57,7 +57,7 @@ pub struct DiffEq<B, V, Func>
 where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
-    Func: Fn(V) -> V,
+    Func: Fn(&V) -> V,
 {
     pub slope: Func,
     _phantoms: PhantomData<(B, V)>,
@@ -67,7 +67,7 @@ impl<B, V, Func> DiffEq<B, V, Func>
 where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
-    Func: Fn(V) -> V,
+    Func: Fn(&V) -> V,
 {
     /// Create a new ordinary differential equation from a slope function
     pub fn new(slope: Func) -> DiffEq<B, V, Func> {

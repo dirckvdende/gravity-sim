@@ -24,14 +24,14 @@ fn next_k<B, V>(
     k: &mut [V; 6],
     h: B,
     index: usize,
-    slope: impl Fn(V) -> V,
+    slope: impl Fn(&V) -> V,
 ) where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
 {
     let b = &B[index];
     let x = linear_comb(&b, &k);
-    let new_k = slope(x) * h;
+    let new_k = slope(&x) * h;
     k[index] = new_k;
 }
 
@@ -66,7 +66,7 @@ pub struct RKFState<B, V, Func>
 where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
-    Func: Fn(V) -> V,
+    Func: Fn(&V) -> V,
 {
     /// Differential equation to simulate
     pub diff_eq: DiffEq<B, V, Func>,
@@ -80,7 +80,7 @@ impl<B, V, Func> RKFState<B, V, Func>
 where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
-    Func: Fn(V) -> V,
+    Func: Fn(&V) -> V,
 {
     /// Create a new RKF state
     pub fn new(

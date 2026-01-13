@@ -1,79 +1,90 @@
 
-use std::collections::HashMap;
 use super::types::*;
 use super::object::*;
 use crate::ode::DiffEq;
 use crate::ode::HasNorm;
 use crate::ode::RKFOptions;
 use crate::ode::RKFState;
-use nalgebra::DVector;
-use nalgebra::Matrix;
-use nalgebra::dvector;
-use nalgebra::vector;
+use std::iter::zip;
+use std::ops::{Mul, Add};
+use wasm_bindgen::prelude::*;
 
 /// Gravity sim state
+#[wasm_bindgen]
 pub struct GravitySim {
     /// Map of IDs to gravity sim objects
-    pub objects: HashMap<ObjectID, GravityObject>,
+    #[wasm_bindgen(skip)]
+    pub objects: Vec<GravityObject>,
     /// Current time from epoch in seconds
     pub time: Float,
 }
 
-// Alias for vector type used in ODEs
-type V = DVector<Float>;
-
-impl HasNorm<Float> for V {
-    fn norm(&self) -> Float {
-        self.norm()
+#[wasm_bindgen]
+impl GravitySim {
+    #[wasm_bindgen(getter)]
+    pub fn objects(&self) -> Vec<GravityObject> {
+        self.objects.clone()
+    }
+    #[wasm_bindgen(setter)]
+    pub fn set_objects(&mut self, objects: Vec<GravityObject>) {
+        self.objects = objects;
     }
 }
 
-/// Differential equation with initial state/condition
-struct DiffEqInitial<Func: Fn(V) -> V> {
-    diff_eq: DiffEq<Float, V, Func>,
-    initial_state: V,
+/// Struct used for ODE calculations
+#[derive(Clone)]
+struct GravityVector(Vec<GravityObject>);
+
+impl Mul<Float> for GravityVector {
+    type Output = GravityVector;
+    fn mul(mut self, rhs: Float) -> Self::Output {
+        for object in &mut self.0 {
+            object.position *= rhs;
+            object.velocity *= rhs;
+        }
+        self
+    }
+}
+
+impl Add<GravityVector> for GravityVector {
+    type Output = GravityVector;
+    fn add(mut self, rhs: GravityVector) -> Self::Output {
+        for (left, right) in zip(&mut self.0, rhs.0) {
+            left.position += right.position;
+            left.velocity += right.velocity;
+        }
+        self
+    }
+}
+
+impl HasNorm<Float> for GravityVector {
+    fn norm(&self) -> Float {
+        let mut total = 0.;
+        for object in &self.0 {
+            total += object.position.norm_squared()
+                + object.velocity.norm_squared();
+        }
+        f64::sqrt(total)
+    }
+}
+
+impl GravityVector {
+    fn slope(&self) -> GravityVector {
+        // TODO: Implement
+        self.clone()
+    }
 }
 
 impl GravitySim {
     /// Evolve the sim a given amount of time
     pub fn evolve(&mut self, time: Float, options: RKFOptions) {
-        let ode = self.to_ode();
-        let mut rkf = GravitySim::to_rkf(ode, options);
-        rkf.evolve(time);
-        let state = rkf.state.clone();
-        drop(rkf);
-        self.from_ode_state(state);
-    }
-    /// Get an initial state and differential equation from a gravity sim state.
-    /// Returns a struct with the equation and initial state
-    fn to_ode(&mut self) -> DiffEqInitial<impl Fn(V) -> V> {
-        let vsize = self.objects[&0].position.len();
-        let mut initial_state_vec: Vec<f64> = Vec::new();
-        // TODO: Fill initial state vector
-        let initial_state = DVector::from_vec(initial_state_vec);
-        let slope = |v: V| -> V {
-            // TODO: Implement
-            v
-        };
-        DiffEqInitial {
-            diff_eq: DiffEq::new(slope),
-            initial_state,
-        }
-    }
-    /// Convert a differential equation state to a list of objects and store it
-    /// in the gravity sim
-    fn from_ode_state(&mut self, state: V) {
-
-    }
-    /// Convert differential equation with initial conditions to RKF state
-    fn to_rkf<Func: Fn(V) -> V>(
-        diff_eq_initial: DiffEqInitial<Func>,
-        options: RKFOptions,
-    ) -> RKFState<Float, V, Func> {
-        RKFState::new(
-            diff_eq_initial.diff_eq,
-            diff_eq_initial.initial_state,
+        let state = GravityVector(self.objects.clone());
+        let mut rkf = RKFState::new(
+            DiffEq::new(GravityVector::slope),
+            state,
             options,
-        )
+        );
+        rkf.evolve(time);
+        self.objects = rkf.state.0;
     }
 }
