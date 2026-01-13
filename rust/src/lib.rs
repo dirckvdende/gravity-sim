@@ -1,11 +1,10 @@
 
-mod constants;
 mod sim;
 mod ode;
 mod vector3;
 
 use wasm_bindgen::prelude::*;
-use nalgebra::Vector3;
+use vector3::Vector3;
 
 #[wasm_bindgen]
 extern "C" {

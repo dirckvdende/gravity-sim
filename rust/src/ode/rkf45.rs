@@ -1,6 +1,7 @@
 
 use super::ode::*;
-use std::{iter::zip, time::{Duration, Instant}};
+use std::{iter::zip, time::Instant};
+use wasm_bindgen::prelude::*;
 
 /// Linear combination of vectors, with factors as f64
 fn linear_comb<B, V, const S: usize>(factors: &[f64; S], vectors: &[V; S]) -> V
@@ -36,6 +37,7 @@ fn next_k<B, V>(
 }
 
 /// Options for the RKF solver
+#[wasm_bindgen]
 pub struct RKFOptions {
     /// Tolerance for the solver to determine required step sizes. Lower
     /// tolerance means step size will be smaller
@@ -44,7 +46,7 @@ pub struct RKFOptions {
     pub max_steps: usize,
     /// Maximum time in seconds to spend on an evolve call. Once this threshold
     /// is reached no more steps are executed
-    pub max_compute_time: Duration,
+    pub max_compute_time: f64,
 }
 
 /// Factors while calculating k's
@@ -104,8 +106,8 @@ where
             ..
         } = self.options;
         let zero = self.state.clone() * B::from(0.);
-        while time.clone().into() > 0. && max_steps > 0 && start_time.elapsed() <
-        max_compute_time {
+        while time.clone().into() > 0. && max_steps > 0 &&
+        start_time.elapsed().as_secs_f64() < max_compute_time {
             let mut high_error = true;
             let mut h = time.clone();
             while high_error {

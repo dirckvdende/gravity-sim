@@ -1,4 +1,5 @@
 
+use super::constants::*;
 use super::types::*;
 use super::object::*;
 use crate::ode::DiffEq;
@@ -64,27 +65,58 @@ impl HasNorm<Float> for GravityVector {
             total += object.position.norm_squared()
                 + object.velocity.norm_squared();
         }
-        f64::sqrt(total)
+        Float::sqrt(total)
     }
 }
 
 impl GravityVector {
-    fn slope(&self) -> GravityVector {
-        // TODO: Implement
-        self.clone()
+    fn slope(&self, multiplier: f64) -> GravityVector {
+        let mut slope = self.clone();
+        for object in &mut slope.0 {
+            object.position = object.velocity * multiplier;
+            let force = self.force_on_object(object);
+            let divide = 1. / (object.mass + SMOOTHING_FACTOR);
+            object.velocity = force * multiplier * divide;
+        }
+        slope
+    }
+
+    fn slope_forward(&self) -> GravityVector { self.slope(1.) }
+    fn slope_backward(&self) -> GravityVector { self.slope(-1.) }
+
+    fn force_on_object(&self, object: &GravityObject) -> PosVector {
+        let mut total = PosVector::zero();
+        for other in &self.0 {
+            if other.id == object.id {
+                continue;
+            }
+            let pos_diff = other.position - object.position;
+            let distance = pos_diff.norm_squared().powf(1.5);
+            let force = pos_diff * (GRAV_CONSTANT * object.mass * other.mass /
+                distance);
+            total += force;
+        }
+        total
     }
 }
 
+#[wasm_bindgen]
 impl GravitySim {
     /// Evolve the sim a given amount of time
     pub fn evolve(&mut self, time: Float, options: RKFOptions) {
         let state = GravityVector(self.objects.clone());
+        let time_abs = time.abs();
+        let backward = time < 0.;
         let mut rkf = RKFState::new(
-            DiffEq::new(GravityVector::slope),
+            DiffEq::new(if backward {
+                GravityVector::slope_backward
+            } else {
+                GravityVector::slope_forward
+            }),
             state,
             options,
         );
-        rkf.evolve(time);
+        rkf.evolve(time_abs);
         self.objects = rkf.state.0;
     }
 }
