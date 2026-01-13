@@ -6,7 +6,6 @@ use crate::ode::DiffEq;
 use crate::ode::HasNorm;
 use crate::ode::RKFOptions;
 use crate::ode::RKFState;
-use std::iter::zip;
 use std::ops::{Mul, Add};
 use wasm_bindgen::prelude::*;
 
@@ -54,9 +53,9 @@ impl Mul<Float> for GravityVector {
 impl Add<GravityVector> for GravityVector {
     type Output = GravityVector;
     fn add(mut self, rhs: GravityVector) -> Self::Output {
-        for (left, right) in zip(&mut self.0, rhs.0) {
-            left.position += right.position;
-            left.velocity += right.velocity;
+        for index in 0..self.0.len() {
+            self.0[index].position += rhs.0[index].position;
+            self.0[index].velocity += rhs.0[index].velocity;
         }
         self
     }
@@ -95,7 +94,7 @@ impl GravityVector {
                 continue;
             }
             let pos_diff = other.position - object.position;
-            let distance = pos_diff.norm_squared().powf(1.5);
+            let distance = pos_diff.norm().powi(3);
             let force = pos_diff * (GRAV_CONSTANT * object.mass * other.mass /
                 distance);
             total += force;

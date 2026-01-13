@@ -27,12 +27,13 @@ fn next_k<B, V>(
     h: B,
     index: usize,
     slope: impl Fn(&V) -> V,
+    state: V,
 ) where
     B: ScalarLike<B>,
     V: VectorLike<B, V>,
 {
-    let b = &B[index];
-    let x = linear_comb(&b, &k);
+    let b = &BT[index];
+    let x = state + linear_comb(&b, &k);
     let new_k = slope(&x) * h;
     k[index] = new_k;
 }
@@ -63,12 +64,12 @@ impl RKFOptions {
 }
 
 /// Factors while calculating k's
-const B: [[f64; 6]; 5] = [
-    [2. / 9., 0., 0., 0., 0., 0.],
-    [1. / 12., 1. / 4., 0., 0., 0., 0.],
-    [69. / 128., -243. / 128., 135. / 64., 0., 0., 0.],
-    [-17. / 12., 27. / 4., -27. / 5., 16. / 15., 0., 0.],
-    [65. / 432., -5. / 16., 13. / 16., 4. / 27., 5. / 144., 0.],
+const BT: [[f64; 6]; 5] = [
+    [2. / 9.,    0.,           0.,         0.,        0.,        0.],
+    [1. / 12.,   1. / 4.,      0.,         0.,        0.,        0.],
+    [69. / 128., -243. / 128., 135. / 64., 0.,        0.,        0.],
+    [-17. / 12., 27. / 4.,     -27. / 5.,  16. / 15., 0.,        0.],
+    [65. / 432., -5. / 16.,    13. / 16.,  4. / 27.,  5. / 144., 0.],
 ];
 /// Factors in front of k's while calculating order 4 approximation
 const C4: [f64; 6] = [1. / 9., 0., 9. / 20., 16. / 45., 1. / 12., 0.];
@@ -125,8 +126,10 @@ where
             let mut h = time.clone();
             while high_error {
                 let mut k: [V; 6] = core::array::from_fn(|_| zero.clone());
-                for i in 0..k.len() {
-                    next_k(&mut k, h.clone(), i, &self.diff_eq.slope);
+                k[0] = (self.diff_eq.slope)(&self.state);
+                for i in 1..k.len() {
+                    next_k(&mut k, h.clone(), i - 1, &self.diff_eq.slope,
+                        self.state.clone());
                 }
                 let order4 = self.state.clone() + linear_comb(&C4, &k);
                 let order5 = self.state.clone() + linear_comb(&C5, &k);

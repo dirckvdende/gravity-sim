@@ -6,12 +6,13 @@ import { objectsToState, slopeFunction, stateToObjects } from
 "@/util/sim/odeConvert";
 import { RKFSolver } from "@/util/sim/rkf45";
 import Vector2 from "@/util/linalg/Vector2";
-import {
+import init, {
     GravityObject as GravityObjectRust,
     GravitySim as GravitySimRust,
     Vector3 as Vector3Rust,
     RKFOptions as RKFOptionsRust,
 } from "rust";
+await init()
 
 /** Options to pass to the gravity sim */
 export type GravitySimOptions = {
@@ -86,19 +87,21 @@ options?: GravitySimOptions): GravitySimReturn {
      */
     function evolve(time: number): number {
         const sim = new GravitySimRust()
+        const rustObjects: GravityObjectRust[] = []
         // Pass objects to rust
         for (const object of objects.value) {
             const { position, velocity } = object;
-            sim.objects.push(new GravityObjectRust(
+            rustObjects.push(new GravityObjectRust(
                 object.id,
                 new Vector3Rust(position.x, position.y, 0),
                 new Vector3Rust(velocity.x, velocity.y, 0),
                 object.mass,
             ))
         }
+        sim.objects = rustObjects
 
         const elapsedTime = sim.evolve(time, new RKFOptionsRust(
-            toValue(fullOptions.tolerance),
+            toValue(fullOptions.tolerance) * maxDistance(),
             toValue(fullOptions.maxStepsPerEvolve),
             toValue(fullOptions.maxComputeTime),
         ))
@@ -115,6 +118,8 @@ options?: GravitySimOptions): GravitySimReturn {
                 rustObject.velocity.y,
             )
         }
+        timestamp.value = new Date(Math.round(timestamp.value.getTime() +
+            elapsedTime * 1000))
 
         return elapsedTime
 
@@ -197,7 +202,7 @@ function fillOptionsDefaults(options?: GravitySimOptions):
 Required<GravitySimOptions> {
     return {
         maxEvolveTime: Infinity,
-        maxStepsPerEvolve: 1000,
+        maxStepsPerEvolve: 1,
         maxComputeTime: 1 / 120,
         tolerance: 1e-8,
         ...options,
