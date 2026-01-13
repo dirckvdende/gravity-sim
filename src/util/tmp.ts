@@ -1,5 +1,5 @@
 // Temporary
 
-import init, * as wasm from "rust"
+import { greet } from "rust"
 
-init().then(() => wasm.greet("World"))
+greet("World")

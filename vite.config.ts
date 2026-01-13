@@ -5,6 +5,7 @@ import vue from "@vitejs/plugin-vue"
 import vueDevTools from "vite-plugin-vue-devtools"
 import { resolve } from "node:path"
 import { cwd } from "node:process"
+import topLevelAwait from "vite-plugin-top-level-await"
 
 /**
  * Get a path to an HTML file
@@ -31,6 +32,7 @@ export default defineConfig((configEnv) => ({
     plugins: [
         vue(),
         vueDevTools(),
+        topLevelAwait(),
     ],
     resolve: {
         alias: {

@@ -11,7 +11,7 @@
         "build": "run-s build-rust build-vite",
         "build-vite": "run-p type-check \"build-only {@}\" --",
         "build-only": "vite build",
-        "build-rust": "cd rust && wasm-pack build --target web",
+        "build-rust": "cd rust && wasm-pack build --target web && node post-process.js",
         "preview": "vite preview",
         "type-check": "vue-tsc --build"
     },
@@ -20,6 +20,7 @@
         "npm-run-all2": "^8.0.4",
         "pinia": "^3.0.4",
         "rust": "file:rust/pkg",
+        "vite-plugin-top-level-await": "^1.6.0",
         "vue": "^3.5.22"
     },
     "devDependencies": {
