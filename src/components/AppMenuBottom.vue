@@ -41,6 +41,8 @@
     }
 
     const modes = [
+        { name: "-100 years / s", speed: -60 * 60 * 24 * 365.25 * 100 },
+        { name: "-10 years / s", speed: -60 * 60 * 24 * 365.25 * 10 },
         { name: "-1 year / s", speed: -60 * 60 * 24 * 365.25 },
         { name: "-1 month / s", speed: -60 * 60 * 24 * 365.25 / 12 },
         { name: "-1 week / s", speed: -60 * 60 * 24 * 7 },
@@ -55,6 +57,8 @@
         { name: "1 week / s", speed: 60 * 60 * 24 * 7 },
         { name: "1 month / s", speed: 60 * 60 * 24 * 365.25 / 12 },
         { name: "1 year / s", speed: 60 * 60 * 24 * 365.25 },
+        { name: "10 years / s", speed: 60 * 60 * 24 * 365.25 * 10 },
+        { name: "100 years / s", speed: 60 * 60 * 24 * 365.25 * 100 },
     ] as const
 
     // Pair of [index, mode]
