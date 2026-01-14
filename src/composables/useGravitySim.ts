@@ -100,6 +100,7 @@ options?: GravitySimOptions): GravitySimReturn {
         }
         sim.objects = rustObjects
 
+        // Simulate
         const elapsedTime = sim.evolve(time, new RKFOptionsRust(
             toValue(fullOptions.tolerance) * maxDistance(),
             toValue(fullOptions.maxStepsPerEvolve),
@@ -122,21 +123,6 @@ options?: GravitySimOptions): GravitySimReturn {
             elapsedTime * 1000))
 
         return elapsedTime
-
-        // const backward = time < 0
-        // time = Math.min(toValue(fullOptions.maxEvolveTime), Math.abs(time))
-        // const state = objectsToState(objects.value)
-        // const slope = slopeFunction(objects.value, backward)
-        // const solver = new RKFSolver(state, slope, {
-        //     tolerance: toValue(fullOptions.tolerance) * maxDistance()
-        // })
-        // const { state: newState, time: elapsedTime } = solver.evolve(time,
-        //     toValue(fullOptions.maxStepsPerEvolve), toValue(
-        //     fullOptions.maxComputeTime))
-        // timestamp.value = new Date(Math.round(timestamp.value.getTime() +
-        //     elapsedTime * 1000 * (backward ? -1 : 1)))
-        // stateToObjects(newState, objects.value)
-        // return elapsedTime * (backward ? -1 : 1)
     }
 
     /**
@@ -202,7 +188,7 @@ function fillOptionsDefaults(options?: GravitySimOptions):
 Required<GravitySimOptions> {
     return {
         maxEvolveTime: Infinity,
-        maxStepsPerEvolve: 1,
+        maxStepsPerEvolve: 20,
         maxComputeTime: 1 / 120,
         tolerance: 1e-8,
         ...options,

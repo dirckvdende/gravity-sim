@@ -1,7 +1,7 @@
 
-use crate::vector3::Vector3;
+use crate::linalg::Vector3;
 
 /// Float type used in the sim
 pub type Float = f64;
-/// Position/velocity vector type
-pub type PosVector = Vector3;
+/// Position/velocity/force vector type used in the sim
+pub type Vector = Vector3;

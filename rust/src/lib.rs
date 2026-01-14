@@ -1,7 +1,6 @@
 
 mod sim;
-mod ode;
-mod vector3;
+mod linalg;
 
 use wasm_bindgen::prelude::*;
 extern crate console_error_panic_hook;
