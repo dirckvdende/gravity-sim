@@ -35,7 +35,7 @@ export type FormatOptions = {
  * Instructions for a formatted unit. This can be used to generate HTML or
  * plaintext
  */
-type FormattedUnit = {
+export type FormattedUnit = {
     /** Base number */
     base: string
     /** Power of ten to multiply base with (undefined means 0) */
@@ -207,13 +207,13 @@ function exponentFormat(value: number, options: FormatOptions): {
  * @returns An object with information on how to format the given unit. The
  * actual formatting to a string happens in other functions such as unitToHTML
  */
-function unitToFormat(value: number, units: UnitsList, options: FormatOptions):
-FormattedUnit {
+export function unitToFormat(value: number, units: UnitsList, options?:
+FormatOptions): FormattedUnit {
     const negative = value < 0
     if (negative)
         value = -value
     const { suffix, scale } = bestUnit(value, units)
-    const { base, exponent } = exponentFormat(value / scale, options)
+    const { base, exponent } = exponentFormat(value / scale, options ?? {})
     return {
         base: (negative ? "-" : "") + base,
         exponent,
