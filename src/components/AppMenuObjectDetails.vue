@@ -3,9 +3,10 @@
     import SideMenuSection from '@/components/SideMenuSection.vue';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
-    import { computed, ref, useTemplateRef, watch, type ComputedRef } from 'vue';
-    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS, TIME_UNITS } from
-    '@/util/units';
+    import { computed, ref, useTemplateRef, watch, type ComputedRef } from
+    'vue';
+    import { LENGTH_UNITS, VELOCITY_UNITS, MASS_UNITS, FORCE_UNITS, TIME_UNITS }
+    from '@/util/units';
     import SideMenuStat from '@/components/SideMenuStat.vue';
     import SideMenuCenterImage from '@/components/SideMenuCenterImage.vue';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
@@ -19,11 +20,18 @@
     import SideMenuObjectVectorStat from
     '@/components/SideMenuObjectVectorStat.vue';
     import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';
+    import { useDelayedFalse } from '@/composables/useDelayedFalse';
 
     const { objects } = storeToRefs(useGravitySimStore())
-    const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
+    const {
+        activeMenu,
+        focusedObject: trueFocusedObject,
+    } = storeToRefs(useMenuStore())
     const visible = computed(() =>
-        activeMenu.value == "object-details" && focusedObject.value != null)
+        activeMenu.value == "object-details" && trueFocusedObject.value != null)
+    const partiallyVisible = useDelayedFalse(visible, 2000)
+    const focusedObject = computed(() =>
+        partiallyVisible.value ? trueFocusedObject.value : null)
 
     function closeMenu(): void {
         activeMenu.value = "none"
@@ -43,10 +51,12 @@
     )
 
     // Object selector for comparisons
-    const compareObject = ref<StyledGravityObject | undefined>(undefined)
+    const trueCompareObject = ref<StyledGravityObject | undefined>(undefined)
     function updateCompareObject(value: StyledGravityObject | undefined): void {
-        compareObject.value = value
+        trueCompareObject.value = value
     }
+    const compareObject = computed(() =>
+        partiallyVisible.value ? trueCompareObject.value : null)
 
     const {
         name, mass, size, position, velocity, force, massProportion,
