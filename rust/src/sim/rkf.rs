@@ -1,7 +1,14 @@
 use super::constants::*;
 use super::object_vector::GravityObjectVector;
+use super::timing::js_now;
 use super::types::*;
 use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
 
 /// Factors while calculating k's
 const BT: [[f64; 6]; 5] = [
@@ -54,7 +61,8 @@ pub fn rkf_next_state(
     time: Float,
     options: RKFOptions,
 ) -> (Float, GravityObjectVector) {
-    // TODO: Check against max running time
+    let compute_time_start = js_now();
+    let max_compute_time = options.max_compute_time;
     let mut time_left = time.abs();
     let backward = time < 0.;
     let initial_time = time.clone();
@@ -64,7 +72,10 @@ pub fn rkf_next_state(
         core::array::from_fn(|_| state.clone());
     let mut error = state.clone();
     let mut cur_state = state;
-    while time_left > 0. && steps_left > 0 {
+    while time_left > 0.
+        && steps_left > 0
+        && js_now() - compute_time_start < max_compute_time
+    {
         let mut high_error = true;
         let mut h = time_left.clone();
         while high_error {

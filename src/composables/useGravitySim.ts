@@ -2,9 +2,6 @@
 import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter,
 type Ref } from "vue";
 import type { GravityObject } from "@/util/sim/object";
-import { objectsToState, slopeFunction, stateToObjects } from
-"@/util/sim/odeConvert";
-import { RKFSolver } from "@/util/sim/rkf45";
 import Vector2 from "@/util/linalg/Vector2";
 import init, {
     GravityObject as GravityObjectRust,
@@ -188,7 +185,7 @@ function fillOptionsDefaults(options?: GravitySimOptions):
 Required<GravitySimOptions> {
     return {
         maxEvolveTime: Infinity,
-        maxStepsPerEvolve: 20,
+        maxStepsPerEvolve: 1000,
         maxComputeTime: 1 / 120,
         tolerance: 1e-8,
         ...options,
