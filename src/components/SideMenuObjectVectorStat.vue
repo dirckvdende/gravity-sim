@@ -85,7 +85,7 @@
     </SideMenuStat>
     <SideMenuStat :value="value?.x" :units="units" :level="1">x</SideMenuStat>
     <SideMenuStat :value="value?.y" :units="units" :level="1">y</SideMenuStat>
-    <SideMenuStat :value="value?.z" :units="units" :level="1">y</SideMenuStat>
+    <SideMenuStat :value="value?.z" :units="units" :level="1">z</SideMenuStat>
     <LineGraph :value="paused ? null : value?.length()"
         ref="graph-1d" v-if="showGraph1D" />
     <LineGraph2D :point="paused ? null : value?.flatten()" draw-point show-axes
