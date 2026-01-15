@@ -10,11 +10,11 @@ import moonIcon from "@/assets/icons/moon.svg"
  */
 export function objectIconFromName(name: string): string {
     let icon = moonIcon
-    for (const iconFile of iconURLs) {
-        const split = iconFile.split("/")
+    for (const { filename, url } of iconURLs) {
+        const split = filename.split("/")
         const iconName = split[split.length - 1]!.split(".")[0]!
         if (name.toUpperCase().includes(iconName.toUpperCase()))
-            icon = iconFile
+            icon = url
     }
     return icon
 }
