@@ -105,9 +105,9 @@
         if (!data)
             return undefined
         const percentUnits = [{ suffix: '%', scale: 1 }]
-        return `position error: ${unitToHTML(data.positionError, LENGTH_UNITS)}
+        return `Δposition: ${unitToHTML(data.positionError, LENGTH_UNITS)}
             (${unitToHTML(data.positionErrorRelative * 100, percentUnits)}),
-            velocity error: ${unitToHTML(data.velocityError, VELOCITY_UNITS)}
+            Δvelocity: ${unitToHTML(data.velocityError, VELOCITY_UNITS)}
             (${unitToHTML(data.velocityErrorRelative * 100, percentUnits)})`
     }
 
@@ -144,10 +144,11 @@
                 files. Leave the table settings on "defaults".
             </p>
             <p>
-                The tool flattens the imported 3D coordinates to a 2D plane. As
-                such some accuracy is lost when not all points are on the same
-                plane. Make sure to upload at least three <i>different</i> files
-                for this to work properly.
+                The tool rotates the imported 3D coordinates to be as clone to a
+                2D plane as possible. This makes it easier to view most systems
+                in the sim, where rotating the camera is not possible. Make sure
+                to upload at least three <i>different</i> files for this tool to
+                work properly.
             </p>
             <!-- @vue-generic {ObjectFile} -->
             <FileList ref="file-list" @update="listUpdate">
