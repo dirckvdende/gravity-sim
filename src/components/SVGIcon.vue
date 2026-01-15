@@ -9,7 +9,7 @@
 </script>
 
 <template>
-    <div :class="$style.container">
+    <div v-if="glow" :class="$style.container">
         <svg
             viewBox="0 0 25 25"
             style="translate: 0 1px"
@@ -19,12 +19,17 @@
         <svg
             viewBox="0 0 25 25"
             style="translate: 0 1px"
-            v-if="glow"
             v-bind="$attrs"
             :class="$style.glow">
             <path :d="path" />
         </svg>
     </div>
+    <svg v-else
+        viewBox="0 0 25 25"
+        style="translate: 0 1px"
+        v-bind="$attrs">
+        <path :d="path" />
+    </svg>
 </template>
 
 <style lang="scss" module>
