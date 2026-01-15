@@ -173,6 +173,7 @@
     <BottomMenu class="ignore-side-menu-close">
         <BottomMenuSection>
             <BottomMenuButton
+                glow
                 :path-icon="paused ? mdiPlay : mdiPause"
                 @click="pause"
                 :style="{
@@ -201,6 +202,7 @@
             <BottomMenuButton
                 :path-icon="mdiBullseye"
                 @click="toggleBarycenter"
+                :glow="showBarycenter"
                 :style="{
                     '--icon-color': showBarycenter ?
                     'var(--accent-color-purple, #9f30b3)' : undefined,
@@ -214,6 +216,7 @@
             <BottomMenuButton
                 :path-icon="mdiOrbit"
                 @click="toggleOrbits"
+                :glow="showOrbits"
                 :style="{
                     '--icon-color': showOrbits ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
@@ -221,6 +224,7 @@
             <BottomMenuButton
                 :path-icon="mdiArrowTopRight"
                 @click="showVelocityArrows = !showVelocityArrows"
+                :glow="showVelocityArrows"
                 :style="{
                     '--icon-color': showVelocityArrows ?
                         'var(--accent-color-blue)' : undefined
@@ -228,6 +232,7 @@
             <BottomMenuButton
                 :path-icon="mdiArrowTopLeft"
                 @click="showAccelerationArrows = !showAccelerationArrows"
+                :glow="showAccelerationArrows"
                 :style="{
                     '--icon-color': showAccelerationArrows ?
                         'var(--accent-color-red)' : undefined
@@ -235,6 +240,7 @@
             <BottomMenuButton
                 :path-icon="mdiGrid"
                 @click="toggleGrid"
+                :glow="showGrid"
                 :style="{
                     '--icon-color': showGrid ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
@@ -242,6 +248,7 @@
             <BottomMenuButton
                 :path-icon="mdiWeatherNight"
                 @click="toggleDarkMode"
+                :glow="darkMode"
                 :style="{
                     '--icon-color': darkMode ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
@@ -249,6 +256,7 @@
             <BottomMenuButton
                 :path-icon="mdiFullscreen"
                 @click="isFullscreen = !isFullscreen"
+                :glow="isFullscreen"
                 :style="{
                     '--icon-color': isFullscreen ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,

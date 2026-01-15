@@ -1,11 +1,12 @@
 <script setup lang="ts">
     import SVGIcon from '@/components/SVGIcon.vue';
 
-    const { pathIcon, icon } = defineProps<{
+    const { pathIcon, icon, glow = false } = defineProps<{
         /** SVG path of the icon of the button */
         pathIcon?: string,
         /** Icon of the button as a url */
         icon?: string,
+        glow?: boolean,
     }>()
 
     const emit = defineEmits<{
@@ -19,7 +20,8 @@
         <SVGIcon
             v-if="pathIcon"
             :path="pathIcon"
-            :class="$style['path-icon']" />
+            :class="$style['path-icon']"
+            :glow="glow" />
         <div v-else-if="icon" :class="$style.icon">
             <img :src="icon" />
         </div>
