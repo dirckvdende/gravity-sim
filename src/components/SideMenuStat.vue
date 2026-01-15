@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-    import { unitToFormat, unitToHTML, type FormatOptions, type FormattedUnit, type UnitsList } from
-    '@/util/units';
+    import { unitToFormat, type FormatOptions, type FormattedUnit,
+    type UnitsList } from '@/util/units';
     import { computed, type ComputedRef } from 'vue';
     import type { SideMenuStatButtonDef } from
     '@/components/SideMenuStatButton.vue';
@@ -66,7 +66,9 @@
         <div :class="$style.stat">
             <span class="base">{{ valueFormat.base }}</span>
             <span class="multiplier" v-if="valueFormat.exponent">
-                × 10<sup class="exponent">{{ valueFormat.exponent }}</sup>
+                &nbsp;×&nbsp;10<sup class="exponent">
+                    {{ valueFormat.exponent }}
+                </sup>
             </span>
             <span class="suffix" v-if="valueFormat.suffix != ''">
                 &nbsp;{{ valueFormat.suffix }}
