@@ -1,5 +1,6 @@
 
 import Vector2 from "@/util/linalg/Vector2";
+import Vector3 from "@/util/linalg/Vector3";
 import type { StateFile } from "./statefile.mts";
 
 /**
@@ -18,6 +19,8 @@ export function serializeState(state: StateFile): string {
             return { $type: "infinity" }
         if (value instanceof Vector2)
             return { $type: "Vector2", x: value.x, y: value.y }
+        if (value instanceof Vector3)
+            return { $type: "Vector3", x: value.x, y: value.y, z: value.z }
         if (value instanceof Date)
             return { $type: "Date", value: value.getTime() }
         return value
@@ -39,11 +42,21 @@ export function deserializeState(serialized: string): StateFile {
             switch (value.$type) {
                 case "infinity": return Infinity
                 case "Vector2": return new Vector2(value.x, value.y)
+                case "Vector3": return new Vector3(value.x, value.y, value.z)
                 case "Date": return new Date(value.value)
                 default: throw new Error(`Unrecognized type ${value.$type}`)
             }
         }
         return value
+    })
+    // Temporary: conversion from old to new file format
+    r.objects.forEach((object: any) => {
+        if (object.position instanceof Vector2)
+            object.position = new Vector3(
+                object.position.x, object.position.y, 0)
+        if (object.velocity instanceof Vector2)
+            object.velocity = new Vector3(
+                object.velocity.x, object.velocity.y, 0)
     })
     return r
 }
