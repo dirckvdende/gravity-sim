@@ -8,8 +8,8 @@ export const useSettingsStore = defineStore("settings", () => ({
     speed: ref(1),
     /** Whether the simulation is paused */
     paused: ref(false),
-    /** Whether dark mode is enabled */
-    darkMode: ref(false),
+    /** Whether dark mode is enabled (default on) */
+    darkMode: ref(true),
     /** Whether a grid should be displayed */
     showGrid: ref(true),
     /** Whether orbits should be displayed */
