@@ -7,7 +7,6 @@
     import SideMenuStat from '@/components/SideMenuStat.vue';
     import { storeToRefs } from 'pinia';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import Vector2 from '@/util/linalg/Vector2';
     import Vector3 from '@/util/linalg/Vector3';
     import LineGraph from '@/components/LineGraph.vue';
     import LineGraph2D from '@/components/LineGraph2D.vue';
