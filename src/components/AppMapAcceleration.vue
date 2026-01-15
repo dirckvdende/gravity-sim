@@ -6,6 +6,7 @@
     import { computed, inject } from 'vue';
     import MapArrow from '@/components/MapArrow.vue';
     import type Vector2 from '@/util/linalg/Vector2';
+    import type Vector3 from '@/util/linalg/Vector3';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import type { GravityObject } from '@/util/sim/object';
     import { forceOnObject } from '@/util/sim/odeConvert';
@@ -31,7 +32,7 @@
      * @param object The object to get the acceleration of
      * @return The acceleration vector
      */
-    function objectAcceleration(object: GravityObject): Vector2 {
+    function objectAcceleration(object: GravityObject): Vector3 {
         // TODO: Probably want to restructure code such that this isn't
         // calculated multiple times
         const mass = object.mass + EXTRA_MASS
@@ -48,15 +49,16 @@
         }[] = []
         for (const object of objects.value) {
             const acceleration = objectAcceleration(object)
-            const arrowSizePixels = ARROW_SCALE * Math.sqrt(acceleration.length() * pixelSize.value)
-                / Math.sqrt(totalMass.value / pixelSize.value)
+            const arrowSizePixels = ARROW_SCALE * Math.sqrt(acceleration
+                .flatten().length() * pixelSize.value) / Math.sqrt(
+                totalMass.value / pixelSize.value)
             if (arrowSizePixels > LENGTH_CUTOFF)
                 continue
             const arrowSize = arrowSizePixels * pixelSize.value
             out.push({
-                start: object.position,
-                end: object.position.add(acceleration.normalize()
-                    .scale(arrowSize))
+                start: object.position.flatten(),
+                end: object.position.flatten().add(acceleration.flatten()
+                    .normalize().scale(arrowSize))
             })
         }
         return out

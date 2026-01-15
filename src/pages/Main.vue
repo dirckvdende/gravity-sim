@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { storeToRefs } from 'pinia';
     import AppMap from '@/components/AppMap.vue';
-    import Vector2 from '@/util/linalg/Vector2';
+    import Vector3 from '@/util/linalg/Vector3';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import AppUI from '@/components/AppUI.vue';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
@@ -111,8 +111,8 @@
     objects.value.push({
         id: 0,
         mass: 6.4171e+23,
-        position: new Vector2(219331860751.8892, -3.07482006171276e-06),
-        velocity: new Vector2(-2161.201612056362, 25071.162096161017),
+        position: new Vector3(219331860751.8892, -3.07482006171276e-06, 0),
+        velocity: new Vector3(-2161.201612056362, 25071.162096161017, 0),
         icon: marsIcon,
         size: 6_779_000,
         name: "Mars",
@@ -121,8 +121,8 @@
     objects.value.push({
         id: 1,
         mass: 1.98841e+30,
-        position: new Vector2(848634613.9098889, -451849082.26611096),
-        velocity: new Vector2(-0.4097221427660388, 12.55523946105921),
+        position: new Vector3(848634613.9098889, -451849082.26611096, 0),
+        velocity: new Vector3(-0.4097221427660388, 12.55523946105921, 0),
         icon: sunIcon,
         size: 1_392_700_000,
         name: "Sol",
@@ -131,8 +131,8 @@
     objects.value.push({
         id: 2,
         mass: 5.97219e+24,
-        position: new Vector2(-141081000038.2215, 39474087820.45221),
-        velocity: new Vector2(-7915.160638621885, -29123.98240226964),
+        position: new Vector3(-141081000038.2215, 39474087820.45221, 0),
+        velocity: new Vector3(-7915.160638621885, -29123.98240226964, 0),
         icon: earthIcon,
         size: 12_742_000,
         name: "Earth",
@@ -141,8 +141,8 @@
     objects.value.push({
         id: 3,
         mass: 3.302e+23,
-        position: new Vector2(-29834537827.31945, -40455481011.01213),
-        velocity: new Vector2(37103.64877771851, -39634.69322681381),
+        position: new Vector3(-29834537827.31945, -40455481011.01213, 0),
+        velocity: new Vector3(37103.64877771851, -39634.69322681381, 0),
         icon: mercuryIcon,
         size: 4_879_400,
         name: "Mercury",
@@ -151,8 +151,8 @@
     objects.value.push({
         id: 4,
         mass: 4.8685e+24,
-        position: new Vector2(89656347232.53941, -62434220202.28404),
-        velocity: new Vector2(20223.571925826516, 28534.252011848803),
+        position: new Vector3(89656347232.53941, -62434220202.28404, 0),
+        velocity: new Vector3(20223.571925826516, 28534.252011848803, 0),
         icon: venusIcon,
         size: 12_104_000,
         name: "Venus",
@@ -161,8 +161,8 @@
     objects.value.push({
         id: 5,
         mass: 1.89819e+27,
-        position: new Vector2(-733770320394.0323, -256510379204.82162),
-        velocity: new Vector2(3697.9630469766134, -12519.091774373986),
+        position: new Vector3(-733770320394.0323, -256510379204.82162, 0),
+        velocity: new Vector3(3697.9630469766134, -12519.091774373986, 0),
         icon: jupiterIcon,
         size: 139_820_000,
         name: "Jupiter",
@@ -171,8 +171,8 @@
     objects.value.push({
         id: 6,
         mass: 5.6834e+26,
-        position: new Vector2(-77507984011.84268, 1422304621904.8862),
-        velocity: new Vector2(-9594.914243919056, -1057.6776389139093),
+        position: new Vector3(-77507984011.84268, 1422304621904.8862, 0),
+        velocity: new Vector3(-9594.914243919056, -1057.6776389139093, 0),
         icon: saturnIcon,
         size: 120_536_000,
         name: "Saturn",
@@ -181,8 +181,8 @@
     objects.value.push({
         id: 7,
         mass: 8.6813e+25,
-        position: new Vector2(-2568876601491.96, 1378270461947.779),
-        velocity: new Vector2(-2899.158837100163, -6037.676866393813),
+        position: new Vector3(-2568876601491.96, 1378270461947.779, 0),
+        velocity: new Vector3(-2899.158837100163, -6037.676866393813, 0),
         icon: uranusIcon,
         size: 51_118_000,
         name: "Uranus",
@@ -191,8 +191,8 @@
     objects.value.push({
         id: 8,
         mass: 1.02409e+26,
-        position: new Vector2(-263078058929.1874, 4462502936784.5205),
-        velocity: new Vector2(-5452.886561546886, -356.19481326340053),
+        position: new Vector3(-263078058929.1874, 4462502936784.5205, 0),
+        velocity: new Vector3(-5452.886561546886, -356.19481326340053, 0),
         icon: neptuneIcon,
         size: 49_244_000,
         name: "Neptune",

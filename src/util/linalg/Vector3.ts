@@ -1,4 +1,6 @@
 
+import Vector2 from "@/util/linalg/Vector2"
+
 /** 3D position in space */
 export default class Vector3 {
 
@@ -115,6 +117,14 @@ export default class Vector3 {
      */
     dot(other: Vector3): number {
         return this.x * other.x + this.y * other.y + this.z * other.z
+    }
+
+    /**
+     * Remove the z-coord from the vector
+     * @returns The vector as a Vector2, with the z-coord dropped
+     */
+    flatten(): Vector2 {
+        return new Vector2(this.x, this.y)
     }
 
 }

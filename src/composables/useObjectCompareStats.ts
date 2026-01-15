@@ -2,7 +2,7 @@
 import type { MaybeRefOrGetter } from "vue";
 import type { StyledGravityObject } from "@/util/sim/object";
 import { computed, toValue, type ComputedRef } from "vue";
-import Vector2 from "@/util/linalg/Vector2";
+import Vector3 from "@/util/linalg/Vector3";
 import { DISTANCE_SMOOTHING, GRAV_CONSTANT } from "@/util/sim/constants";
 
 /** Return value of the object compare stats composable */
@@ -14,9 +14,9 @@ export type ObjectCompareStatsReturn = {
     /** Ratio between object sizes (diameters if spherical) */
     sizeRatio: ComputedRef<number | undefined>
     /** Relative position to compare object */
-    relativePosition: ComputedRef<Vector2 | undefined>
+    relativePosition: ComputedRef<Vector3 | undefined>
     /** Relative velocity to compare object */
-    relativeVelocity: ComputedRef<Vector2 | undefined>
+    relativeVelocity: ComputedRef<Vector3 | undefined>
     /** Relative escape velocity between the two objects */
     escapeVelocity: ComputedRef<number | undefined>
     /**
@@ -25,12 +25,12 @@ export type ObjectCompareStatsReturn = {
      */
     gravBound: ComputedRef<boolean | undefined>
     /** Center of mass of the two objects */
-    barycenter: ComputedRef<Vector2 | undefined>
+    barycenter: ComputedRef<Vector3 | undefined>
     /**
      * Eccentricity vector of the objects orbit around the other object. The
      * length of this vector is the orbital eccentricity
      */
-    eccentricityVector: ComputedRef<Vector2 | undefined>
+    eccentricityVector: ComputedRef<Vector3 | undefined>
     /**
      * Semi-major axis of the orbit around the compare object (also works for
      * objects that aren't gravitationally bound)

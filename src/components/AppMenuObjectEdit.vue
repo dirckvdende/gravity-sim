@@ -11,6 +11,7 @@
     import SideMenuSection from '@/components/SideMenuSection.vue';
     import SideMenuInputNumber from '@/components/SideMenuInputNumber.vue';
     import Vector2 from '@/util/linalg/Vector2';
+    import Vector3 from '@/util/linalg/Vector3';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
     import SideMenuInputImage from '@/components/SideMenuInputImage.vue';
     import emptyIcon from "@/assets/icons/empty.svg"
@@ -71,20 +72,29 @@
      * @param vector Vector ref to turn into refs
      * @returns Separate refs for the x- and y-coord
      */
-    function vectorRefs(vector: Ref<Vector2>): {
+    function vectorRefs(vector: Ref<Vector3>): {
         x: WritableComputedRef<number>
         y: WritableComputedRef<number>
+        z: WritableComputedRef<number>
     } {
         return {
             x: computed({
                 get: () => vector.value.x,
                 set: (value) =>
-                    vector.value = new Vector2(value, vector.value.y),
+                    vector.value = new Vector3(value, vector.value.y,
+                        vector.value.z),
             }),
             y: computed({
                 get: () => vector.value.y,
                 set: (value) =>
-                    vector.value = new Vector2(vector.value.x, value),
+                    vector.value = new Vector3(vector.value.x, value,
+                        vector.value.z),
+            }),
+            z: computed({
+                get: () => vector.value.z,
+                set: (value) =>
+                    vector.value = new Vector3(vector.value.x, vector.value.y,
+                        value)
             }),
         }
     }
@@ -95,9 +105,9 @@
     const mass = focusedObjectRef("mass", 1)
     const size = focusedObjectRef("size", 0)
     const { x: posX, y: posY } = vectorRefs(focusedObjectRef("position",
-        Vector2.Zero))
+        Vector3.Zero))
     const { x: velX, y: velY } = vectorRefs(focusedObjectRef("velocity",
-        Vector2.Zero))
+        Vector3.Zero))
 </script>
 
 <template>

@@ -16,6 +16,7 @@
     import { useMenuStore } from '@/stores/useMenuStore';
     import { useGravityMapStore } from '@/stores/useGravityMapStore';
     import Vector2 from '@/util/linalg/Vector2';
+    import Vector3 from '@/util/linalg/Vector3';
     import { getState } from '@/util/filesystem/state.mjs';
     import { saveToFile } from '@/util/filesystem/save.mjs';
     import type { StyledGravityObject } from '@/util/sim/object';
@@ -142,8 +143,8 @@
             id++
         const object: StyledGravityObject = {
             id,
-            position: Vector2.Zero,
-            velocity: Vector2.Zero,
+            position: Vector3.Zero,
+            velocity: Vector3.Zero,
             mass: 1,
             name: "New object",
             description: "",
