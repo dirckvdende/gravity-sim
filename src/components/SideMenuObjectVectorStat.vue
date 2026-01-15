@@ -7,7 +7,8 @@
     import SideMenuStat from '@/components/SideMenuStat.vue';
     import { storeToRefs } from 'pinia';
     import { useSettingsStore } from '@/stores/useSettingsStore';
-    import type Vector2 from '@/util/linalg/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
+    import Vector3 from '@/util/linalg/Vector3';
     import LineGraph from '@/components/LineGraph.vue';
     import LineGraph2D from '@/components/LineGraph2D.vue';
 
@@ -21,7 +22,7 @@
          * The value of the stat to display. Displays a placeholder ("—") when
          * undefined. Displays nothing when null
          */
-        value?: Vector2 | null
+        value?: Vector3 | null
         /** List of units to use to format the values (default no units) */
         units?: UnitsList
         /**
@@ -84,9 +85,10 @@
     </SideMenuStat>
     <SideMenuStat :value="value?.x" :units="units" :level="1">x</SideMenuStat>
     <SideMenuStat :value="value?.y" :units="units" :level="1">y</SideMenuStat>
+    <SideMenuStat :value="value?.z" :units="units" :level="1">y</SideMenuStat>
     <LineGraph :value="paused ? null : value?.length()"
         ref="graph-1d" v-if="showGraph1D" />
-    <LineGraph2D :point="paused ? null : value" draw-point show-axes
+    <LineGraph2D :point="paused ? null : value?.flatten()" draw-point show-axes
         ref="graph-2d" v-if="showGraph2D" />
 </template>
 

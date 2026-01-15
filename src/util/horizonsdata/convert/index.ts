@@ -37,7 +37,8 @@ export function convertToStateFile(files: ObjectFile[]): StateFile {
         name: "Horizons data import",
         objects: objects.map(({ object }) => object),
         position: Vector2.Zero,
-        zoomLevel: zoomLevelCover(objects.map(({ object }) => object.position)),
+        zoomLevel: zoomLevelCover(objects.map(({ object }) =>
+            object.position.flatten())),
         timestamp,
         speed: 1,
     }
@@ -126,8 +127,8 @@ function mapToPlane(files: ObjectFile[], normalVector: Vector3): ObjectFile[] {
 
 /**
  * Convert object files to gravity objects. The object files should have already
- * been mapped to a plane, such that their z-coords are removed and reported as
- * error metrics
+ * been mapped to a plane, such that their z-coords are least significant and
+ * reported as error metrics
  * @param files List of object files to convert. The generatorData properties of
  * these files are updated in-place
  * @returns The generated gravity objects, with generatorData results to be
@@ -160,8 +161,8 @@ function toGravityObjects(files: ObjectFile[]): {
                 size: file.size,
                 icon: objectIconFromName(file.name),
                 id: index,
-                position: new Vector2(file.position.x, file.position.y),
-                velocity: new Vector2(file.velocity.x, file.velocity.y),
+                position: file.position,
+                velocity: file.velocity,
                 mass: file.mass,
             }
         }

@@ -14,7 +14,7 @@
         v-if="showBarycenter"
         :icons="[{
             src: baryCenterIcon,
-            position: barycenter,
+            position: barycenter.flatten(),
             size: 20,
             ignoreScaling: true,
         }]" />

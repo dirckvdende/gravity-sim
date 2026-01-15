@@ -1,6 +1,6 @@
 
 import { type GravityObject } from "./object";
-import Vector2 from "@/util/linalg/Vector2";
+import Vector3 from "@/util/linalg/Vector3";
 import { GRAV_CONSTANT, DISTANCE_SMOOTHING } from "./constants";
 
 /**
@@ -9,8 +9,8 @@ import { GRAV_CONSTANT, DISTANCE_SMOOTHING } from "./constants";
  * @param objects Objects to convert
  * @returns An array of alternating position and velocity vectors
  */
-export function objectsToState(objects: GravityObject[]): Vector2[] {
-    const out: Vector2[] = []
+export function objectsToState(objects: GravityObject[]): Vector3[] {
+    const out: Vector3[] = []
     for (const object of objects) {
         out.push(object.position)
         out.push(object.velocity)
@@ -24,7 +24,7 @@ export function objectsToState(objects: GravityObject[]): Vector2[] {
  * @param state State to convert
  * @param objects Objects to put the position and velocity into, from the state
  */
-export function stateToObjects(state: Vector2[], objects: GravityObject[]): void
+export function stateToObjects(state: Vector3[], objects: GravityObject[]): void
 {
     if (state.length != 2 * objects.length)
         throw new Error("State and objects lengths don't match")
@@ -43,13 +43,13 @@ export function stateToObjects(state: Vector2[], objects: GravityObject[]): void
  * @returns A function that returns the slope based on the current state
  */
 export function slopeFunction(objects: GravityObject[], backward: boolean =
-false): (state: Vector2[]) => Vector2[] {
+false): (state: Vector3[]) => Vector3[] {
     const masses = objectMasses(objects)
     const mult = backward ? -1 : 1
     return (state) => {
         if (state.length != 2 * masses.length)
             throw new Error("Invalid state length")
-        const slope = state.map(() => Vector2.Zero)
+        const slope = state.map(() => Vector3.Zero)
         for (const [index, mass] of masses.entries()) {
             slope[index * 2] = state[index * 2 + 1]!.scale(mult)
             slope[index * 2 + 1] = forceOn(index, state, masses).scale(
@@ -75,11 +75,11 @@ export function objectMasses(objects: GravityObject[]): number[] {
  * @param masses Masses of all objects
  * @returns The force acting on the object from the other objects
  */
-export function forceOn(index: number, state: Vector2[], masses: number[]):
-Vector2 {
+export function forceOn(index: number, state: Vector3[], masses: number[]):
+Vector3 {
     const mass = masses[index]!
     const pos = state[index * 2]!
-    let total = Vector2.Zero
+    let total = Vector3.Zero
     for (const [otherIndex, otherMass] of masses.entries()) {
         if (otherIndex == index)
             continue
@@ -101,8 +101,8 @@ Vector2 {
  * @returns The acting force as a vector
  */
 export function forceOnObject(sourceObject: GravityObject,
-objects: GravityObject[]): Vector2 {
-    let total = Vector2.Zero
+objects: GravityObject[]): Vector3 {
+    let total = Vector3.Zero
     for (const object of objects) {
         if (object == sourceObject)
             continue

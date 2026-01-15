@@ -1,5 +1,5 @@
 
-import type Vector2 from "@/util/linalg/Vector2";
+import type Vector3 from "@/util/linalg/Vector3";
 import type { StyledGravityObject } from "@/util/sim/object";
 import { toValue, computed, type ComputedRef, type MaybeRefOrGetter } from
 "vue";
@@ -14,11 +14,11 @@ export type ObjectStatsReturn = {
     /** Size of the object (diameter if spherical) */
     size: ComputedRef<number | undefined>
     /** Position of the object */
-    position: ComputedRef<Vector2 | undefined>
+    position: ComputedRef<Vector3 | undefined>
     /** Velocity of the object */
-    velocity: ComputedRef<Vector2 | undefined>
+    velocity: ComputedRef<Vector3 | undefined>
     /** Force acting on the object */
-    force: ComputedRef<Vector2 | undefined>
+    force: ComputedRef<Vector3 | undefined>
     /** Proportion of the total mass this object takes up */
     massProportion: ComputedRef<number | undefined>
 }

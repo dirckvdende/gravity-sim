@@ -30,15 +30,15 @@
             end: Vector2
         }[] = []
         for (const object of objects.value) {
-            const arrowSizePixels = ARROW_SCALE * object.velocity.length()
-                / Math.sqrt(totalMass.value / pixelSize.value)
+            const arrowSizePixels = ARROW_SCALE * object.velocity.flatten()
+                .length() / Math.sqrt(totalMass.value / pixelSize.value)
             if (arrowSizePixels > LENGTH_CUTOFF)
                 continue
             const arrowSize = arrowSizePixels * pixelSize.value
             out.push({
-                start: object.position,
-                end: object.position.add(object.velocity.normalize()
-                    .scale(arrowSize))
+                start: object.position.flatten(),
+                end: object.position.flatten().add(object.velocity.flatten()
+                    .normalize().scale(arrowSize))
             })
         }
         return out

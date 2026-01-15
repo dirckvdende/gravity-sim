@@ -2,13 +2,13 @@
 import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter,
 type Ref } from "vue";
 import type { GravityObject } from "@/util/sim/object";
-import Vector2 from "@/util/linalg/Vector2";
 import init, {
     GravityObject as GravityObjectRust,
     GravitySim as GravitySimRust,
     Vector3 as Vector3Rust,
     RKFOptions as RKFOptionsRust,
 } from "rust";
+import Vector3 from "@/util/linalg/Vector3";
 await init()
 
 /** Options to pass to the gravity sim */
@@ -52,7 +52,7 @@ export type GravitySimReturn = {
      */
     timestamp: Ref<Date>
     /** Barycenter (center of mass) of the objects in the sim */
-    barycenter: ComputedRef<Vector2>
+    barycenter: ComputedRef<Vector3>
     /**
      * Normalize positions and velocities such that barycenter is at (0, 0) and
      * doesn't move
@@ -90,8 +90,8 @@ options?: GravitySimOptions): GravitySimReturn {
             const { position, velocity } = object;
             rustObjects.push(new GravityObjectRust(
                 object.id,
-                new Vector3Rust(position.x, position.y, 0),
-                new Vector3Rust(velocity.x, velocity.y, 0),
+                new Vector3Rust(position.x, position.y, position.z),
+                new Vector3Rust(velocity.x, velocity.y, velocity.z),
                 object.mass,
             ))
         }
@@ -107,13 +107,15 @@ options?: GravitySimOptions): GravitySimReturn {
         // Get objects from rust
         for (const [index, rustObject] of sim.objects.entries()) {
             const object = objects.value[index]!
-            object.position = new Vector2(
+            object.position = new Vector3(
                 rustObject.position.x,
                 rustObject.position.y,
+                rustObject.position.z,
             )
-            object.velocity = new Vector2(
+            object.velocity = new Vector3(
                 rustObject.velocity.x,
                 rustObject.velocity.y,
+                rustObject.velocity.z,
             )
         }
         timestamp.value = new Date(Math.round(timestamp.value.getTime() +
@@ -136,28 +138,28 @@ options?: GravitySimOptions): GravitySimReturn {
 
     // Center of mass of the system
     const barycenter = computed(() => {
-        let total = Vector2.Zero
+        let total = Vector3.Zero
         let mass = 0
         for (const object of objects.value) {
             total = total.add(object.position.scale(object.mass))
             mass += object.mass
         }
         if (mass == 0)
-            return Vector2.Zero
+            return Vector3.Zero
         return total.scale(1 / mass)
     })
 
     /**
      * Velocity of the barycenter (i.e. total shift of the system over time)
      */
-    function barycenterVelocity(): Vector2 {
-        let total = Vector2.Zero
+    function barycenterVelocity(): Vector3 {
+        let total = Vector3.Zero
         let mass = 0
         for (const object of objects.value) {
             total = total.add(object.velocity.scale(object.mass))
             mass += object.mass
         }
-        return mass == 0 ? Vector2.Zero : total.scale(1 / mass)
+        return mass == 0 ? Vector3.Zero : total.scale(1 / mass)
     }
 
     /**

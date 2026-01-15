@@ -1,14 +1,14 @@
 
-import Vector2 from "@/util/linalg/Vector2"
+import Vector3 from "@/util/linalg/Vector3"
 
 /** An object in the gravity sim, without visual info */
 export type GravityObject = {
     /** Unique identifier to track object changes */
     id: number
     /** Position of the object */
-    position: Vector2
+    position: Vector3
     /** Velocity vector of the object */
-    velocity: Vector2
+    velocity: Vector3
     /** Mass of the object */
     mass: number
 }

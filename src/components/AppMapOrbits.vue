@@ -31,7 +31,7 @@
             v-if="showOrbits"
             v-for="{ id, position } in objects"
             :key="id"
-            :head="position"
+            :head="position.flatten()"
             ref="orbits"
             :color="darkMode
                 ? [0.2, 0.263, 0.357, 1]
