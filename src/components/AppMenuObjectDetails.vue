@@ -21,6 +21,7 @@
     '@/components/SideMenuObjectVectorStat.vue';
     import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';
     import { useDelayedFalse } from '@/composables/useDelayedFalse';
+    import { removeObject } from '@/util/removeObject';
 
     const { objects } = storeToRefs(useGravitySimStore())
     const {
@@ -91,10 +92,10 @@
             component.value?.clearGraph()
     }, { deep: false })
 
-    /** Delete the currently focused object */
+    /** Delete the currently focused object and close the menu */
     function deleteObject(): void {
-        objects.value = objects.value.filter((object) =>
-            object != focusedObject.value)
+        if (focusedObject.value)
+            removeObject(focusedObject.value)
         closeMenu()
     }
 
