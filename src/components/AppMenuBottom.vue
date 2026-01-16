@@ -170,6 +170,8 @@
         { caseInsensitive: true })
     useKeyEvent("F", () => showAccelerationArrows.value =
         !showAccelerationArrows.value, { caseInsensitive: true })
+
+    useKeyEvent("U", () => lockedObject.value = null, { caseInsensitive: true })
 </script>
 
 <template>
@@ -279,7 +281,7 @@
             <BottomMenuButton
                 :path-icon="mdiLockOpenOutline"
                 @click="lockedObject = null"
-                >Unlock</BottomMenuButton>
+                >Unlock (U)</BottomMenuButton>
         </BottomMenuSection>
     </BottomMenu>
 </template>
