@@ -9,19 +9,20 @@
                 "icon",
                 "objects",
                 "position",
-                "zoomlevel",
+                "zoomLevel",
                 "timestamp",
                 "speed"
             ],
             "properties": {
                 "$schema": { "type": "string" },
                 "icon": { "$ref": "#/$defs/url" },
+                "name": { "type": "string" },
                 "objects": {
                     "type": "array",
                     "items": { "$ref": "#/$defs/object" }
                 },
                 "position": { "$ref": "#/$defs/vector2" },
-                "zoomlevel": { "type": "number" },
+                "zoomLevel": { "type": "number" },
                 "timestamp": { "$ref": "#/$defs/date" },
                 "speed": { "type": "number" }
             }
@@ -35,7 +36,6 @@
                 "velocity",
                 "mass",
                 "name",
-                "description",
                 "size",
                 "icon"
             ],
@@ -53,10 +53,6 @@
         "vector2": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-                "x",
-                "y"
-            ],
             "properties": {
                 "x": { "type": "number" },
                 "y": { "type": "number" }
@@ -65,11 +61,6 @@
         "vector3": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-                "x",
-                "y",
-                "z"
-            ],
             "properties": {
                 "x": { "type": "number" },
                 "y": { "type": "number" },
