@@ -26,7 +26,7 @@ export function convertToStateFile(files: ObjectFile[]): StateFile {
     if (files.length < 1)
         throw new ConversionError("Cannot convert empty list of files")
     const timestamp = getTimestamp(files)
-    const shifted = subtractCentoid(files)
+    const shifted = subtractBarycenter(files)
     const normalVector = planeFit(shifted)
     const mappedToPlane = mapToPlane(shifted, normalVector)
     const objects = toGravityObjects(mappedToPlane)
@@ -45,39 +45,60 @@ export function convertToStateFile(files: ObjectFile[]): StateFile {
 }
 
 /**
- * Subtract the centroid position from a list of object files such that the
- * output list of files will have its centroid at the origin
+ * Subtract the barycenter position from a list of object files such that the
+ * output list of files will have its barycenter at the origin
  * @param objects The list of file objects to center
  * @returns A copy of the list with shifted positions
  */
-function subtractCentoid(files: ObjectFile[]): ObjectFile[] {
+function subtractBarycenter(files: ObjectFile[]): ObjectFile[] {
     if (files.length == 0)
         return []
-    const points = files.map((file) => file.position)
+    // Points with their masses
+    const points: [Vector3, number][] = files.map((file) =>
+        [file.position, file.mass])
+    // Add positions added with velocities if there are few points. These are
+    // labeled with the same masses
     if (points.length < 3)
         for (const file of files)
-            points.push(file.position.add(file.velocity))
-    const centroid = points.reduce((prev, cur) => prev.add(cur),
-        Vector3.Zero).scale(1 / points.length)
+            points.push([file.position.add(file.velocity), file.mass])
+    let totalMass = points.reduce((prev, cur) => prev + cur[1], 0)
+    // If total mass is zero, treat all objects equally
+    if (totalMass == 0) {
+        for (const point of points)
+            point[1] = 1
+        totalMass = points.length
+    }
+    const barycenter = points.reduce((prev, cur) =>
+        prev.add(cur[0].scale(cur[1])), Vector3.Zero).scale(1 / totalMass)
     return files.map((file) => ({
         ...file,
-        position: file.position.subtract(centroid),
+        position: file.position.subtract(barycenter),
     }))
 }
 
 /**
  * Fit a plane to the positions of objects. If there is only one object, its
- * velocity is also taken into account
+ * velocity is also taken into account. Objects are weighted by their masses,
+ * such that objects with a larger mass incur a higher error when being far from
+ * the plane. It is assumed that the barycenter of the objects is at the origin
  * @param files Object files to fit the plane for
  * @returns The normal vector of the fitted plane
  */
 function planeFit(files: ObjectFile[]): Vector3 {
     if (files.length == 0)
         throw new ConversionError("Cannot fit plane to zero objects")
-    const points = files.map((file) => file.position)
+    const points: [Vector3, number][] = files.map((file) =>
+        [file.position, file.mass])
     if (points.length < 2)
-        points.push(files[0]!.velocity)
-    const matrix = matrixFromColumns(points)
+        points.push([files[0]!.velocity, files[0]!.mass])
+    // Same as in subtractBarycenter function
+    const totalMass = points.reduce((prev, cur) => prev + cur[1], 0)
+    if (totalMass == 0)
+        for (const point of points)
+            point[1] = 1
+    const weightedPoints = points.map(([position, mass]) =>
+        position.scale(mass))
+    const matrix = matrixFromColumns(weightedPoints)
     // This matrix will have shape 3 x n with n >= 2
     const { u } = svd(matrix)
     const onb = Vector.orthonormalBasis(
