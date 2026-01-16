@@ -119,7 +119,6 @@
             click: editObject,
         }, {
             iconPath: mdiDeleteOutline,
-            text: 'delete',
             click: deleteObject,
         }, {
             iconPath: lockedObject == focusedObject ? mdiLockOpenOutline
