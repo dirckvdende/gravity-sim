@@ -19,10 +19,12 @@
     import SideMenuObjectStat from '@/components/SideMenuObjectStat.vue';
     import SideMenuObjectVectorStat from
     '@/components/SideMenuObjectVectorStat.vue';
-    import { mdiDeleteOutline, mdiPencilOutline } from '@mdi/js';
+    import { mdiDeleteOutline, mdiLockOpenOutline, mdiLockOutline, mdiPencilOutline } from '@mdi/js';
     import { useDelayedFalse } from '@/composables/useDelayedFalse';
     import { removeObject } from '@/util/removeObject';
+    import { useLockStore } from '@/stores/useLockStore';
 
+    const { lockedObject } = storeToRefs(useLockStore())
     const { objects } = storeToRefs(useGravitySimStore())
     const {
         activeMenu,
@@ -119,6 +121,11 @@
             iconPath: mdiDeleteOutline,
             text: 'delete',
             click: deleteObject,
+        }, {
+            iconPath: lockedObject == focusedObject ? mdiLockOpenOutline
+                : mdiLockOutline,
+            click: () => lockedObject = lockedObject == focusedObject ? null
+                : focusedObject,
         }]">
 
         <SideMenuCenterImage v-if="focusedObject" style="margin: 1em 0 1.5em 0"
