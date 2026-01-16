@@ -14,6 +14,7 @@
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import AppMapVelocity from '@/components/AppMapVelocity.vue';
     import AppMapAcceleration from '@/components//AppMapAcceleration.vue';
+import AppMapObjectLock from './AppMapObjectLock.vue';
 
     const map = useTemplateRef("map")
     const store = storeToRefs(useGravityMapStore())
@@ -43,6 +44,7 @@
     <Map :class="$style.map" ref="map">
         <MapInteractorPan />
         <MapInteractorZoom />
+        <AppMapObjectLock />
         <MapGrid
             v-if="showGrid"
             :separation-interval="[2, 5]"

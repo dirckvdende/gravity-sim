@@ -2,7 +2,7 @@
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
     mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
-    mdiArrowTopRight, mdiArrowTopLeft } from '@mdi/js';
+    mdiArrowTopRight, mdiArrowTopLeft, mdiLockOpenOutline} from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '@/composables/useKeyEvent';
     import BottomMenu from '@/components/BottomMenu.vue';
@@ -22,6 +22,7 @@
     import type { StyledGravityObject } from '@/util/sim/object';
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
     import moonIcon from "@/assets/icons/moon.svg"
+    import { useLockStore } from '@/stores/useLockStore';
 
     const {
         showBarycenter,
@@ -33,6 +34,7 @@
     } = storeToRefs(useSettingsStore())
     const { speed, paused } = storeToRefs(useSettingsStore())
     const { slowed, objects } = storeToRefs(useGravitySimStore())
+    const { lockedObject } = storeToRefs(useLockStore())
 
     const isFullscreen = useFullscreen()
 
@@ -168,6 +170,8 @@
         { caseInsensitive: true })
     useKeyEvent("F", () => showAccelerationArrows.value =
         !showAccelerationArrows.value, { caseInsensitive: true })
+
+    useKeyEvent("U", () => lockedObject.value = null, { caseInsensitive: true })
 </script>
 
 <template>
@@ -272,6 +276,12 @@
                 :path-icon="mdiFolderOpenOutline"
                 @click="loadFile"
                 >Load file</BottomMenuButton>
+        </BottomMenuSection>
+        <BottomMenuSection v-if="lockedObject">
+            <BottomMenuButton
+                :path-icon="mdiLockOpenOutline"
+                @click="lockedObject = null"
+                >Unlock (U)</BottomMenuButton>
         </BottomMenuSection>
     </BottomMenu>
 </template>
