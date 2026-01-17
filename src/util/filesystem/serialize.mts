@@ -84,13 +84,9 @@ export function deserializeState(serialized: string): StateFile {
     const ajv = new Ajv2020()
     const validate = ajv.compile(schema)
     const parsed = JSON.parse(serialized)
-    if (!validate(parsed)) {
-        // const errorText = (validate.errors ?? []).map(
-        //     ({ message }) => message ?? "").join("; ")
-        // console.log(validate.errors)
+    if (!validate(parsed))
         throw new Error(`Invalid file format. Validator threw these errors: ` +
         `${ajv.errorsText(validate.errors)}`)
-    }
     return deserializeSave(parsed)
 }
 
