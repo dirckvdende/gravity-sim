@@ -11,6 +11,7 @@
     import { getState, setState } from '@/util/filesystem/state.mjs';
     import { scenarioURLs } from '@/util/assetURLs';
     import type { StateFile } from '@/util/filesystem/statefile.mjs';
+import PopupModal from './PopupModal.vue';
 
     // List of predefined scenarios, loaded asynchronously
     const scenarios = ref<StateFile[]>([])
@@ -42,6 +43,8 @@
             })
         }
     }
+
+    const popupText = ref<null | string>(null)
 </script>
 
 <template>
@@ -49,7 +52,9 @@
         <SideMenuSection style="padding-top: .5em;">
             <SideMenuButton
                 :path-icon="mdiFolderOpenOutline"
-                @click="() => loadFromFile().then((state) => setState(state))">
+                @click="loadFromFile()
+                    .then((state) => setState(state))
+                    .catch((reason) => popupText = reason.toString())">
                 Load from file</SideMenuButton>
             <SideMenuButton
                 :path-icon="mdiContentSaveOutline"
@@ -63,4 +68,8 @@
                 @click="() => setState(state)">{{ state.name }}</SideMenuButton>
         </SideMenuSection>
     </SideMenu>
+    <PopupModal v-if="popupText" @close="popupText = null">
+        <template #head>Error</template>
+        {{ popupText }}
+    </PopupModal>
 </template>
