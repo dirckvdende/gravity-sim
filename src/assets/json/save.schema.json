@@ -1,0 +1,73 @@
+{
+    "$schema":"https://json-schema.org/draft/2020-12/schema",
+    "$ref": "#/$defs/base",
+    "$defs": {
+        "base": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "icon",
+                "objects",
+                "position",
+                "zoomLevel",
+                "timestamp",
+                "speed"
+            ],
+            "properties": {
+                "$schema": { "type": "string" },
+                "icon": { "$ref": "#/$defs/url" },
+                "name": { "type": "string" },
+                "objects": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/object" }
+                },
+                "position": { "$ref": "#/$defs/vector2" },
+                "zoomLevel": { "type": "number" },
+                "timestamp": { "$ref": "#/$defs/date" },
+                "speed": { "type": "number" }
+            }
+        },
+        "object": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "position",
+                "velocity",
+                "mass",
+                "name",
+                "size",
+                "icon"
+            ],
+            "properties": {
+                "id": { "type": "integer", "minimum": 0 },
+                "position": { "$ref": "#/$defs/vector3" },
+                "velocity": { "$ref": "#/$defs/vector3" },
+                "mass": { "type": "number", "minimum": 0 },
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "size": { "type": "number", "minimum": 0 },
+                "icon": { "$ref": "#/$defs/url" }
+            }
+        },
+        "vector2": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "x": { "type": "number" },
+                "y": { "type": "number" }
+            }
+        },
+        "vector3": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "x": { "type": "number" },
+                "y": { "type": "number" },
+                "z": { "type": "number" }
+            }
+        },
+        "url": { "type": "string" },
+        "date": { "type": "number" }
+    }
+}
