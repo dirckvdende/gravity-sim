@@ -1,6 +1,6 @@
 
 import { iconURLs } from "@/util/assetURLs"
-import moonIcon from "@/assets/icons/moon.svg"
+import defaultIcon from "@/assets/icons/generic-asteroid.svg"
 
 /**
  * Find an icon to give to a gravity object based on its name. Icons are listed
@@ -9,7 +9,7 @@ import moonIcon from "@/assets/icons/moon.svg"
  * @returns Name of the icon to use as a path to the file
  */
 export function objectIconFromName(name: string): string {
-    let icon = moonIcon
+    let icon = defaultIcon
     for (const { filename, url } of iconURLs) {
         const split = filename.split("/")
         const iconName = split[split.length - 1]!.split(".")[0]!
