@@ -16,4 +16,6 @@ interface ImportMetaEnv {
     readonly VITE_BASE_URL?: string,
     /** Whether component performance markers should be inserted */
     readonly VITE_MEASURE_PERFORMANCE?: "false" | "true",
+    /** Version of the app */
+    readonly VITE_APP_VERSION?: string,
 }

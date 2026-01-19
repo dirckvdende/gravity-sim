@@ -11,6 +11,7 @@
     import SideMenuStat from './SideMenuStat.vue';
     import { LENGTH_UNITS, MASS_UNITS } from '@/util/units';
     import SideMenuObjectVectorStat from './SideMenuObjectVectorStat.vue';
+    import SideMenuText from './SideMenuText.vue';
 
     const { name, icon, description } = storeToRefs(usePropertiesStore())
     const {
@@ -22,6 +23,8 @@
     const totalMass = computed(() =>
         objects.value.reduce((prev, cur) => prev + cur.mass, 0))
     const objectCount = computed(() => objects.value.length)
+
+    const appVersion = import.meta.env.VITE_APP_VERSION
 </script>
 
 <template>
@@ -54,6 +57,30 @@
             <SideMenuObjectVectorStat :value="barycenter" :units="LENGTH_UNITS">
                 Barycenter
             </SideMenuObjectVectorStat>
+        </SideMenuSection>
+
+        <SideMenuSection divider>
+            <SideMenuText>
+                Gravity sim created by <a target="_blank"
+                href="https://dirck.dev/">Dirck van den Ende</a><br />
+                <a target="_blank"
+                href="https://github.com/dirckvdende/gravity-sim"> Source
+                code</a>&nbsp;·&nbsp;<a target="_blank"
+                href="./horizons-data-import">Horizons import tool</a>
+            </SideMenuText>
+            <SideMenuText>
+                App version
+                <template v-if="appVersion === undefined">unknown</template>
+                <template v-else-if="appVersion.startsWith('git:')">
+                    <a
+                        target="_blank"
+                        :href="`https://github.com/dirckvdende/gravity-sim/` +
+                        `commit/${appVersion.substring(4)}`">
+                        {{ appVersion.substring(4, 11) }}
+                    </a>
+                </template>
+                <template v-else="appVersion">{{ appVersion }}</template>
+            </SideMenuText>
         </SideMenuSection>
     </SideMenu>
 </template>
