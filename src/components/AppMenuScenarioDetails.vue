@@ -6,16 +6,22 @@
     import { computed } from 'vue';
     import SideMenuCenterImage from '@/components/SideMenuCenterImage.vue';
     import { useGravitySimStore } from '@/stores/useGravitySimStore';
-    import SideMenuObjectStat from '@/components/SideMenuObjectStat.vue';
     import { mdiPencilOutline } from '@mdi/js';
     import { usePropertiesStore } from '@/stores/usePropertiesStore';
     import SideMenuStat from './SideMenuStat.vue';
+    import { LENGTH_UNITS, MASS_UNITS } from '@/util/units';
+    import SideMenuObjectVectorStat from './SideMenuObjectVectorStat.vue';
 
     const { name, icon, description } = storeToRefs(usePropertiesStore())
     const {
         activeMenu,
     } = storeToRefs(useMenuStore())
     const visible = computed(() => activeMenu.value == "scenario-details")
+
+    const { objects, barycenter } = storeToRefs(useGravitySimStore())
+    const totalMass = computed(() =>
+        objects.value.reduce((prev, cur) => prev + cur.mass, 0))
+    const objectCount = computed(() => objects.value.length)
 </script>
 
 <template>
@@ -31,12 +37,23 @@
 
         <SideMenuCenterImage style="margin: 1em 0 1.5em 0" :src="icon" />
 
-        <SideMenuSection v-if="description" divider>
-            <SideMenuStat :value="description" large>Description</SideMenuStat>
+        <SideMenuSection divider>
+            <SideMenuStat :value="name">Name</SideMenuStat>
+            <SideMenuStat :value="description" large v-if="description">
+                Description
+            </SideMenuStat>
         </SideMenuSection>
 
         <SideMenuSection divider>
-            <SideMenuObjectStat :value="name">Name</SideMenuObjectStat>
+            <SideMenuStat :value="objectCount.toFixed(0)">
+                Objects
+            </SideMenuStat>
+            <SideMenuStat :value="totalMass" :units="MASS_UNITS">
+                Total mass
+            </SideMenuStat>
+            <SideMenuObjectVectorStat :value="barycenter" :units="LENGTH_UNITS">
+                Barycenter
+            </SideMenuObjectVectorStat>
         </SideMenuSection>
     </SideMenu>
 </template>
