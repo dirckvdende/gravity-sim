@@ -10,8 +10,17 @@
         box-sizing: border-box;
         padding: 0 1em;
         text-align: center;
-        font-weight: 800;
-        font-size: .9em;
+        font-size: .65em;
+        margin: .7em 0;
         color: var(--side-menu-icon-color);
+
+        a {
+            color: inherit;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 </style>

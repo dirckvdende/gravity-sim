@@ -15,11 +15,11 @@ import { useOrbitsStore } from "@/stores/useOrbitsStore"
  */
 export function getState(): StateFile {
     const { objects, timestamp } = useGravitySimStore()
-    const { icon, name } = usePropertiesStore()
+    const { icon, name, description } = usePropertiesStore()
     const { position, zoomLevel } = useGravityMapStore()
     const { speed } = useSettingsStore()
     return {
-        icon, name, position, zoomLevel, timestamp, speed,
+        icon, name, description, position, zoomLevel, timestamp, speed,
         objects: objects.map((object) => ({ ...object })),
     }
 } 
@@ -31,12 +31,13 @@ export function getState(): StateFile {
  */
 export function setState(state: Partial<StateFile>): void {
     const { objects, timestamp } = storeToRefs(useGravitySimStore())
-    const { icon, name } = storeToRefs(usePropertiesStore())
+    const { icon, name, description } = storeToRefs(usePropertiesStore())
     const { position, zoomLevel } = storeToRefs(useGravityMapStore())
     const { speed } = storeToRefs(useSettingsStore())
     objects.value = state.objects ?? objects.value
     icon.value = state.icon ?? icon.value
     name.value = state.name ?? name.value
+    description.value = state.description ?? ""
     position.value = state.position ?? position.value
     zoomLevel.value = state.zoomLevel ?? zoomLevel.value
     timestamp.value = state.timestamp ?? new Date(Date.now())

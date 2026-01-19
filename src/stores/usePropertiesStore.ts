@@ -9,4 +9,6 @@ export const usePropertiesStore = defineStore("properties", () => ({
     icon: ref(emptyIcon),
     /** Name of the scenario */
     name: ref("Gravity sim scenario"),
+    /** Scenario description */
+    description: ref(""),
 }))

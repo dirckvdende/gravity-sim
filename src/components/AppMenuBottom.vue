@@ -2,7 +2,8 @@
     import { mdiFastForward, mdiRewind, mdiPause, mdiPlay, mdiBullseye,
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
     mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
-    mdiArrowTopRight, mdiArrowTopLeft, mdiLockOpenOutline} from '@mdi/js';
+    mdiArrowTopRight, mdiArrowTopLeft, mdiLockOpenOutline,
+    mdiInformationOutline } from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '@/composables/useKeyEvent';
     import BottomMenu from '@/components/BottomMenu.vue';
@@ -268,6 +269,10 @@
                 }">Full screen</BottomMenuButton>
         </BottomMenuSection>
         <BottomMenuSection>
+            <BottomMenuButton
+                :path-icon="mdiInformationOutline"
+                @click="activeMenu = 'scenario-details'"
+                >Scenario info</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiContentSaveOutline"
                 @click="saveFile"
