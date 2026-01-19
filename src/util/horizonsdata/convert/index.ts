@@ -35,6 +35,7 @@ export function convertToStateFile(files: ObjectFile[]): StateFile {
     return {
         icon: moonIcon,
         name: "Horizons data import",
+        description: "",
         objects: objects.map(({ object }) => object),
         position: Vector2.Zero,
         zoomLevel: zoomLevelCover(objects.map(({ object }) =>

@@ -11,6 +11,7 @@ The file contains a single JSON object with the following fields:
 {
     "icon": "https://example.com/image.png",
     "name": "My gravity sim scenario",
+    "description": "Many planets!",
     "position": { "x": 10.1, "y": -20.4 },
     "zoomLevel": -2.1,
     "timestamp": 1765806030149,
@@ -22,6 +23,8 @@ The file contains a single JSON object with the following fields:
 The `icon` field contains a URL to an image that will be used as the icon for the scenario, for example when listing it among other scenarios. This can also be a [data URL](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data).
 
 The `name` field contains the name of the scenario.
+
+The `description` field is optional. It contains some description of the scenario.
 
 The `position` field indicates the 2D position of the camera. When a user opens this scenario, this position will be at the center of their screen. Units are in meters.
 

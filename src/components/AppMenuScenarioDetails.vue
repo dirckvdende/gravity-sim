@@ -9,8 +9,9 @@
     import SideMenuObjectStat from '@/components/SideMenuObjectStat.vue';
     import { mdiPencilOutline } from '@mdi/js';
     import { usePropertiesStore } from '@/stores/usePropertiesStore';
+    import SideMenuStat from './SideMenuStat.vue';
 
-    const { name, icon } = storeToRefs(usePropertiesStore())
+    const { name, icon, description } = storeToRefs(usePropertiesStore())
     const {
         activeMenu,
     } = storeToRefs(useMenuStore())
@@ -29,6 +30,10 @@
         }]">
 
         <SideMenuCenterImage style="margin: 1em 0 1.5em 0" :src="icon" />
+
+        <SideMenuSection v-if="description" divider>
+            <SideMenuStat :value="description" large>Description</SideMenuStat>
+        </SideMenuSection>
 
         <SideMenuSection divider>
             <SideMenuObjectStat :value="name">Name</SideMenuObjectStat>

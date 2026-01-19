@@ -8,6 +8,8 @@ export type StateFile = {
     icon: string
     /** Name to display in menus where the file can be loaded in */
     name: string
+    /** Description of the scenario */
+    description: string
     /** List of gravity objects that are tracked */
     objects: StyledGravityObject[]
     /** Map camera position */

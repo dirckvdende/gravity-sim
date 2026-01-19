@@ -6,6 +6,7 @@
 export type SerializedSave = {
     icon: SerializedURL
     name: string
+    description?: string
     objects: SerializedObject[]
     position: SerializedVector2
     zoomLevel: number
