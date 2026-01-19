@@ -23,6 +23,16 @@ export async function saveToFile(state: StateFile): Promise<void> {
  */
 export async function loadFromFile(): Promise<StateFile> {
     const { content } = await uploadString(".grav")
+    return await loadFromString(content)
+}
+
+/**
+ * Load a state file by reading a string
+ * @param content The string to load from
+ * @returns A promise with the loaded state object. The file object will
+ * have blob URLs for all resources
+ */
+export async function loadFromString(content: string): Promise<StateFile> {
     const state = deserializeState(content)
     await stateToBlobURLs(state)
     return state
