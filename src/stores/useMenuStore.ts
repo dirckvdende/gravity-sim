@@ -11,6 +11,8 @@ export const useMenuStore = defineStore("menu-state", () => ({
         | "load"
         | "object-details"
         | "object-edit"
+        | "scenario-details"
+        | "scenario-edit"
     >("none"),
     /**
      * Object of which details are currently shown (if object-details is active)

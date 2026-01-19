@@ -6,6 +6,7 @@
     import AppDemoOverlay from '@/components/AppDemoOverlay.vue';
     import AppMenuObjectEdit from '@/components/AppMenuObjectEdit.vue';
     import { useDarkMode } from '@/composables/useDarkMode';
+    import AppMenuScenarioDetails from './AppMenuScenarioDetails.vue';
 
     useDarkMode()
 </script>
@@ -17,6 +18,7 @@
             <AppMenuLoad />
             <AppMenuObjectDetails />
             <AppMenuObjectEdit />
+            <AppMenuScenarioDetails />
             <AppMenuBottom />
         </div>
     </div>
