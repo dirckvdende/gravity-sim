@@ -15,27 +15,17 @@
         activeMenu,
     } = storeToRefs(useMenuStore())
     const visible = computed(() => activeMenu.value == "scenario-details")
-
-    /** Close the current menu */
-    function closeMenu(): void {
-        activeMenu.value = "none"
-    }
-
-    /** Edit the scenario info */
-    function editScenario(): void {
-        activeMenu.value = "scenario-edit"
-    }
 </script>
 
 <template>
     <SideMenu
         :visible="visible"
         menu-title="Scenario info"
-        @close="closeMenu"
+        @close="activeMenu = 'none'"
         :bottom-buttons="[{
             iconPath: mdiPencilOutline,
             text: 'edit',
-            click: editScenario,
+            click: () => activeMenu = 'scenario-edit',
         }]">
 
         <SideMenuCenterImage style="margin: 1em 0 1.5em 0" :src="icon" />
