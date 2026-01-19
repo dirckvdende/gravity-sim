@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd $(dirname $0)
+rm -rf out
 mkdir out
 
 python3 horizons-download.py 500@5 599 > out/jupiter.txt
