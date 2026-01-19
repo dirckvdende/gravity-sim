@@ -98,6 +98,7 @@ export function deserializeState(serialized: string): StateFile {
 function deserializeSave(save: SerializedSave): StateFile {
     return {
         icon: save.icon,
+        description: save.description ?? "",
         name: save.name,
         objects: save.objects.map(deserializeObject),
         position: deserializeVector2(save.position),
