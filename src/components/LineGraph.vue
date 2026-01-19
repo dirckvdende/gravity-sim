@@ -6,6 +6,8 @@
     import { useElementSize } from '@vueuse/core';
     import Vector2 from '@/util/linalg/Vector2';
     import { downloadNodeAsString } from '@/util/downloadNodeAsString';
+    import { storeToRefs } from 'pinia';
+    import { useSettingsStore } from '@/stores/useSettingsStore';
 
     const {
         value,
@@ -20,6 +22,8 @@
         /** Maximum time to look back in seconds (default 10) */
         maxTime?: number
     }>()
+
+    const { darkMode } = storeToRefs(useSettingsStore())
 
     const LOG_STEP = 1.3
     const EXTRA_SPACE = 1.1
@@ -120,16 +124,30 @@
         iconPath: mdiContentSaveOutline,
         click: download,
     }]">
-        <svg :class="$style.svg" ref="svg" stroke="#333" stroke-width="1"
-            fill="none" :width="pixelWidth" :height="pixelHeight">
+        <svg
+            :class="$style.svg"
+            ref="svg"
+            stroke-width="1"
+            fill="none"
+            :width="pixelWidth"
+            :height="pixelHeight">
+            <rect
+                :class="$style.background"
+                width="100%"
+                height="100%"
+                :fill="darkMode ? 'black' : 'white'" />
             <line
                 :x1="0"
                 :y1="pixelHeight / 2"
                 :x2="pixelWidth"
                 :y2="pixelHeight / 2"
                 :class="$style['zero-line']"
-                v-if="hasNegative" />
-            <path :d="path" :class="$style.path" />
+                v-if="hasNegative"
+                stroke="#777" />
+            <path
+                :d="path"
+                :stroke="darkMode ? '#eee' : '#222'"
+                :class="$style.path" />
         </svg>
     </GraphContainer>
 </template>
@@ -142,9 +160,17 @@
         stroke-width: 1;
         fill: none;
 
+        .background {
+            display: none;
+        }
+
         .zero-line {
             stroke: color-mix(in srgb, var(--side-menu-text-color),
                 transparent 50%);
+        }
+
+        .path {
+            stroke: var(--side-menu-text-color) !important;
         }
     }
 </style>

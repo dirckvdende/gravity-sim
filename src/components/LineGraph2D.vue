@@ -5,6 +5,8 @@
     import { computed, ref, useTemplateRef, watch } from 'vue';
     import GraphContainer from '@/components/GraphContainer.vue';
     import { mdiContentSaveOutline, mdiDeleteOutline } from '@mdi/js';
+    import { storeToRefs } from 'pinia';
+    import { useSettingsStore } from '@/stores/useSettingsStore';
 
     const {
         point,
@@ -23,14 +25,14 @@
          */
         maxPoints?: number
         /**
-         * Draw a circle at the position of the latest point. Can be a boolean
-         * for on-off switch, or a string with the color of the point (default
-         * false, default color red)
+         * Draw a circle at the position of the latest point (orange color)
          */
-        drawPoint?: boolean | string
+        drawPoint?: boolean
         /** Show x and y-axes in the graph (default false) */
         showAxes?: boolean
     }>()
+
+    const { darkMode } = storeToRefs(useSettingsStore())
 
     const LOG_STEP = 1.3
     const EXTRA_SPACE = 1.1
@@ -107,31 +109,46 @@
         iconPath: mdiContentSaveOutline,
         click: download,
     }]">
-        <svg :class="$style.svg" ref="svg" stroke="#333" stroke-width="1"
-            fill="none" :width="pixelWidth" :height="pixelHeight">
+        <svg
+            :class="$style.svg"
+            ref="svg"
+            stroke-width="1"
+            fill="none"
+            :width="pixelWidth"
+            :height="pixelHeight">
+            <rect
+                :class="$style.background"
+                width="100%"
+                height="100%"
+                :fill="darkMode ? 'black' : 'white'" />
             <line
                 :x1="0"
                 :y1="pixelHeight / 2"
                 :x2="pixelWidth"
                 :y2="pixelHeight / 2"
                 :class="$style['axis-line']"
-                v-if="showAxes" />
+                v-if="showAxes"
+                stroke="#777" />
             <line
                 :x1="pixelWidth / 2"
                 :y1="0"
                 :x2="pixelWidth / 2"
                 :y2="pixelHeight"
                 :class="$style['axis-line']"
-                v-if="showAxes" />
-            <path :d="path" />
+                v-if="showAxes"
+                stroke="#777" />
+            <path
+                :d="path"
+                :stroke="darkMode ? '#eee' : '#222'"
+                :class="$style.path" />
             <circle
                 v-if="drawPoint && pixelPoints[pixelPoints.length - 1]"
                 :cx="pixelPoints[pixelPoints.length - 1]?.x"
                 :cy="pixelPoints[pixelPoints.length - 1]?.y"
                 r="4"
-                :fill="drawPoint === true ? 'var(--accent-color-orange, orange)'
-                    : drawPoint"
-                stroke="none" />
+                fill="orange"
+                stroke="none"
+                :class="$style.circle" />
         </svg>
     </GraphContainer>
 </template>
@@ -140,13 +157,24 @@
     .svg {
         width: 100%;
         height: 100%;
-        stroke: var(--side-menu-text-color);
         stroke-width: 1;
         fill: none;
 
+        .background {
+            display: none;
+        }
+
         .axis-line {
             stroke: color-mix(in srgb, var(--side-menu-text-color),
-                transparent 50%);
+                transparent 50%) !important;
+        }
+
+        .path {
+            stroke: var(--side-menu-text-color) !important;
+        }
+
+        .circle {
+            fill: var(--accent-color-orange, orange) !important;
         }
     }
 </style>
