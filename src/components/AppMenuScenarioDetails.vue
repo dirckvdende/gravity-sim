@@ -65,7 +65,7 @@
                 href="https://dirck.dev/">Dirck van den Ende</a><br />
                 <a target="_blank"
                 href="https://github.com/dirckvdende/gravity-sim"> Source
-                code</a>&nbsp;·&nbsp;<a target="_blank"
+                code</a>&nbsp;•&nbsp;<a target="_blank"
                 href="./horizons-data-import">Horizons import tool</a>
             </SideMenuText>
             <SideMenuText>
