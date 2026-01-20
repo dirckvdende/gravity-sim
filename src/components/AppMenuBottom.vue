@@ -199,6 +199,20 @@
         </BottomMenuSection>
         <BottomMenuSection>
             <BottomMenuButton
+                :path-icon="mdiInformationOutline"
+                @click="activeMenu = 'scenario-details'"
+                >Scenario info</BottomMenuButton>
+            <BottomMenuButton
+                :path-icon="mdiContentSaveOutline"
+                @click="saveFile"
+                >Save file</BottomMenuButton>
+            <BottomMenuButton
+                :path-icon="mdiFolderOpenOutline"
+                @click="loadFile"
+                >Load file</BottomMenuButton>
+        </BottomMenuSection>
+        <BottomMenuSection>
+            <BottomMenuButton
                 :path-icon="mdiPlus"
                 @click="addObject">Add object (A)</BottomMenuButton>
             <BottomMenuButton
@@ -279,20 +293,6 @@
                     '--icon-color': isFullscreen ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Full screen</BottomMenuButton>
-        </BottomMenuSection>
-        <BottomMenuSection>
-            <BottomMenuButton
-                :path-icon="mdiInformationOutline"
-                @click="activeMenu = 'scenario-details'"
-                >Scenario info</BottomMenuButton>
-            <BottomMenuButton
-                :path-icon="mdiContentSaveOutline"
-                @click="saveFile"
-                >Save file</BottomMenuButton>
-            <BottomMenuButton
-                :path-icon="mdiFolderOpenOutline"
-                @click="loadFile"
-                >Load file</BottomMenuButton>
         </BottomMenuSection>
         <BottomMenuSection v-if="lockedObject">
             <BottomMenuButton
