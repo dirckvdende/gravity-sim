@@ -8,6 +8,7 @@
     import { useDarkMode } from '@/composables/useDarkMode';
     import AppMenuScenarioDetails from './AppMenuScenarioDetails.vue';
     import AppMenuScenarioEdit from './AppMenuScenarioEdit.vue';
+    import AppIntroPupup from './AppIntroPupup.vue';
 
     useDarkMode()
 </script>
@@ -25,6 +26,7 @@
         </div>
     </div>
     <AppDemoOverlay />
+    <AppIntroPupup />
 </template>
 
 <style lang="scss" module>
