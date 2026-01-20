@@ -184,6 +184,18 @@
         preventDefault: true,
     })
     useKeyEvent("L", () => loadFile(), { caseInsensitive: true })
+    useKeyEvent("G", () => toggleGrid(), { caseInsensitive: true })
+
+    /** Toggle 3D perspective effect */
+    function toggle3D(): void {
+        inverseFocalLength.value = inverseFocalLength.value == 0
+            ? 2 * Math.tan(1.4 / 2) : 0
+    }
+
+    useKeyEvent("P", () => toggle3D(), { caseInsensitive: true })
+    useKeyEvent("D", () => toggleDarkMode(), { caseInsensitive: true })
+    useKeyEvent("M", () => isFullscreen.value = !isFullscreen.value,
+        { caseInsensitive: true })
 </script>
 
 <template>
@@ -275,18 +287,16 @@
                 :style="{
                     '--icon-color': showGrid ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Show grid</BottomMenuButton>
+                }">Show grid (G)</BottomMenuButton>
             <!-- inverseFocalLength = 2 * tan(fov / 2) -->
             <BottomMenuButton
                 :path-icon="mdiVideo3d"
-                @click="inverseFocalLength = inverseFocalLength == 0
-                    ? 2 * Math.tan(1.4 / 2)
-                    : 0"
+                @click="toggle3D"
                 :glow="inverseFocalLength != 0"
                 :style="{
                     '--icon-color': inverseFocalLength != 0 ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">3D effect</BottomMenuButton>
+                }">3D effect (P)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiWeatherNight"
                 @click="toggleDarkMode"
@@ -294,7 +304,7 @@
                 :style="{
                     '--icon-color': darkMode ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Dark mode</BottomMenuButton>
+                }">Dark mode (D)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiFullscreen"
                 @click="isFullscreen = !isFullscreen"
@@ -302,7 +312,7 @@
                 :style="{
                     '--icon-color': isFullscreen ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
-                }">Full screen</BottomMenuButton>
+                }">Full screen (M)</BottomMenuButton>
         </BottomMenuSection>
         <BottomMenuSection v-if="lockedObject">
             <BottomMenuButton
