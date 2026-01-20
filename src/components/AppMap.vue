@@ -31,6 +31,8 @@ import AppMapObjectLock from './AppMapObjectLock.vue';
         }
         syncRef(store.position, mapState.position, syncOptions)
         syncRef(store.zoomLevel, mapState.zoomLevel, syncOptions)
+        syncRef(store.inverseFocalLength, mapState.inverseFocalLength,
+            syncOptions)
     }
 
     onMounted(() => {
