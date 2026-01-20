@@ -174,6 +174,16 @@
         !showAccelerationArrows.value, { caseInsensitive: true })
 
     useKeyEvent("U", () => lockedObject.value = null, { caseInsensitive: true })
+
+    useKeyEvent("I", () => activeMenu.value = "scenario-details",
+        { caseInsensitive: true })
+    useKeyEvent("S", () => saveFile(), {
+        mode: "keydown",
+        caseInsensitive: true,
+        ctrlKey: true,
+        preventDefault: true,
+    })
+    useKeyEvent("L", () => loadFile(), { caseInsensitive: true })
 </script>
 
 <template>
@@ -201,15 +211,15 @@
             <BottomMenuButton
                 :path-icon="mdiInformationOutline"
                 @click="activeMenu = 'scenario-details'"
-                >Scenario info</BottomMenuButton>
+                >Scenario info (I)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiContentSaveOutline"
                 @click="saveFile"
-                >Save file</BottomMenuButton>
+                >Save file (Ctrl+S)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiFolderOpenOutline"
                 @click="loadFile"
-                >Load file</BottomMenuButton>
+                >Load file (L)</BottomMenuButton>
         </BottomMenuSection>
         <BottomMenuSection>
             <BottomMenuButton
