@@ -3,7 +3,7 @@
 
 ![Banner](./docs/assets/banner.png)
 
-This is the repository for the [interactive gravity sim](https://dirck.dev/gravity-sim) web app. In this application objects with mass can be placed in a 3D space, which will simulate the gravitational interactions between the objects (without taking relativity into account).
+This is the repository for the [interactive gravity sim](https://dirck.dev/gravity-sim) web app. In this application objects with mass can be placed in a 3D space, which will simulate the gravitational interactions between the objects (without taking relativity into account). Some preset scenarios can be loaded right away.
 
 ## Development
 
@@ -32,3 +32,31 @@ Note that the Rust code is not automatically compiled when it is changed, even w
 ## File format
 
 The simulator uses a custom file format ".grav", which contains JSON encoded data of the state of the system. These files conform with the JSON schema found [here](./src/assets/json/save.schema.json). For more information on the file format, read the [documentation](./docs/fileformat.md).
+
+## Examples
+
+Below are some usage examples of the sim. Keep in mind there is much more to discover!
+
+### What if the sun suddenly becomes 10% more massive?
+
+![Example picture](./docs/assets/example0.png)
+
+### Pluto system
+
+![Example picture](./docs/assets/example1.png)
+
+### Visualize velocities and accelerations
+
+![Example picture](./docs/assets/example2.png)
+
+### Saturn's moons
+
+![Example picture](./docs/assets/example3.png)
+
+### Plot relative positions between objects
+
+![Example picture](./docs/assets/example4.png)
+
+### Display 2-body orbital characteristics
+
+![Example picture](./docs/assets/example5.png)
