@@ -28,6 +28,8 @@ export type MapStateBase = {
 export type MapState = MapStateBase & {
     /** The size of a single pixel in map coords */
     pixelSize: ComputedRef<number>
+    /** Inverse focual length in map coords */
+    inverseFocalLengthGlobal: ComputedRef<number>
     /**
      * Viewport (in map coords) of the map with top left and bottom right coords
      */
@@ -105,6 +107,9 @@ export function extendMapState(base: MapStateBase): MapState {
         return Math.exp(-zoomLevel.value)
     })
 
+    const inverseFocalLengthGlobal = computed(() => inverseFocalLength.value /
+        (viewport.value.bottomRight.x - viewport.value.topLeft.x))
+
     const viewport = computed(() => ({
         topLeft: position.value.subtract(targetSize.value.scale(
             pixelSize.value / 2)),
@@ -125,13 +130,10 @@ export function extendMapState(base: MapStateBase): MapState {
     }
 
     function toPixelCoords3D(mapCoords: Vector3): Vector2 | null {
-        const width = viewport.value.bottomRight.x - viewport.value.topLeft.x
-        const focal = inverseFocalLength.value / width
         // Negative z -> further away
-        const scale = 1 + focal * -mapCoords.z
+        const scale = 1 + inverseFocalLengthGlobal.value * -mapCoords.z
         if (scale <= 0)
             return null
-        console.log(scale)
         return toPixelCoords(mapCoords
             .flatten()
             .subtract(position.value)
@@ -157,6 +159,7 @@ export function extendMapState(base: MapStateBase): MapState {
     return {
         ...base,
         pixelSize,
+        inverseFocalLengthGlobal,
         viewport,
         toMapCoords,
         toPixelCoords,
