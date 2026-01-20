@@ -19,10 +19,13 @@
     import SideMenuObjectStat from '@/components/SideMenuObjectStat.vue';
     import SideMenuObjectVectorStat from
     '@/components/SideMenuObjectVectorStat.vue';
-    import { mdiDeleteOutline, mdiLockOpenOutline, mdiLockOutline, mdiPencilOutline } from '@mdi/js';
+    import { mdiContentCopy, mdiDeleteOutline, mdiLockOpenOutline,
+        mdiLockOutline, mdiPencilOutline } from '@mdi/js';
     import { useDelayedFalse } from '@/composables/useDelayedFalse';
     import { removeObject } from '@/util/removeObject';
     import { useLockStore } from '@/stores/useLockStore';
+    import { cloneObject } from '@/util/cloneObject';
+    import Vector3 from '@/util/linalg/Vector3';
 
     const { lockedObject } = storeToRefs(useLockStore())
     const { objects } = storeToRefs(useGravitySimStore())
@@ -106,6 +109,17 @@
         // NOTE: focused object is already set correctly
         activeMenu.value = "object-edit"
     }
+
+    /** Function called when the clone/copy button is clicked */
+    function cloneAction(): void {
+        if (focusedObject.value == null)
+            return
+        const object = cloneObject(focusedObject.value)
+        object.position = object.position.add(new Vector3(1, 1, 0)
+            .scale(object.size * 5))
+        object.name = `${focusedObject.value.name} (copy)`
+        trueFocusedObject.value = object
+    }
 </script>
 
 <template>
@@ -117,6 +131,9 @@
             iconPath: mdiPencilOutline,
             text: 'edit',
             click: editObject,
+        }, {
+            iconPath: mdiContentCopy,
+            click: cloneAction,
         }, {
             iconPath: mdiDeleteOutline,
             click: deleteObject,

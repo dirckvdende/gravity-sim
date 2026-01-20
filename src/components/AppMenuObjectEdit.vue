@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import SideMenu from '@/components/SideMenu.vue';
-    import { mdiDeleteOutline } from '@mdi/js';
+    import { mdiContentCopy, mdiDeleteOutline } from '@mdi/js';
     import { storeToRefs } from 'pinia';
     import { useMenuStore } from '@/stores/useMenuStore';
     import { computed, type Ref, type WritableComputedRef } from 'vue';
@@ -30,6 +30,7 @@
     import nixIcon from '@/assets/icons/nix.svg'
     import kerberosIcon from '@/assets/icons/kerberos.svg'
     import { removeObject } from '@/util/removeObject';
+    import { cloneObject } from '@/util/cloneObject';
 
     const { activeMenu, focusedObject } = storeToRefs(useMenuStore())
     const visible = computed(() =>
@@ -45,6 +46,18 @@
         if (focusedObject.value)
             removeObject(focusedObject.value)
         closeMenu()
+    }
+
+    /** Function called when the clone/copy button is clicked */
+    function cloneAction(): void {
+        if (focusedObject.value == null)
+            return
+        const object = cloneObject(focusedObject.value)
+        object.position = object.position.add(new Vector3(1, 1, 0)
+            .scale(object.size * 5))
+        object.name = `${focusedObject.value.name} (copy)`
+        focusedObject.value = object
+        activeMenu.value = "object-details"
     }
 
     /**
@@ -116,6 +129,10 @@
         :menu-title="`Edit: ${name}`"
         @close="closeMenu"
         :bottom-buttons="[{
+            iconPath: mdiContentCopy,
+            text: 'copy',
+            click: cloneAction,
+        }, {
             iconPath: mdiDeleteOutline,
             text: 'delete',
             click: deleteObject,
