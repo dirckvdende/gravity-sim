@@ -7,6 +7,6 @@ import { ref } from "vue";
 export const useGravityMapStore = defineStore("gravity-map", () => ({
     position: ref(Vector2.Zero),
     zoomLevel: ref(0),
-    // inverseFocalLength = 2 * tan(fov / 2)
-    inverseFocalLength: ref(2 * Math.tan(1.4 / 2)),
+    // Default: orthogonal projection
+    inverseFocalLength: ref(0),
 }))

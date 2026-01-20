@@ -3,7 +3,7 @@
     mdiTarget, mdiOrbit, mdiWeatherNight, mdiGrid, mdiContentSaveOutline,
     mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
     mdiArrowTopRight, mdiArrowTopLeft, mdiLockOpenOutline,
-    mdiInformationOutline } from '@mdi/js';
+    mdiInformationOutline, mdiVideo3d } from '@mdi/js';
     import { computed } from 'vue';
     import { useKeyEvent } from '@/composables/useKeyEvent';
     import BottomMenu from '@/components/BottomMenu.vue';
@@ -36,6 +36,7 @@
     const { speed, paused } = storeToRefs(useSettingsStore())
     const { slowed, objects } = storeToRefs(useGravitySimStore())
     const { lockedObject } = storeToRefs(useLockStore())
+    const { inverseFocalLength } = storeToRefs(useGravityMapStore())
 
     const isFullscreen = useFullscreen()
 
@@ -251,6 +252,17 @@
                     '--icon-color': showGrid ?
                     'var(--accent-color-blue, #6b8edf)' : undefined,
                 }">Show grid</BottomMenuButton>
+            <!-- inverseFocalLength = 2 * tan(fov / 2) -->
+            <BottomMenuButton
+                :path-icon="mdiVideo3d"
+                @click="inverseFocalLength = inverseFocalLength == 0
+                    ? 2 * Math.tan(1.4 / 2)
+                    : 0"
+                :glow="inverseFocalLength != 0"
+                :style="{
+                    '--icon-color': inverseFocalLength != 0 ?
+                    'var(--accent-color-blue, #6b8edf)' : undefined,
+                }">3D effect</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiWeatherNight"
                 @click="toggleDarkMode"
