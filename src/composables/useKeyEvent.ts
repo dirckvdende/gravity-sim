@@ -10,9 +10,10 @@ export type KeyEventOptions = {
     /**
      * Event emit mode. Press means it will be emitted when releasing the key.
      * Hold means it will be emitted as long as the key is held (event frame)
-     * (default press)
+     * (default press). Keydown means it will be triggered when the key is
+     * pressed down
      */
-    mode?: "press" | "hold",
+    mode?: "press" | "hold" | "keydown",
     /**
      * Whether the keys should be case insensitive, meaning holding the shift
      * key or not doesn't have an effect (default false)
@@ -20,7 +21,7 @@ export type KeyEventOptions = {
     caseInsensitive?: boolean,
     /**
      * Prevent default event handler when this specific key is pressed (default
-     * false). Only has an effect for mode "press"
+     * false). Only has an effect for modes "press" and "keydown"
      */
     preventDefault?: boolean,
     /**
@@ -106,8 +107,13 @@ export function useKeyEvent(key: MaybeRefOrGetter<string | null>, callback:
         || activeElement.value?.tagName == "INPUT")
             return
         holdActive = true
-        if ((optionsRef.value?.mode ?? "press") == "hold")
+        if (optionsRef.value?.mode == "hold")
             requestAnimationFrame(() => holdEmit(event))
+        if (optionsRef.value?.mode == "keydown" && hasCtrlAltMeta(event)) {
+            callback(event)
+            if (optionsRef.value?.preventDefault)
+                event.preventDefault()
+        }
     }
 
     /**
