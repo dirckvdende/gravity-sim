@@ -5,7 +5,6 @@
     import { storeToRefs } from 'pinia';
     import { computed, inject } from 'vue';
     import MapArrow from '@/components/MapArrow.vue';
-    import type Vector2 from '@/util/linalg/Vector2';
     import type Vector3 from '@/util/linalg/Vector3';
     import { useSettingsStore } from '@/stores/useSettingsStore';
     import type { GravityObject } from '@/util/sim/object';
@@ -44,8 +43,8 @@
         if (!showAccelerationArrows.value)
             return []
         const out: {
-            start: Vector2
-            end: Vector2
+            start: Vector3
+            end: Vector3
         }[] = []
         for (const object of objects.value) {
             const acceleration = objectAcceleration(object)
@@ -56,9 +55,9 @@
                 continue
             const arrowSize = arrowSizePixels * pixelSize.value
             out.push({
-                start: object.position.flatten(),
-                end: object.position.flatten().add(acceleration.flatten()
-                    .normalize().scale(arrowSize))
+                start: object.position,
+                end: object.position.add(acceleration.normalize()
+                    .scale(arrowSize))
             })
         }
         return out

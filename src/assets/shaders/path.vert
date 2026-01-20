@@ -2,12 +2,16 @@
 precision highp float;
 
 // Previous point in the path
-attribute vec3 prev_position;
+attribute vec4 prev_position;
 // Current point in the path
-attribute vec3 cur_position;
+attribute vec4 cur_position;
 // Next point in the path
-attribute vec3 next_position;
+attribute vec4 next_position;
 
+// Inverse focal length in world coordinates
+uniform float inverse_focal_length;
+// World coordinates of the center of the screen
+uniform vec2 canvas_center;
 // Global-to-clip coord transform
 uniform mat3 transform;
 // Output canvas size in pixels
@@ -59,12 +63,19 @@ vec2 normal_vector(vec2 a, vec2 b) {
 }
 
 /**
- * Apply transformation matrix to coordinates
- * @param coords The coordinates to apply the matrix to
- * @returns The transformed coordinates
+ * Convert 3D coords to clip coords. This happens in two steps:
+ *   1) Convert 3D to 2D
+ *   2) Apply transformation matrix to coordinates
+ * @param coords The coordinates to convert
+ * @returns The transformed coordinates in x and y, and the output z coord
+ * (which will allow hiding vertices that are behind the camera)
  */
-vec2 clip_coords(vec2 coords) {
-    return (transform * vec3(coords, 1)).xy;
+vec3 clip_coords(vec3 coords) {
+    float scale = 1.0 + inverse_focal_length * -coords.z;
+    // if (scale <= 0.0)
+    //     return vec3(0, 0, -2);
+    vec2 depth_coords = (coords.xy - canvas_center) / scale + canvas_center;
+    return vec3((transform * vec3(depth_coords, 1)).xy, 0);
 }
 
 /**
@@ -111,16 +122,23 @@ float opacity() {
 }
 
 void main() {
-    vec2 prev = clip_to_canvas(clip_coords(prev_position.xy));
-    vec2 cur = clip_to_canvas(clip_coords(cur_position.xy));
-    vec2 next = clip_to_canvas(clip_coords(next_position.xy));
+    vec2 prev = clip_to_canvas(clip_coords(prev_position.xyz).xy);
+    vec3 cur_clip = clip_coords(cur_position.xyz);
+    vec2 next = clip_to_canvas(clip_coords(next_position.xyz).xy);
+
+    if (cur_clip.z < -1.0) {
+        gl_Position = vec4(0.0, 0.0, -2.0, 1.0);
+        return;
+    }
+
+    vec2 cur = clip_to_canvas(cur_clip.xy);
 
     // Vectors to previous and next points
     vec2 back = vec2(0, 0);
     vec2 forward = vec2(0, 0);
-    if (prev_position.z != -1.0)
+    if (prev_position.w != -1.0)
         back = prev - cur;
-    if (next_position.z != -1.0)
+    if (next_position.w != -1.0)
         forward = next - cur;
 
     // Fix zero-length back/forward
@@ -137,7 +155,7 @@ void main() {
     // Normal vector points to the inside of the corner
     vec2 normal = normal_vector(back, forward);
 
-    vec2 extra = cur_position.z < 0.5
+    vec2 extra = cur_position.w < 0.5
         ? normal * width / 2.0
         : -normal * width / 2.0;
 

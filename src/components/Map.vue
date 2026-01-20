@@ -13,12 +13,14 @@
         elementSize.width.value,
         elementSize.height.value,
     ))
+    const inverseFocalLength = ref(0)
     
     const state = extendMapState({
         target,
         position,
         zoomLevel,
         targetSize,
+        inverseFocalLength,
     })
     provide(mapStateKey, state)
     defineExpose({ state })

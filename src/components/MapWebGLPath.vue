@@ -1,11 +1,11 @@
 <script setup lang="ts">
-    import type Vector2 from '@/util/linalg/Vector2';
+    import type Vector3 from '@/util/linalg/Vector3';
     import { useWebGLCallback } from '@/composables/useWebGLCallback';
     import vertexShader from "@/assets/shaders/path.vert?raw";
     import fragmentShader from "@/assets/shaders/path.frag?raw";
     import { createProgram } from '@/util/webGL';
     import { inject } from 'vue';
-    import { webGLKey } from '@/util/keys';
+    import { mapStateKey, webGLKey } from '@/util/keys';
     import { useDevicePixelRatio } from '@vueuse/core';
 
     const {
@@ -15,7 +15,7 @@
         width = 2,
     } = defineProps<{
         /** Current head of the path. Path is extended when this prop changes */
-        head: Vector2
+        head: Vector3
         /**
          * Maximum number of points in the path, after which the start of the
          * path is cut off. This cannot be changed dynamically! (default 1000)
@@ -30,6 +30,10 @@
         width?: number
     }>()
 
+    const {
+        position: canvasCenter,
+        inverseFocalLengthGlobal: inverseFocalLength,
+    } = inject(mapStateKey)!
     const { transform, canvasHeight, canvasWidth } = inject(webGLKey)!
     const { pixelRatio } = useDevicePixelRatio()
 
@@ -43,6 +47,10 @@
             gl.getAttribLocation(program, "cur_position"),
             gl.getAttribLocation(program, "next_position"),
         ] as const
+        const inverseFocalLengthLocation = gl.getUniformLocation(program,
+            "inverse_focal_length")
+        const canvasCenterLocation = gl.getUniformLocation(program,
+            "canvas_center")
         const transformLocation = gl.getUniformLocation(program, "transform")
         const colorLocation = gl.getUniformLocation(program, "color")
         const canvasSizeLocation = gl.getUniformLocation(program, "canvas_size")
@@ -59,18 +67,18 @@
         // "previous" and "next" can be passed for first and last point in the
         // path. The startPointer points to the start of p1. Note that p2 is
         // duplicates when the list of points wraps around. Each cell in this
-        // representation is 6 floats. E.g. for p1 this is
-        //     [ p1x, p1y, 0, p1x, p1y, 1 ]
+        // representation is 8 floats. E.g. for p1 this is
+        //     [ p1x, p1y, p1z, 0, p1x, p1y, p1z, 1 ]
         // This allows the drawing of two vertices for every point in the path.
         // The padding is of the form
-        //     [ 0, 0, -1, 0, 0, -1 ]
+        //     [ 0, 0, 0, -1, 0, 0, 0, -1 ]
         // When the buffer is full it will look like this:
         //     [ * p2 p3 p4 p5 p6 p7 * p1 p2 * ]
         // Note there are only three spots with padding
 
         const positionBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-        const bufferItemStride = 3
+        const bufferItemStride = 4
         const bufferItemSize = bufferItemStride * 2
         const floatSize = Float32Array.BYTES_PER_ELEMENT
         const bufferSize = bufferItemSize * (maxSize + 4)
@@ -98,27 +106,27 @@
          * will always be added after
          */
         function updateBufferPoint(
-            point: Vector2,
+            point: Vector3,
             pointer: number,
             paddingBefore: boolean,
         ): void {
             if (paddingBefore) {
                 const offset = (pointer - bufferItemSize) * floatSize
                 gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array([
-                    0, 0, -1,
-                    0, 0, -1,
-                    point.x, point.y, 0,
-                    point.x, point.y, 1,
-                    0, 0, -1,
-                    0, 0, -1,
+                    0, 0, 0, -1,
+                    0, 0, 0, -1,
+                    point.x, point.y, point.z, 0,
+                    point.x, point.y, point.z, 1,
+                    0, 0, 0, -1,
+                    0, 0, 0, -1,
                 ]))
             } else {
                 const offset = pointer * floatSize
                 gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array([
-                    point.x, point.y, 0,
-                    point.x, point.y, 1,
-                    0, 0, -1,
-                    0, 0, -1,
+                    point.x, point.y, point.z, 0,
+                    point.x, point.y, point.z, 1,
+                    0, 0, 0, -1,
+                    0, 0, 0, -1,
                 ]))
             }
         }
@@ -127,7 +135,7 @@
          * Add a point to the end of the position buffer
          * @param point The point to add
          */
-        function addPointToBuffer(point: Vector2, last: Vector2): void {
+        function addPointToBuffer(point: Vector3, last: Vector3): void {
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
             length++
             if (length == 1) {
@@ -186,6 +194,9 @@
         /** Called every frame */
         function frame(): void {
             gl.useProgram(program)
+            gl.uniform1f(inverseFocalLengthLocation, inverseFocalLength.value)
+            gl.uniform2f(canvasCenterLocation, canvasCenter.value.x,
+                canvasCenter.value.y)
             gl.uniformMatrix3fv(transformLocation, false, transform.value)
             gl.uniform4fv(colorLocation, color)
             gl.uniform2f(canvasSizeLocation, canvasWidth.value,

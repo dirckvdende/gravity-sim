@@ -5,7 +5,7 @@
     import { storeToRefs } from 'pinia';
     import { computed, inject } from 'vue';
     import MapArrow from '@/components/MapArrow.vue';
-    import type Vector2 from '@/util/linalg/Vector2';
+    import type Vector3 from '@/util/linalg/Vector3';
     import { useSettingsStore } from '@/stores/useSettingsStore';
 
     // Mass added to the mass total to avoid division by zero
@@ -26,8 +26,8 @@
         if (!showVelocityArrows.value)
             return []
         const out: {
-            start: Vector2
-            end: Vector2
+            start: Vector3
+            end: Vector3
         }[] = []
         for (const object of objects.value) {
             const arrowSizePixels = ARROW_SCALE * object.velocity.flatten()
@@ -36,9 +36,9 @@
                 continue
             const arrowSize = arrowSizePixels * pixelSize.value
             out.push({
-                start: object.position.flatten(),
-                end: object.position.flatten().add(object.velocity.flatten()
-                    .normalize().scale(arrowSize))
+                start: object.position,
+                end: object.position.add(object.velocity.normalize()
+                    .scale(arrowSize))
             })
         }
         return out

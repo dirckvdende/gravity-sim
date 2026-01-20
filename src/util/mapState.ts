@@ -1,7 +1,7 @@
 
 import Vector2 from "@/util/linalg/Vector2";
-import { computed, type ComputedRef, type InjectionKey, type Ref, ref } from
-"vue";
+import Vector3 from "@/util/linalg/Vector3";
+import { computed, type ComputedRef, type Ref, ref } from "vue";
 
 /** State of a map with center position, zoom level, etc. */
 export type MapStateBase = {
@@ -13,6 +13,12 @@ export type MapStateBase = {
     zoomLevel: Ref<number>
     /** Size of the target element in pixels */
     targetSize: ComputedRef<Vector2>
+    /**
+     * Inverse focal length for 3D view, a value of 0 is an orthogonal
+     * projection. The focal length is relative to the width of the screen (in
+     * map units)
+     */
+    inverseFocalLength: Ref<number>
 }
 
 /**
@@ -22,6 +28,8 @@ export type MapStateBase = {
 export type MapState = MapStateBase & {
     /** The size of a single pixel in map coords */
     pixelSize: ComputedRef<number>
+    /** Inverse focual length in map coords */
+    inverseFocalLengthGlobal: ComputedRef<number>
     /**
      * Viewport (in map coords) of the map with top left and bottom right coords
      */
@@ -37,20 +45,24 @@ export type MapState = MapStateBase & {
     toMapCoords(pixelCoords: Vector2): Vector2
     /**
      * Convert map coords to pixel coords
-     * @param state The map state to use for the conversion
      * @param mapCoords Map coords to convert
      * @returns The pixel coords
      */
     toPixelCoords(mapCoords: Vector2): Vector2
     /**
+     * Convert map coords to pixel coords, taking camera depth into account.
+     * Returns null if the coords are behind the camera
+     * @param mapCoords Map coords to convert
+     * @returns The pixel coords
+     */
+    toPixelCoords3D(mapCoords: Vector3): Vector2 | null
+    /**
      * Modify map state such that it is shifted by a given amount of pixels
-     * @param state The map state to modify
      * @param diff Pixel coord difference
      */
     panPixels(diff: Vector2): void
     /**
      * Modify map state to zoom in/out
-     * @param state The map state to modify
      * @param diff Difference in zoom level to apply (positive = zoom in,
      * negative = zoom out)
      * @param at Position to zoom into, in map coords (default center of
@@ -78,6 +90,7 @@ export function defaultState(): MapState {
         position: ref(Vector2.Zero),
         zoomLevel: ref(0),
         targetSize: computed(() => Vector2.Zero),
+        inverseFocalLength: ref(0),
     })
 }
 
@@ -88,11 +101,14 @@ export function defaultState(): MapState {
  */
 export function extendMapState(base: MapStateBase): MapState {
 
-    const { position, targetSize, zoomLevel } = base
+    const { position, targetSize, zoomLevel, inverseFocalLength } = base
 
     const pixelSize = computed(() => {
         return Math.exp(-zoomLevel.value)
     })
+
+    const inverseFocalLengthGlobal = computed(() => inverseFocalLength.value /
+        (viewport.value.bottomRight.x - viewport.value.topLeft.x))
 
     const viewport = computed(() => ({
         topLeft: position.value.subtract(targetSize.value.scale(
@@ -113,6 +129,18 @@ export function extendMapState(base: MapStateBase): MapState {
         )
     }
 
+    function toPixelCoords3D(mapCoords: Vector3): Vector2 | null {
+        // Negative z -> further away
+        const scale = 1 + inverseFocalLengthGlobal.value * -mapCoords.z
+        if (scale <= 0)
+            return null
+        return toPixelCoords(mapCoords
+            .flatten()
+            .subtract(position.value)
+            .scale(1 / scale)
+            .add(position.value))
+    }
+
     function panPixels(diff: Vector2): void {
         position.value = position.value.add(diff.scale(pixelSize.value))
     }
@@ -131,9 +159,11 @@ export function extendMapState(base: MapStateBase): MapState {
     return {
         ...base,
         pixelSize,
+        inverseFocalLengthGlobal,
         viewport,
         toMapCoords,
         toPixelCoords,
+        toPixelCoords3D,
         panPixels,
         zoom,
         zoomRatio,
