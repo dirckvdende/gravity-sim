@@ -4,7 +4,7 @@
     mdiFullscreen, mdiFolderOpenOutline, mdiPlus, mdiDeleteOutline, 
     mdiArrowTopRight, mdiArrowTopLeft, mdiLockOpenOutline,
     mdiInformationOutline, mdiVideo3d } from '@mdi/js';
-    import { computed } from 'vue';
+    import { computed, ref } from 'vue';
     import { useKeyEvent } from '@/composables/useKeyEvent';
     import BottomMenu from '@/components/BottomMenu.vue';
     import BottomMenuButton from '@/components/BottomMenuButton.vue';
@@ -24,6 +24,8 @@
     import { useOrbitsStore } from '@/stores/useOrbitsStore';
     import moonIcon from "@/assets/icons/moon.svg"
     import { useLockStore } from '@/stores/useLockStore';
+    import PopupModal from './PopupModal.vue';
+    import SideMenuBottomButtons from './SideMenuBottomButtons.vue';
 
     const {
         showBarycenter,
@@ -165,6 +167,7 @@
     /** Delete all objects in the sim */
     function deleteObjects(): void {
         focusedObject.value = null
+        lockedObject.value = null
         objects.value = []
     }
 
@@ -196,6 +199,8 @@
     useKeyEvent("D", () => toggleDarkMode(), { caseInsensitive: true })
     useKeyEvent("M", () => isFullscreen.value = !isFullscreen.value,
         { caseInsensitive: true })
+
+    const deleteWarningVisible = ref(false)
 </script>
 
 <template>
@@ -239,7 +244,23 @@
                 @click="addObject">Add object (A)</BottomMenuButton>
             <BottomMenuButton
                 :path-icon="mdiDeleteOutline"
-                @click="deleteObjects">Delete all objects</BottomMenuButton>
+                @click="deleteWarningVisible = true"
+                >Delete all objects</BottomMenuButton>
+            <PopupModal
+                v-if="deleteWarningVisible"
+                @close="deleteWarningVisible = false">
+                Are you sure you want to delete all objects?
+                <SideMenuBottomButtons :buttons="[{
+                    click: () => deleteWarningVisible = false,
+                    text: 'Cancel',
+                }, {
+                    click: () => {
+                        deleteObjects()
+                        deleteWarningVisible = false
+                    },
+                    text: 'Delete all',
+                }]" style="font-size: 1.1em; padding: 1em 0 0 0;" />
+            </PopupModal>
         </BottomMenuSection>
         <BottomMenuSection>
             <BottomMenuButton
