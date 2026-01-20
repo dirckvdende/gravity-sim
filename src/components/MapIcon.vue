@@ -10,7 +10,7 @@
         /**
          * Position of the icon in unit coordinates
          */
-        position: Vector2,
+        position: Vector2 | Vector3,
         /**
          * Size of the icon in unit coordinates (max. of width and height), or
          * pixel coordinates if ignoreScaling is set
@@ -31,7 +31,8 @@
 </script>
 
 <script lang="ts" setup>
-    import type Vector2 from '@/util/linalg/Vector2';
+    import Vector2 from '@/util/linalg/Vector2';
+    import Vector3 from '@/util/linalg/Vector3';
     import MapIconScaled from '@/components/MapIconScaled.vue';
     import { computed, inject } from 'vue';
     import MapIconPin from '@/components/MapIconPin.vue';
@@ -54,14 +55,25 @@
         showPinAt?: number,
     }>()
 
-    const { toPixelCoords, pixelSize } = inject(mapStateKey, defaultState())
+    const {
+        toPixelCoords,
+        toPixelCoords3D,
+        pixelSize,
+    } = inject(mapStateKey, defaultState())
 
     // List of icons with sizes and positions in pixel values
-    const unitSizeIcons = computed(() => icons.map((icon) => ({
-        ...icon,
-        position: toPixelCoords(icon.position),
-        size:  icon.size / (icon.ignoreScaling ? 1 : pixelSize.value),
-    })))
+    const unitSizeIcons = computed(() => icons.map((icon) => {
+        const position = icon.position instanceof Vector2
+            ? toPixelCoords(icon.position)
+            : toPixelCoords3D(icon.position)
+        if (position == null)
+            return null
+        return {
+            ...icon,
+            position,
+            size:  icon.size / (icon.ignoreScaling ? 1 : pixelSize.value),
+        }
+    }).filter((v) => v != null))
 
     // List of icons with z-index added, such that icons with higher y coord are
     // displayed on top of those with a lower y coord

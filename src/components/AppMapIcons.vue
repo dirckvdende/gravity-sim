@@ -18,7 +18,7 @@
     <MapIcon :icons="objects.map((object) => ({
         src: object.icon,
         size: object.size,
-        position: object.position.flatten(),
+        position: object.position,
         click: () => showObjectDetails(object)
     }))" />
 </template>
