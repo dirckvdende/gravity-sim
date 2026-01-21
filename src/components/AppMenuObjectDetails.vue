@@ -71,7 +71,7 @@
     const {
         distance, massRatio, sizeRatio, relativePosition, relativeVelocity,
         escapeVelocity, gravBound, eccentricityVector, semiMajorAxis,
-        orbitalPeriod,
+        orbitalPeriod, directionalRelativePosition, directionalRelativeVelocity,
     } = useObjectCompareStats(focusedObject, compareObject, objects)
 
     const graphComponents = [
@@ -87,6 +87,8 @@
         useTemplateRef("distance-ref"),
         useTemplateRef("relative-position-ref"),
         useTemplateRef("relative-velocity-ref"),
+        useTemplateRef("directional-relative-position-ref"),
+        useTemplateRef("directional-relative-velocity-ref"),
         useTemplateRef("escape-velocity-ref"),
         useTemplateRef("eccentricity-ref"),
         useTemplateRef("semi-major-axis-ref"),
@@ -189,6 +191,15 @@
                 <SideMenuObjectVectorStat :value="relativeVelocity"
                     ref="relative-velocity-ref" :units="VELOCITY_UNITS"
                     show-length has-graph>Relative velocity</SideMenuObjectVectorStat>
+
+                <SideMenuObjectVectorStat :value="directionalRelativePosition"
+                    ref="directional-relative-position-ref"
+                    :units="LENGTH_UNITS" has-graph>
+                    Direct. rel. pos.</SideMenuObjectVectorStat>
+                <SideMenuObjectVectorStat :value="directionalRelativeVelocity"
+                    ref="directional-relative-velocity-ref"
+                    :units="VELOCITY_UNITS" show-length has-graph>
+                    Direct. rel. vel.</SideMenuObjectVectorStat>
 
                 <SideMenuObjectStat :value="escapeVelocity" ref="escape-velocity-ref"
                     :units="VELOCITY_UNITS" has-graph>
