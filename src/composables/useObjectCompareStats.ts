@@ -22,12 +22,12 @@ export type ObjectCompareStatsReturn = {
     relativeVelocity: ComputedRef<Vector3 | undefined>
     /**
      * Directional position relative to compare object (directions are given by
-     * velocity and acting force of original object)
+     * velocity and acting force of compare object)
      */
     directionalRelativePosition: ComputedRef<Vector3 | undefined>
     /**
      * Directional velocity relative to compare object (directions are given by
-     * velocity and acting force of original object)
+     * velocity and acting force of compare object)
      */
     directionalRelativeVelocity: ComputedRef<Vector3 | undefined>
     /** Relative escape velocity between the two objects */
@@ -98,11 +98,11 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
 
     const force = definedComputed((object, _, allObjects) =>
         forceOnObject(object, allObjects))
-    const directionalBasis = definedComputed((object) => {
+    const directionalBasis = definedComputed((_, otherObject) => {
         if (!force.value)
             return undefined
-        const velocity = new Vector(object.velocity.x, object.velocity.y,
-            object.velocity.z)
+        const velocity = new Vector(otherObject.velocity.x,
+            otherObject.velocity.y, otherObject.velocity.z)
         const forceVector = new Vector(force.value.x, force.value.y,
             force.value.z)
         const onb = Vector.orthonormalBasis(velocity, forceVector,
