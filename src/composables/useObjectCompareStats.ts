@@ -96,8 +96,8 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
     const relativeVelocity = definedComputed((object, otherObject) =>
         object.velocity.subtract(otherObject.velocity))
 
-    const force = definedComputed((object, _, allObjects) =>
-        forceOnObject(object, allObjects))
+    const force = definedComputed((_, otherObject, allObjects) =>
+        forceOnObject(otherObject, allObjects))
     const directionalBasis = definedComputed((_, otherObject) => {
         if (!force.value)
             return undefined
