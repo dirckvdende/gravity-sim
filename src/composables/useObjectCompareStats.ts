@@ -4,6 +4,9 @@ import type { StyledGravityObject } from "@/util/sim/object";
 import { computed, toValue, type ComputedRef } from "vue";
 import Vector3 from "@/util/linalg/Vector3";
 import { DISTANCE_SMOOTHING, GRAV_CONSTANT } from "@/util/sim/constants";
+import { forceOnObject } from "@/util/sim/odeConvert";
+import Matrix from "@/util/linalg/Matrix";
+import Vector from "@/util/linalg/Vector";
 
 /** Return value of the object compare stats composable */
 export type ObjectCompareStatsReturn = {
@@ -17,6 +20,16 @@ export type ObjectCompareStatsReturn = {
     relativePosition: ComputedRef<Vector3 | undefined>
     /** Relative velocity to compare object */
     relativeVelocity: ComputedRef<Vector3 | undefined>
+    /**
+     * Directional position relative to compare object (directions are given by
+     * velocity and acting force of original object)
+     */
+    directionalRelativePosition: ComputedRef<Vector3 | undefined>
+    /**
+     * Directional velocity relative to compare object (directions are given by
+     * velocity and acting force of original object)
+     */
+    directionalRelativeVelocity: ComputedRef<Vector3 | undefined>
     /** Relative escape velocity between the two objects */
     escapeVelocity: ComputedRef<number | undefined>
     /**
@@ -82,6 +95,45 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
         object.position.subtract(otherObject.position))
     const relativeVelocity = definedComputed((object, otherObject) =>
         object.velocity.subtract(otherObject.velocity))
+
+    const force = definedComputed((object, _, allObjects) =>
+        forceOnObject(object, allObjects))
+    const directionalBasis = definedComputed((object) => {
+        if (!force.value)
+            return undefined
+        const velocity = new Vector(object.velocity.x, object.velocity.y,
+            object.velocity.z)
+        const forceVector = new Vector(force.value.x, force.value.y,
+            force.value.z)
+        const onb = Vector.orthonormalBasis(velocity, forceVector,
+            new Vector(1, 0, 0), new Vector(0, 1, 0), new Vector(0, 0, 1))
+        if (onb.length != 3)
+            return undefined
+        return onb as [Vector, Vector, Vector]
+    })
+    const directionalMatrix = computed(() => {
+        const basis = directionalBasis.value
+        if (!basis)
+            return undefined
+        return new Matrix(...basis).transpose().inverse()
+    })
+    const directionalRelativePosition = computed(() => {
+        if (!relativePosition.value || !directionalMatrix.value)
+            return undefined
+        const v = directionalMatrix.value.multiply(new Vector(
+            relativePosition.value.x, relativePosition.value.y,
+            relativePosition.value.z))
+        return new Vector3(v.get(0), v.get(1), v.get(2))
+    })
+    const directionalRelativeVelocity = computed(() => {
+        if (!relativeVelocity.value || !directionalMatrix.value)
+            return undefined
+        const v = directionalMatrix.value.multiply(new Vector(
+            relativeVelocity.value.x, relativeVelocity.value.y,
+            relativeVelocity.value.z))
+        return new Vector3(v.get(0), v.get(1), v.get(2))
+    })
+
     const distance = definedComputed((object, otherObject) =>
         object.position.subtract(otherObject.position).length())
     const massRatio = definedComputed((object, otherObject) =>
@@ -142,7 +194,8 @@ StyledGravityObject[] | null | undefined>): ObjectCompareStatsReturn {
     return {
         relativePosition, relativeVelocity, distance, massRatio, sizeRatio,
         escapeVelocity, gravBound, barycenter, eccentricityVector,
-        semiMajorAxis, orbitalPeriod,
+        semiMajorAxis, orbitalPeriod, directionalRelativePosition,
+        directionalRelativeVelocity,
     }
 
 }
