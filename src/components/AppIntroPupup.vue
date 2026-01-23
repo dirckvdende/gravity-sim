@@ -18,6 +18,11 @@
             You can load some preset scenarios by clicking the folder icon at
             the bottom.
         </p>
+        <p>
+            <i>Important: This application doesn't work properly in some browsers
+            (most notably Firefox). Please use Google Chrome if you're
+            experiencing issues.</i>
+        </p>
         <SideMenuBottomButtons :buttons="[{
             click: () => visible = false,
             text: 'Get started',
