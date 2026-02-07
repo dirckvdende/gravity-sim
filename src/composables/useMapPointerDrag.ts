@@ -24,9 +24,9 @@ export type PointerDragState = {
  */
 export function toggleCursor(cursor: string | null): void {
     if (cursor === null)
-        document.documentElement.attributeStyleMap.delete("cursor")
+        document.documentElement.style.cursor = ""
     else
-        document.documentElement.attributeStyleMap.set("cursor", cursor)
+        document.documentElement.style.cursor = cursor
 }
 
 /**
